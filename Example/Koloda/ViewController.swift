@@ -11,65 +11,65 @@ import Koloda
 
 private var numberOfCards: UInt = 5
 
-class ViewController: UIViewController, CardDeckViewDataSource, CardDeckViewDelegate {
+class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
     
-    @IBOutlet weak var deckView: KolodaView!
+    @IBOutlet weak var kolodaView: KolodaView!
     
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        deckView.dataSource = self
-        deckView.delegate = self
+        kolodaView.dataSource = self
+        kolodaView.delegate = self
     }
     
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        deckView?.swipeLeft()
+        kolodaView?.swipeLeft()
     }
     
     @IBAction func rightButtonTapped() {
-        deckView?.swipeRight()
+        kolodaView?.swipeRight()
     }
     
     @IBAction func undoButtonTapped() {
-        deckView?.revertAction()
+        kolodaView?.revertAction()
     }
     
-    //MARK: CardDeckViewDataSource
-    func deckNumberOfCards(deck: KolodaView) -> UInt {
+    //MARK: KolodaViewDataSource
+    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
         return numberOfCards
     }
     
-    func deckViewForCardAtIndex(deck: KolodaView, index: UInt) -> UIView {
+    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
         return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
     }
-    func deckViewForCardOverlayAtIndex(deck: KolodaView, index: UInt) -> OverlayView? {
+    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
         return NSBundle.mainBundle().loadNibNamed("OverlayView",
             owner: self, options: nil)[0] as? OverlayView
     }
     
-    //MARK: CardDeckViewDelegate
+    //MARK: KolodaViewDelegate
     
-    func deckDidSwipedCardAtIndex(deck: KolodaView, index: UInt, direction: SwipeResultDirection) {
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
     //Example: loading more cards
         if index >= 3 {
             numberOfCards = 6
-            deckView.reloadData()
+            kolodaView.reloadData()
         }
     }
     
-    func deckDidRunOutOfCards(deck: KolodaView) {
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {
     //Example: reloading
-        deckView.resetCurrentCardNumber()
+        kolodaView.resetCurrentCardNumber()
     }
     
-    func deckDidSelectCardAtIndex(deck: KolodaView, index: UInt) {
+    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
     
-    func deckShouldApplyAppearAnimation(deck: KolodaView) -> Bool {
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
         return true
     }
     

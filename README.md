@@ -47,13 +47,13 @@ Properties
 
 The KolodaView has the following properties:
 ```swift
-	weak var dataSource: CardDeckViewDataSource!
+	weak var dataSource: KolodaViewDataSource!
 ```
-An object that supports the CardDeckViewDataSource protocol and can provide views to populate the KolodaView.
+An object that supports the KolodaViewDataSource protocol and can provide views to populate the KolodaView.
 ```swift
-	weak var delegate: CardDeckViewDelegate?
+	weak var delegate: KolodaViewDelegate?
 ```
-An object that supports the CardDeckViewDelegate protocol and can respond to KolodaView events.
+An object that supports the KolodaViewDelegate protocol and can respond to KolodaView events.
 ```swift
     public var currentCardNumber
 ```
@@ -61,7 +61,7 @@ The index of front card in the KolodaView (read only).
 ```swift
     public var countOfCards
 ```    
-The count of cards in the KolodaView (read only). To set this, implement the `deckNumberOfCards:` dataSource method. 
+The count of cards in the KolodaView (read only). To set this, implement the `kolodaNumberOfCards:` dataSource method. 
 ```swift
     var countOfVisibleCards
 ```
@@ -95,37 +95,37 @@ Applies swipe right animation and action, increment currentCardNumber.
 Protocols
 ---------------
 
-The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, CardDeckViewDataSource and CardDeckViewDelegate. The CardDeckViewDataSource protocol has the following methods:
+The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-	func deckNumberOfCards(deck: KolodaView) -> UInt
+	func kolodaNumberOfCards(koloda: KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
-	func deckViewForCardAtIndex(deck: KolodaView, index: UInt) -> UIView
+	func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
 ```
 Return a view to be displayed at the specified index in the KolodaView. 
 ```swift
-   func deckViewForCardOverlayAtIndex(deck: KolodaView, index: UInt) -> OverlayView?
+   func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView?
 ```   
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
-The CardDeckViewDelegate protocol has the following methods:
+The KolodaViewDelegate protocol has the following methods:
 ```swift    
-    func deckDidSwipedCardAtIndex(deck: KolodaView,index: UInt, direction: SwipeResultDirection)
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
 ```    
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func deckDidRunOutOfCards(deck: KolodaView)
+    func kolodaDidRunOutOfCards(koloda: KolodaView)
 ```    
 This method is called when the KolodaView has no cards to display.
 ```swift
-	func deckDidSelectCardAtIndex(deck: KolodaView, index: UInt)
+	func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func deckShouldApplyAppearAnimation(deck: KolodaView) -> Bool
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
-This method is fired on reload, when any cards are displayed. If you return YES from the method, or don't implement it, the deck will apply appear animation.
+This method is fired on reload, when any cards are displayed. If you return YES from the method, or don't implement it, the koloda will apply appear animation.
 
 
 Release Notes
