@@ -5,7 +5,7 @@ KolodaView
 
 Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/)
 
-<img src="https://yalantis.com/media/content/ckeditor/2015/07/02/2.gif" />
+![Preview](https://yalantis.com/media/content/ckeditor/2015/07/02/2.gif)
 
 Purpose
 --------------
