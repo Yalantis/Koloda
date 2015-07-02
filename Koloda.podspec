@@ -1,15 +1,8 @@
-#
-# Be sure to run `pod lib lint KolodaView.podspec' to ensure this is a
-# valid spec and remove all comments before submitting the spec.
-#
-# Any lines starting with a # are optional, but encouraged
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
+
 
 Pod::Spec.new do |s|
 s.name             = "Koloda"
-s.version          = "1.0.0"
+s.version          = "1.0.1"
 s.summary          = "KolodaView is a class designed to simplify the implementation of Tinder like cards on iOS. "
 
 s.homepage         = "https://github.com/Yalantis/Koloda"
