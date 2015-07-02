@@ -22,41 +22,41 @@ private let revertCardAnimationDuration: NSTimeInterval = 1.0
 private let revertCardAnimationToValue: CGFloat = 1.0
 private let revertCardAnimationFromValue: CGFloat = 0.0
 
-private let deckAppearScaleAnimationName = "deckAppearScaleAnimation"
-private let deckAppearScaleAnimationFromValue = CGPoint(x: 0.1, y: 0.1)
-private let deckAppearScaleAnimationToValue = CGPoint(x: 1.0, y: 1.0)
-private let deckAppearScaleAnimationDuration: NSTimeInterval = 0.8
-private let deckAppearAlphaAnimationName = "deckAppearAlphaAnimation"
-private let deckAppearAlphaAnimationFromValue: CGFloat = 0.0
-private let deckAppearAlphaAnimationToValue: CGFloat = 1.0
-private let deckAppearAlphaAnimationDuration: NSTimeInterval = 0.8
+private let kolodaAppearScaleAnimationName = "kolodaAppearScaleAnimation"
+private let kolodaAppearScaleAnimationFromValue = CGPoint(x: 0.1, y: 0.1)
+private let kolodaAppearScaleAnimationToValue = CGPoint(x: 1.0, y: 1.0)
+private let kolodaAppearScaleAnimationDuration: NSTimeInterval = 0.8
+private let kolodaAppearAlphaAnimationName = "kolodaAppearAlphaAnimation"
+private let kolodaAppearAlphaAnimationFromValue: CGFloat = 0.0
+private let kolodaAppearAlphaAnimationToValue: CGFloat = 1.0
+private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
 
 
-public protocol CardDeckViewDataSource:class {
+public protocol KolodaViewDataSource:class {
     
-    func deckNumberOfCards(deck: KolodaView) -> UInt
-    func deckViewForCardAtIndex(deck: KolodaView, index: UInt) -> UIView
-    func deckViewForCardOverlayAtIndex(deck: KolodaView, index: UInt) -> OverlayView?
+    func kolodaNumberOfCards(koloda: KolodaView) -> UInt
+    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
+    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView?
     
 }
 
-public protocol CardDeckViewDelegate:class {
+public protocol KolodaViewDelegate:class {
     
-    func deckDidSwipedCardAtIndex(deck: KolodaView,index: UInt, direction: SwipeResultDirection)
-    func deckDidRunOutOfCards(deck: KolodaView)
-    func deckDidSelectCardAtIndex(deck: KolodaView, index: UInt)
-    func deckShouldApplyAppearAnimation(deck: KolodaView) -> Bool
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
+    func kolodaDidRunOutOfCards(koloda: KolodaView)
+    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
     
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
     
-    public weak var dataSource: CardDeckViewDataSource! {
+    public weak var dataSource: KolodaViewDataSource! {
         didSet {
             setupDeck()
         }
     }
-    public weak var delegate: CardDeckViewDelegate?
+    public weak var delegate: KolodaViewDelegate?
     
     private(set) public var currentCardNumber = 0
     private(set) public var countOfCards = 0
@@ -83,14 +83,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func setupDeck() {
-        countOfCards = Int(dataSource!.deckNumberOfCards(self))
+        countOfCards = Int(dataSource!.kolodaNumberOfCards(self))
         
         if countOfCards - currentCardNumber > 0 {
             
             var countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
             
             for index in 0..<countOfNeededCards {
-                var nextCardContentView = dataSource?.deckViewForCardAtIndex(self, index: UInt(index))
+                var nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index))
                 var nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                 
                 nextCardView.delegate = self
@@ -169,26 +169,26 @@ public class KolodaView: UIView, DraggableCardDelegate {
         userInteractionEnabled = false
         animating = true
         
-        let deckAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPViewScaleXY)
+        let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPViewScaleXY)
         
-        deckAppearScaleAnimation.duration = deckAppearScaleAnimationDuration
-        deckAppearScaleAnimation.fromValue = NSValue(CGPoint: deckAppearScaleAnimationFromValue)
-        deckAppearScaleAnimation.toValue = NSValue(CGPoint: deckAppearScaleAnimationToValue)
-        deckAppearScaleAnimation.completionBlock = {
+        kolodaAppearScaleAnimation.duration = kolodaAppearScaleAnimationDuration
+        kolodaAppearScaleAnimation.fromValue = NSValue(CGPoint: kolodaAppearScaleAnimationFromValue)
+        kolodaAppearScaleAnimation.toValue = NSValue(CGPoint: kolodaAppearScaleAnimationToValue)
+        kolodaAppearScaleAnimation.completionBlock = {
             (animation, finished) in
             
             self.userInteractionEnabled = true
             self.animating = false
         }
         
-        let deckAppearAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
+        let kolodaAppearAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         
-        deckAppearAlphaAnimation.fromValue = NSNumber(float: Float(deckAppearAlphaAnimationFromValue))
-        deckAppearAlphaAnimation.toValue = NSNumber(float: Float(deckAppearAlphaAnimationToValue))
-        deckAppearAlphaAnimation.duration = deckAppearAlphaAnimationDuration
+        kolodaAppearAlphaAnimation.fromValue = NSNumber(float: Float(kolodaAppearAlphaAnimationFromValue))
+        kolodaAppearAlphaAnimation.toValue = NSNumber(float: Float(kolodaAppearAlphaAnimationToValue))
+        kolodaAppearAlphaAnimation.duration = kolodaAppearAlphaAnimationDuration
         
-        pop_addAnimation(deckAppearAlphaAnimation, forKey: deckAppearAlphaAnimationName)
-        pop_addAnimation(deckAppearScaleAnimation, forKey: deckAppearScaleAnimationName)
+        pop_addAnimation(kolodaAppearAlphaAnimation, forKey: kolodaAppearAlphaAnimationName)
+        pop_addAnimation(kolodaAppearScaleAnimation, forKey: kolodaAppearScaleAnimationName)
     }
     
     func applyRevertAnimation(card: DraggableCardView) {
@@ -247,7 +247,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func cardTapped(card: DraggableCardView) {
         let index = currentCardNumber + find(visibleCards, card)!
         
-        delegate?.deckDidSelectCardAtIndex(self, index: UInt(index))
+        delegate?.kolodaDidSelectCardAtIndex(self, index: UInt(index))
     }
     
     //MARK: Private
@@ -264,7 +264,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func overlayViewForCardAtIndex(index: UInt) -> OverlayView? {
-        return dataSource.deckViewForCardOverlayAtIndex(self, index: index)
+        return dataSource.kolodaViewForCardOverlayAtIndex(self, index: index)
     }
     
     //MARK: Actions
@@ -279,8 +279,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             if let dataSource = self.dataSource {
                 
-                let lastCardContentView = dataSource.deckViewForCardAtIndex(self, index: UInt(shownCardsCount - 1))
-                let lastCardOverlayView = dataSource.deckViewForCardOverlayAtIndex(self, index: UInt(shownCardsCount - 1))
+                let lastCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(shownCardsCount - 1))
+                let lastCardOverlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(shownCardsCount - 1))
                 let lastCardView = DraggableCardView()
                 
                 lastCardView.hidden = true
@@ -308,7 +308,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     frameAnimation.completionBlock = {(animation, finished) in
                         self.visibleCards.last?.hidden = false
                         self.animating = false
-                        self.delegate?.deckDidSwipedCardAtIndex(self, index: UInt(self.currentCardNumber - 1), direction: direction)
+                        self.delegate?.kolodaDidSwipedCardAtIndex(self, index: UInt(self.currentCardNumber - 1), direction: direction)
                     }
                     currentCard.alpha = 1.0
                 }
@@ -319,12 +319,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         } else {
-            delegate?.deckDidSwipedCardAtIndex(self, index: UInt(currentCardNumber - 1), direction: direction)
+            delegate?.kolodaDidSwipedCardAtIndex(self, index: UInt(currentCardNumber - 1), direction: direction)
             animating = false
         }
         
         if (visibleCards.count == 0 ) {
-            self.delegate?.deckDidRunOutOfCards(self)
+            self.delegate?.kolodaDidRunOutOfCards(self)
         }
         
     }
@@ -345,8 +345,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             
             if let dataSource = self.dataSource {
-                let firstCardContentView = dataSource.deckViewForCardAtIndex(self, index: UInt(currentCardNumber))
-                let firstCardOverlayView = dataSource.deckViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber))
+                let firstCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber))
+                let firstCardOverlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber))
                 let firstCardView = DraggableCardView()
                 
                 firstCardView.alpha = 0.0
@@ -397,8 +397,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         for index in 0..<visibleCards.count {
             if let dataSource = self.dataSource {
                 
-                let currentCardContentView = dataSource.deckViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
-                let overlayView = dataSource.deckViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
+                let currentCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
+                let overlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
                 let currentCard = visibleCards[index]
                 
                 currentCard.configure(currentCardContentView, overlayView: overlayView)
@@ -407,7 +407,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func reloadData() {
-        countOfCards = Int(dataSource!.deckNumberOfCards(self))
+        countOfCards = Int(dataSource!.kolodaNumberOfCards(self))
         let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
         
         if countOfCards == 0 {
@@ -427,7 +427,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 setupDeck()
                 layoutDeck()
                 
-                if ((delegate?.deckShouldApplyAppearAnimation(self)) != false) {
+                if ((delegate?.kolodaShouldApplyAppearAnimation(self)) != false) {
                     applyAppearAnimation()
                 }
             }
@@ -437,8 +437,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             for index in 0..<visibleCards.count {
                 if let dataSource = self.dataSource {
                     
-                    let currentCardContentView = dataSource.deckViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
-                    let overlayView = dataSource.deckViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
+                    let currentCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
+                    let overlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
                     let currentCardView = visibleCards[index]
                     
                     currentCardView.configure(currentCardContentView, overlayView: overlayView)
