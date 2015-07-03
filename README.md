@@ -34,7 +34,7 @@ Installation
 To install via CocoaPods add this line to your Podfile
 ```ruby
 use_frameworks!
-pod "KolodaView"
+pod "Koloda"
 ```
 
 
