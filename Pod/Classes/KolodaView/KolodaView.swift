@@ -72,7 +72,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         if !self.configured {
             
-            if self.visibleCards.count <= 0 {
+            if self.visibleCards.isEmpty {
                 reloadData()
             } else {
                 layoutDeck()
@@ -87,29 +87,28 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         if countOfCards - currentCardNumber > 0 {
             
-            var countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
+            let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
             
             for index in 0..<countOfNeededCards {
-                var nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index))
-                var nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
-                
-                nextCardView.delegate = self
-                nextCardView.alpha = index == 0 ? 1.0 : 0.7
-                nextCardView.userInteractionEnabled = index == 0
-                
-                var overlayView = overlayViewForCardAtIndex(UInt(index))
-                
-                nextCardView.configure(nextCardContentView!, overlayView: overlayView!)
-                visibleCards.append(nextCardView)
-                index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index)) {
+                    let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
+                    
+                    nextCardView.delegate = self
+                    nextCardView.alpha = index == 0 ? 1.0 : 0.7
+                    nextCardView.userInteractionEnabled = index == 0
+                    
+                    let overlayView = overlayViewForCardAtIndex(UInt(index))
+                    
+                    nextCardView.configure(nextCardContentView, overlayView: overlayView!)
+                    visibleCards.append(nextCardView)
+                    index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                }
             }
         }
     }
     
     private func layoutDeck() {
-        for index in 0..<visibleCards.count {
-            let card = visibleCards[index]
-            
+        for (index, card) in enumerate(self.visibleCards) {
             card.frame = frameForCardAtIndex(UInt(index))
         }
     }
@@ -175,7 +174,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         kolodaAppearScaleAnimation.fromValue = NSValue(CGPoint: kolodaAppearScaleAnimationFromValue)
         kolodaAppearScaleAnimation.toValue = NSValue(CGPoint: kolodaAppearScaleAnimationToValue)
         kolodaAppearScaleAnimation.completionBlock = {
-            (animation, finished) in
+            (_, _) in
             
             self.userInteractionEnabled = true
             self.animating = false
@@ -200,7 +199,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         firstCardAppearAnimation.fromValue =  NSNumber(float: Float(revertCardAnimationFromValue))
         firstCardAppearAnimation.duration = revertCardAnimationDuration
         firstCardAppearAnimation.completionBlock = {
-            (animation, finished) in
+            (_, _) in
             
             self.animating = false
         }
@@ -230,11 +229,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     self.moveOtherCardsWithFinishPercent(0)
                 },
                 completion: {
-                    finished in
+                    _ in
                     self.animating = false
                     
-                    for index in 1..<self.visibleCards.count {
-                        var card = self.visibleCards[index]
+                    for card in self.visibleCards {
                         card.alpha = 0.7
                     }
             })
@@ -274,7 +272,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         visibleCards.removeAtIndex(0)
 
         currentCardNumber++
-        var shownCardsCount = currentCardNumber + countOfVisibleCards
+        let shownCardsCount = currentCardNumber + countOfVisibleCards
         if shownCardsCount - 1 < countOfCards {
             
             if let dataSource = self.dataSource {
@@ -295,17 +293,16 @@ public class KolodaView: UIView, DraggableCardDelegate {
             }
         }
         
-        if visibleCards.count > 0 {
+        if !visibleCards.isEmpty {
             
-            for index in 0..<visibleCards.count {
-                let currentCard = visibleCards[index]
+            for (index, currentCard) in enumerate(visibleCards) {
                 let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 frameAnimation.duration = backgroundCardFrameAnimationDuration
                 
                 if index != 0 {
                     currentCard.alpha = 0.7
                 } else {
-                    frameAnimation.completionBlock = {(animation, finished) in
+                    frameAnimation.completionBlock = {(_, _) in
                         self.visibleCards.last?.hidden = false
                         self.animating = false
                         self.delegate?.kolodaDidSwipedCardAtIndex(self, index: UInt(self.currentCardNumber - 1), direction: direction)
@@ -321,9 +318,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
         } else {
             delegate?.kolodaDidSwipedCardAtIndex(self, index: UInt(currentCardNumber - 1), direction: direction)
             animating = false
-        }
-        
-        if (visibleCards.count == 0 ) {
             self.delegate?.kolodaDidRunOutOfCards(self)
         }
         
@@ -362,8 +356,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 applyRevertAnimation(firstCardView)
             }
             
-            for index in 1..<visibleCards.count {
-                let currentCard = visibleCards[index]
+            for (index, currentCard) in enumerate(visibleCards) {
                 let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 
                 frameAnimation.duration = backgroundCardFrameAnimationDuration
@@ -390,7 +383,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 visibleCards.append(nextCardView)
                 insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
-                
             }
         }
         
@@ -418,16 +410,15 @@ public class KolodaView: UIView, DraggableCardDelegate {
             clear()
         }
         
-        if (countOfCards - (currentCardNumber + visibleCards.count) > 0) {
+        if countOfCards - (currentCardNumber + visibleCards.count) > 0 {
             
-            if visibleCards.count > 0 {
-                
+            if !visibleCards.isEmpty {
                 loadMissingCards(missingCards)
             } else {
                 setupDeck()
                 layoutDeck()
                 
-                if ((delegate?.kolodaShouldApplyAppearAnimation(self)) != false) {
+                if let delegate = delegate?.kolodaShouldApplyAppearAnimation(self) where delegate == true {
                     applyAppearAnimation()
                 }
             }
