@@ -232,7 +232,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     _ in
                     self.animating = false
                     
-                    for card in self.visibleCards {
+                    for index in 1..<self.visibleCards.count {
+                        let card = self.visibleCards[index]
                         card.alpha = 0.7
                     }
             })
@@ -356,7 +357,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 applyRevertAnimation(firstCardView)
             }
             
-            for (index, currentCard) in enumerate(visibleCards) {
+            for index in 1..<visibleCards.count {
+                let currentCard = visibleCards[index]
                 let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 
                 frameAnimation.duration = backgroundCardFrameAnimationDuration
@@ -418,7 +420,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 setupDeck()
                 layoutDeck()
                 
-                if let delegate = delegate?.kolodaShouldApplyAppearAnimation(self) where delegate == true {
+                if let shouldApply = delegate?.kolodaShouldApplyAppearAnimation(self) where shouldApply == true {
                     applyAppearAnimation()
                 }
             }
