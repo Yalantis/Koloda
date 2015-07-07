@@ -105,7 +105,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                     
                     nextCardView.delegate = self
-                    nextCardView.alpha = index == 1 ? alphaValueOpaque : alphaValueSemiTransparent
+                    nextCardView.alpha = index == 0 ? alphaValueOpaque : alphaValueSemiTransparent
                     nextCardView.userInteractionEnabled = index == 0
                     
                     let overlayView = overlayViewForCardAtIndex(UInt(index))
