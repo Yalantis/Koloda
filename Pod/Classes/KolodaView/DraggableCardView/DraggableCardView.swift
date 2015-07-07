@@ -9,12 +9,6 @@
 import UIKit
 import pop
 
-public enum SwipeResultDirection {
-    case None
-    case Left
-    case Right
-}
-
 protocol DraggableCardDelegate: class {
     
     func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat)
