@@ -108,7 +108,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func layoutDeck() {
-        for (index, card) in enumerate(self.visibleCards) {
+        for (index, card) in self.visibleCards.enumerate() {
             card.frame = frameForCardAtIndex(UInt(index))
         }
     }
@@ -244,7 +244,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func cardTapped(card: DraggableCardView) {
-        let index = currentCardNumber + find(visibleCards, card)!
+        let index = currentCardNumber + visibleCards.indexOf(card)!
         
         delegate?.kolodaDidSelectCardAtIndex(self, index: UInt(index))
     }
@@ -296,7 +296,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         if !visibleCards.isEmpty {
             
-            for (index, currentCard) in enumerate(visibleCards) {
+            for (index, currentCard) in visibleCards.enumerate() {
                 let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 frameAnimation.duration = backgroundCardFrameAnimationDuration
                 
@@ -377,7 +377,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let cardsToAdd = min(missingCardsCount, countOfCards - currentCardNumber)
             
             for index in 1...cardsToAdd {
-                let nextCardIndex = countOfVisibleCards - cardsToAdd + index - 1
                 let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                 
                 nextCardView.alpha = 0.7
