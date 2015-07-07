@@ -26,11 +26,11 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipeLeft()
+        kolodaView?.swipe(SwipeResultDirection.Left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipeRight()
+        kolodaView?.swipe(SwipeResultDirection.Right)
     }
     
     @IBAction func undoButtonTapped() {
