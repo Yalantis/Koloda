@@ -72,7 +72,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     private(set) public var currentCardNumber = 0
     private(set) public var countOfCards = 0
     
-    var countOfVisibleCards = defaultCountOfVisibleCards
+    public var countOfVisibleCards = defaultCountOfVisibleCards
     private var visibleCards = [DraggableCardView]()
     private var animating = false
     private var configured = false
@@ -99,7 +99,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         if countOfCards - currentCardNumber > 0 {
             
             let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
-            
+            println("\(countOfVisibleCards)")
             for index in 0..<countOfNeededCards {
                 if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index)) {
                     let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
@@ -125,7 +125,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Frames
-    private func frameForCardAtIndex(index: UInt) -> CGRect {
+    public func frameForCardAtIndex(index: UInt) -> CGRect {
         let bottomOffset:CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(self.countOfVisibleCards - 1)
         let xOffset = backgroundCardsLeftMargin * CGFloat(index)

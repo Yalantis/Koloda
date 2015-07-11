@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dh2-Wx-deB">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -110,6 +110,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="951" y="136"/>
+        </scene>
+        <!--Background Animation View Controller-->
+        <scene sceneID="Tzl-PZ-ig6">
+            <objects>
+                <viewController id="dh2-Wx-deB" customClass="BackgroundAnimationViewController" customModule="Koloda_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OPM-HU-f7U"/>
+                        <viewControllerLayoutGuide type="bottom" id="gMg-MP-KSD"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PAT-Xa-b2g">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jng-cF-Fd5" customClass="CustomKolodaView" customModule="Koloda_Example" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="84" width="320" height="484"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.75294117650000003" green="0.22352941179999999" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Jng-cF-Fd5" secondAttribute="trailing" id="HDK-vX-CFt"/>
+                            <constraint firstItem="Jng-cF-Fd5" firstAttribute="top" secondItem="OPM-HU-f7U" secondAttribute="bottom" constant="64" id="SRd-NX-5XQ"/>
+                            <constraint firstAttribute="bottom" secondItem="Jng-cF-Fd5" secondAttribute="bottom" id="X83-tu-cSg"/>
+                            <constraint firstItem="Jng-cF-Fd5" firstAttribute="leading" secondItem="PAT-Xa-b2g" secondAttribute="leading" id="m1p-4u-j1f"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="kolodaView" destination="Jng-cF-Fd5" id="DXn-yX-NcT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yd5-80-mNJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="951" y="820"/>
         </scene>
     </scenes>
     <resources>
