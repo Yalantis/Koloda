@@ -73,6 +73,14 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         return true
     }
     
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
+        return true
+    }
+    
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
+        return true
+    }
+    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }

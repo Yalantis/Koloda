@@ -18,6 +18,7 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        kolodaView.alphaValueSemiTransparent = 0.3
         kolodaView.countOfVisibleCards = 2
         kolodaView.dataSource = self
         kolodaView.delegate = self
@@ -72,6 +73,14 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
         return true
+    }
+    
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
+        return false
+    }
+    
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
+        return false
     }
     
     override func prefersStatusBarHidden() -> Bool {
