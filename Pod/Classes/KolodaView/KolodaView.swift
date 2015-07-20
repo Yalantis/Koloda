@@ -59,6 +59,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
     
 }
 
@@ -318,8 +319,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
         if !visibleCards.isEmpty {
             
             for (index, currentCard) in enumerate(visibleCards) {
-                let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
-                frameAnimation.duration = backgroundCardFrameAnimationDuration
+                var frameAnimation: POPPropertyAnimation
+                if let delegateAnimation = delegate?.kolodaBackgroundCardAnimation(self) {
+                    frameAnimation = delegateAnimation
+                } else {
+                    frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
+                    (frameAnimation as! POPBasicAnimation).duration = backgroundCardFrameAnimationDuration
+                }
                 
                 let shouldTransparentize = delegate?.kolodaShouldTransparentizeNextCard(self)
                 
@@ -336,6 +342,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     }
                     if (shouldTransparentize == true) {
                         currentCard.alpha = alphaValueOpaque
+                    } else {
+                        let alphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
+                        alphaAnimation.toValue = alphaValueOpaque
+                        alphaAnimation.duration = backgroundCardFrameAnimationDuration
+                        currentCard.pop_addAnimation(alphaAnimation, forKey: "alpha")
                     }
                 }
                 

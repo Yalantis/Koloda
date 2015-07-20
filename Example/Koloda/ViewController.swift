@@ -8,6 +8,7 @@
 
 import UIKit
 import Koloda
+import pop
 
 private var numberOfCards: UInt = 5
 
@@ -79,6 +80,10 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
     
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
         return true
+    }
+    
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
+        return nil
     }
     
     override func prefersStatusBarHidden() -> Bool {

@@ -23,7 +23,7 @@ class CustomKolodaView: KolodaView {
             
             return frame
         } else if index == 1 {
-            return CGRect(x: -self.bounds.width * 0.25 , y: -self.bounds.height * 0.25, width: self.bounds.width * 2, height: self.bounds.width * 2 * 1.25)
+            return CGRect(x: -self.bounds.width * 0.5 , y: 0, width: self.bounds.width * 2, height: self.bounds.width * 2 * 1.5)
         }
         return CGRectZero
     }

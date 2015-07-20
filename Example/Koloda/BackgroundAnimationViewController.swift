@@ -8,6 +8,7 @@
 
 import UIKit
 import Koloda
+import pop
 
 private var numberOfCards: UInt = 5
 
@@ -18,11 +19,10 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        kolodaView.alphaValueSemiTransparent = 0.3
+        kolodaView.alphaValueSemiTransparent = 0.1
         kolodaView.countOfVisibleCards = 2
         kolodaView.dataSource = self
         kolodaView.delegate = self
-        println("\(kolodaView.countOfVisibleCards)")
     }
     
     
@@ -81,6 +81,13 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
         return false
+    }
+    
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
+        let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
+        animation.springBounciness = 10
+        animation.springSpeed = 18
+        return animation
     }
     
     override func prefersStatusBarHidden() -> Bool {
