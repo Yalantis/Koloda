@@ -49,6 +49,13 @@ public protocol KolodaViewDelegate:class {
     
 }
 
+public extension KolodaViewDelegate {
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection) {}
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {}
+    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {}
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return false}
+}
+
 public class KolodaView: UIView, DraggableCardDelegate {
     
     public weak var dataSource: KolodaViewDataSource! {
