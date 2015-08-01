@@ -10,7 +10,7 @@ import UIKit
 import Koloda
 import pop
 
-private var numberOfCards: UInt = 5
+private var numberOfCards: UInt = 3
 
 class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
 
@@ -23,6 +23,7 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
         kolodaView.countOfVisibleCards = 2
         kolodaView.dataSource = self
         kolodaView.delegate = self
+        self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     
     
@@ -45,21 +46,16 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     }
     
     func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
+        return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
     }
     func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("OverlayView",
+        return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
             owner: self, options: nil)[0] as? OverlayView
     }
     
     //MARK: KolodaViewDelegate
     
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
-        //Example: loading more cards
-        if index >= 3 {
-            numberOfCards = 6
-            kolodaView.reloadData()
-        }
     }
     
     func kolodaDidRunOutOfCards(koloda: KolodaView) {
@@ -85,14 +81,8 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
         let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
-        animation.springBounciness = 10
-        animation.springSpeed = 18
+        animation.springBounciness = 9
+        animation.springSpeed = 16
         return animation
     }
-    
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
-
-
 }

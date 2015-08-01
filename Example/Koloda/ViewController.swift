@@ -22,6 +22,8 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
+        
+        self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     
     
@@ -84,10 +86,6 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
     
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
         return nil
-    }
-    
-    override func prefersStatusBarHidden() -> Bool {
-        return true
     }
 
 }

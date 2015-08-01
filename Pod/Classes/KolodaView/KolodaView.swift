@@ -190,6 +190,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPViewScaleXY)
         
+        kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
         kolodaAppearScaleAnimation.duration = kolodaAppearScaleAnimationDuration
         kolodaAppearScaleAnimation.fromValue = NSValue(CGPoint: kolodaAppearScaleAnimationFromValue)
         kolodaAppearScaleAnimation.toValue = NSValue(CGPoint: kolodaAppearScaleAnimationToValue)
@@ -202,6 +203,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         let kolodaAppearAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         
+        kolodaAppearAlphaAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
         kolodaAppearAlphaAnimation.fromValue = NSNumber(float: Float(kolodaAppearAlphaAnimationFromValue))
         kolodaAppearAlphaAnimation.toValue = NSNumber(float: Float(kolodaAppearAlphaAnimationToValue))
         kolodaAppearAlphaAnimation.duration = kolodaAppearAlphaAnimationDuration
@@ -293,7 +295,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     private func swipedAction(direction: SwipeResultDirection) {
         animating = true
         visibleCards.removeAtIndex(0)
-
+        
         currentCardNumber++
         let shownCardsCount = currentCardNumber + countOfVisibleCards
         if shownCardsCount - 1 < countOfCards {
@@ -460,6 +462,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 layoutDeck()
                 
                 if let shouldApply = delegate?.kolodaShouldApplyAppearAnimation(self) where shouldApply == true {
+                    self.alpha = 0
                     applyAppearAnimation()
                 }
             }
@@ -486,6 +489,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 animating = true
                 
+                if visibleCards.count > 1 {
+                    if let shouldTransparentize = delegate?.kolodaShouldTransparentizeNextCard(self) where shouldTransparentize == true {
+                        let nextCard = visibleCards[1]
+                        nextCard.alpha = alphaValueOpaque
+                    }
+                }
+                
                 switch direction {
                 case SwipeResultDirection.None:
                     return
@@ -493,11 +503,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     frontCard.swipeLeft()
                 case SwipeResultDirection.Right:
                     frontCard.swipeRight()
-                }
-                
-                if visibleCards.count > 1 {
-                    let nextCard = visibleCards[1]
-                    nextCard.alpha = alphaValueOpaque
                 }
             }
         }
