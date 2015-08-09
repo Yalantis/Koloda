@@ -10,7 +10,7 @@ import UIKit
 import Koloda
 import pop
 
-private var numberOfCards: UInt = 3
+private var numberOfCards: UInt = 5
 
 class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
 

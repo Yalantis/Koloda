@@ -21,7 +21,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yIq-Ka-lsq">
-                                        <rect key="frame" x="15" y="33" width="21" height="22"/>
+                                        <rect key="frame" x="15" y="33" width="19" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="22" id="Tem-YK-PQD"/>
+                                            <constraint firstAttribute="width" constant="19" id="nas-ji-QD6"/>
+                                        </constraints>
                                         <state key="normal" image="ic_card_from_bg">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -131,7 +135,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFs-5J-kjv">
-                                <rect key="frame" x="76" y="489" width="34" height="34"/>
+                                <rect key="frame" x="76" y="504" width="34" height="34"/>
                                 <state key="normal" image="ic_skip">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -140,7 +144,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fbm-oE-jd7">
-                                <rect key="frame" x="211" y="490" width="38" height="34"/>
+                                <rect key="frame" x="211" y="505" width="38" height="34"/>
                                 <state key="normal" image="ic_like">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -188,7 +192,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="430-8H-S9o">
-                                <rect key="frame" x="160" y="489" width="1" height="34"/>
+                                <rect key="frame" x="160" y="504" width="1" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="laO-xD-zmg"/>
@@ -203,7 +207,7 @@
                             <constraint firstItem="430-8H-S9o" firstAttribute="top" secondItem="lFs-5J-kjv" secondAttribute="top" id="PpG-qL-IJS"/>
                             <constraint firstItem="Jng-cF-Fd5" firstAttribute="top" secondItem="OPM-HU-f7U" secondAttribute="bottom" constant="64" id="SRd-NX-5XQ"/>
                             <constraint firstAttribute="bottom" secondItem="Jng-cF-Fd5" secondAttribute="bottom" id="X83-tu-cSg"/>
-                            <constraint firstItem="gMg-MP-KSD" firstAttribute="top" secondItem="430-8H-S9o" secondAttribute="bottom" constant="45" id="Yqm-cu-3EX"/>
+                            <constraint firstItem="gMg-MP-KSD" firstAttribute="top" secondItem="430-8H-S9o" secondAttribute="bottom" constant="30" id="Yqm-cu-3EX"/>
                             <constraint firstItem="Ycz-B2-SpB" firstAttribute="leading" secondItem="PAT-Xa-b2g" secondAttribute="leading" id="ZgR-Hx-PUp"/>
                             <constraint firstItem="Ycz-B2-SpB" firstAttribute="top" secondItem="PAT-Xa-b2g" secondAttribute="top" id="dvi-ws-Kcu"/>
                             <constraint firstItem="fbm-oE-jd7" firstAttribute="leading" secondItem="430-8H-S9o" secondAttribute="trailing" constant="50" id="fV3-z6-46y"/>
@@ -226,7 +230,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yd5-80-mNJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="925" y="822"/>
+            <point key="canvasLocation" x="951" y="901"/>
         </scene>
     </scenes>
     <resources>
