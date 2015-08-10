@@ -291,7 +291,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 let lastCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(shownCardsCount - 1))
                 let lastCardOverlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(shownCardsCount - 1))
-                let lastCardView = DraggableCardView()
+                let lastCardFrame = frameForCardAtIndex(UInt(currentCardNumber + visibleCards.count))
+                let lastCardView = DraggableCardView(frame: lastCardFrame)
                 
                 lastCardView.hidden = true
                 lastCardView.userInteractionEnabled = true
@@ -399,6 +400,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
             }
         }
         
+        reconfigureCards()
+    }
+    
+    private func reconfigureCards() {
         for index in 0..<visibleCards.count {
             if let dataSource = self.dataSource {
                 
@@ -438,16 +443,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
         } else {
             
-            for index in 0..<visibleCards.count {
-                if let dataSource = self.dataSource {
-                    
-                    let currentCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
-                    let overlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
-                    let currentCardView = visibleCards[index]
-                    
-                    currentCardView.configure(currentCardContentView, overlayView: overlayView)
-                }
-            }
+            reconfigureCards()
         }
     }
     
