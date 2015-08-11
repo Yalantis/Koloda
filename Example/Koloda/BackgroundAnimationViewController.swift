@@ -10,7 +10,11 @@ import UIKit
 import Koloda
 import pop
 
-private var numberOfCards: UInt = 5
+private let numberOfCards: UInt = 5
+private let frameAnimationSpringBounciness:CGFloat = 9
+private let frameAnimationSpringSpeed:CGFloat = 16
+private let kolodaCountOfVisibleCards = 2
+private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
 
 class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
 
@@ -19,8 +23,8 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        kolodaView.alphaValueSemiTransparent = 0.1
-        kolodaView.countOfVisibleCards = 2
+        kolodaView.alphaValueSemiTransparent = kolodaAlphaValueSemiTransparent
+        kolodaView.countOfVisibleCards = kolodaCountOfVisibleCards
         kolodaView.dataSource = self
         kolodaView.delegate = self
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
@@ -81,8 +85,8 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
         let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
-        animation.springBounciness = 9
-        animation.springSpeed = 16
+        animation.springBounciness = frameAnimationSpringBounciness
+        animation.springSpeed = frameAnimationSpringSpeed
         return animation
     }
 }

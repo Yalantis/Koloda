@@ -323,7 +323,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             for (index, currentCard) in enumerate(visibleCards) {
                 var frameAnimation: POPPropertyAnimation
-                if let delegateAnimation = delegate?.kolodaBackgroundCardAnimation(self) {
+                if let delegateAnimation = delegate?.kolodaBackgroundCardAnimation(self) where delegateAnimation.property.name == kPOPViewFrame {
                     frameAnimation = delegateAnimation
                 } else {
                     frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
