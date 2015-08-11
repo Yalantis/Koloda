@@ -8,8 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		191D14781525C400D3E86FEC /* Pods_Koloda_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5243B3EDBF06248559332C86 /* Pods_Koloda_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		440FB7671B51499A009FC9FC /* CustomKolodaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FB7661B51499A009FC9FC /* CustomKolodaView.swift */; };
+		440FB7691B515995009FC9FC /* BackgroundAnimationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440FB7681B515995009FC9FC /* BackgroundAnimationViewController.swift */; };
 		4420661D1B44577500FD4CAD /* OverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4420661B1B44577500FD4CAD /* OverlayView.xib */; };
 		4420661F1B4457E800FD4CAD /* ExampleOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4420661E1B4457E800FD4CAD /* ExampleOverlayView.swift */; };
+		44B5EC291B660C8500895E3D /* CustomOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B5EC281B660C8500895E3D /* CustomOverlayView.swift */; };
+		44B5EC2B1B660C9100895E3D /* CustomOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44B5EC2A1B660C9100895E3D /* CustomOverlayView.xib */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -32,8 +36,12 @@
 /* Begin PBXFileReference section */
 		093C6CC368001B8BAFD235CB /* Pods-Koloda_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Koloda_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Koloda_Example/Pods-Koloda_Example.release.xcconfig"; sourceTree = "<group>"; };
 		1242FA2632AFB60821C100AF /* Pods-Koloda_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Koloda_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Koloda_Tests/Pods-Koloda_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		440FB7661B51499A009FC9FC /* CustomKolodaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomKolodaView.swift; sourceTree = "<group>"; };
+		440FB7681B515995009FC9FC /* BackgroundAnimationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundAnimationViewController.swift; sourceTree = "<group>"; };
 		4420661C1B44577500FD4CAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OverlayView.xib; sourceTree = "<group>"; };
 		4420661E1B4457E800FD4CAD /* ExampleOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleOverlayView.swift; sourceTree = "<group>"; };
+		44B5EC281B660C8500895E3D /* CustomOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomOverlayView.swift; sourceTree = "<group>"; };
+		44B5EC2A1B660C9100895E3D /* CustomOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomOverlayView.xib; sourceTree = "<group>"; };
 		5243B3EDBF06248559332C86 /* Pods_Koloda_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Koloda_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C6DBB80685DABAE785B8715 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Koloda_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Koloda_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,11 +107,15 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				440FB7681B515995009FC9FC /* BackgroundAnimationViewController.swift */,
 				4420661E1B4457E800FD4CAD /* ExampleOverlayView.swift */,
+				440FB7661B51499A009FC9FC /* CustomKolodaView.swift */,
+				44B5EC281B660C8500895E3D /* CustomOverlayView.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				4420661B1B44577500FD4CAD /* OverlayView.xib */,
+				44B5EC2A1B660C9100895E3D /* CustomOverlayView.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = Example;
@@ -215,6 +227,7 @@
 		607FACC81AFB9204008FA782 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
@@ -253,6 +266,7 @@
 			files = (
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				4420661D1B44577500FD4CAD /* OverlayView.xib in Resources */,
+				44B5EC2B1B660C9100895E3D /* CustomOverlayView.xib in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -366,8 +380,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				440FB7671B51499A009FC9FC /* CustomKolodaView.swift in Sources */,
+				44B5EC291B660C8500895E3D /* CustomOverlayView.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				4420661F1B4457E800FD4CAD /* ExampleOverlayView.swift in Sources */,
+				440FB7691B515995009FC9FC /* BackgroundAnimationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
