@@ -125,7 +125,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    private func layoutDeck() {
+    public func layoutDeck() {
         for (index, card) in enumerate(self.visibleCards) {
             card.frame = frameForCardAtIndex(UInt(index))
         }
