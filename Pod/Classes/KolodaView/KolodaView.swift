@@ -85,6 +85,20 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
     //MARK: Lifecycle
+    required public init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        configure()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configure()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override public func layoutSubviews() {
         super.layoutSubviews()
         
@@ -98,6 +112,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             self.configured = true
         }
+    }
+    
+    private func configure() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutDeck", name: UIDeviceOrientationDidChangeNotification, object: nil)
     }
     
     private func setupDeck() {
