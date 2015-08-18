@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 1.1.0'
+pod 'Koloda', '~> 1.1.1'
 ```
 
 Thread Safety
@@ -136,19 +136,19 @@ This method is called when one of cards is tapped.
 ```swift
     func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
-This method is fired on reload, when any cards are displayed. If you return YES from the method, or don't implement it, the koloda will apply appear animation.
+This method is fired on reload, when any cards are displayed. If you return YES from the method, the koloda will apply appear animation.
 ```swift
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
 ```
-This method is fired on start of front card swipping. If you return YES from the method, or don't implement it, the koloda will move background card with dragging of front card.
+This method is fired on start of front card swipping. If you return YES from the method, the koloda will move background card with dragging of front card.
 ```swift
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
 ```
-This method is fired on koloda's layout and after swiping. If you return YES from the method, or don't implement it, the koloda will transparentize next card below front card.
+This method is fired on koloda's layout and after swiping. If you return YES from the method, the koloda will transparentize next card below front card.
 ```swift
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
 ```
-Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or don't implement it, the koloda will apply default animation.
+Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil, the koloda will apply default animation.
 
 
 Release Notes
