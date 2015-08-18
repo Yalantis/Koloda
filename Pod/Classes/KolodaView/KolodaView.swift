@@ -96,7 +96,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        unsubsribeFromNotifications()
     }
     
     override public func layoutSubviews() {
@@ -114,8 +114,18 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    private func configure() {
+    //MARK: Configurations
+    
+    private func subscribeForNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutDeck", name: UIDeviceOrientationDidChangeNotification, object: nil)
+    }
+    
+    private func unsubsribeFromNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    private func configure() {
+        subscribeForNotifications()
     }
     
     private func setupDeck() {
