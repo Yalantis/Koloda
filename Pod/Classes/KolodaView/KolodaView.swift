@@ -9,7 +9,7 @@
 import UIKit
 import pop
 
-public enum SwipeResultDirection {
+@objc public enum SwipeResultDirection: Int {
     case None
     case Left
     case Right
@@ -43,7 +43,7 @@ private let kolodaAppearAlphaAnimationToValue: CGFloat = 1.0
 private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
 
 
-public protocol KolodaViewDataSource:class {
+@objc public protocol KolodaViewDataSource:class {
     
     func kolodaNumberOfCards(koloda: KolodaView) -> UInt
     func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
@@ -51,7 +51,7 @@ public protocol KolodaViewDataSource:class {
     
 }
 
-public protocol KolodaViewDelegate:class {
+@objc public protocol KolodaViewDelegate:class {
     
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(koloda: KolodaView)
