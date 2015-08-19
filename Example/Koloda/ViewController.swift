@@ -8,6 +8,7 @@
 
 import UIKit
 import Koloda
+import pop
 
 private var numberOfCards: UInt = 5
 
@@ -21,16 +22,18 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
+        
+        self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipeLeft()
+        kolodaView?.swipe(SwipeResultDirection.Left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipeRight()
+        kolodaView?.swipe(SwipeResultDirection.Right)
     }
     
     @IBAction func undoButtonTapped() {
@@ -73,8 +76,16 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         return true
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
         return true
+    }
+    
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
+        return true
+    }
+    
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
+        return nil
     }
 
 }

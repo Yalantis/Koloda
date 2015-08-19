@@ -9,12 +9,6 @@
 import UIKit
 import pop
 
-public enum SwipeResultDirection {
-    case None
-    case Left
-    case Right
-}
-
 protocol DraggableCardDelegate: class {
     
     func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat)
@@ -28,13 +22,13 @@ protocol DraggableCardDelegate: class {
 private let rotationMax: CGFloat = 1.0
 private let defaultRotationAngle = CGFloat(M_PI) / 10.0
 private let scaleMin: CGFloat = 0.8
-private let cardSwipeActionAnimationDuration: CGFloat  = 0.4
+public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
 
 //Reset animation constants
 private let cardResetAnimationSpringBounciness: CGFloat = 10.0
 private let cardResetAnimationSpringSpeed: CGFloat = 20.0
 private let cardResetAnimationKey = "resetPositionAnimation"
-private let cardResetAnimationDuration: CGFloat = 0.2
+private let cardResetAnimationDuration: NSTimeInterval = 0.2
 
 public class DraggableCardView: UIView {
     
@@ -261,8 +255,8 @@ public class DraggableCardView: UIView {
         
         self.overlayView?.overlayState = OverlayMode.Right
         self.overlayView?.alpha = 1.0
-        
-        UIView.animateWithDuration(NSTimeInterval(cardSwipeActionAnimationDuration),
+        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
+        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
             delay: 0.0,
             options: .CurveLinear,
             animations: {
@@ -273,7 +267,6 @@ public class DraggableCardView: UIView {
                 _ in
                 
                 self.dragBegin = false
-                self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
                 self.removeFromSuperview()
         })
     }
@@ -284,8 +277,8 @@ public class DraggableCardView: UIView {
         
         self.overlayView?.overlayState = OverlayMode.Left
         self.overlayView?.alpha = 1.0
-        
-        UIView.animateWithDuration(NSTimeInterval(cardSwipeActionAnimationDuration),
+        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
+        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
             delay: 0.0,
             options: .CurveLinear,
             animations: {
@@ -295,7 +288,6 @@ public class DraggableCardView: UIView {
             completion: {
                 _ in
                 
-                self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
                 self.dragBegin = false
                 self.removeFromSuperview()
         })
@@ -319,7 +311,7 @@ public class DraggableCardView: UIView {
         
         pop_addAnimation(resetPositionAnimation, forKey: cardResetAnimationKey)
         
-        UIView.animateWithDuration(NSTimeInterval(cardResetAnimationDuration),
+        UIView.animateWithDuration(cardResetAnimationDuration,
             delay: 0.0,
             options: .CurveLinear,
             animations: {
@@ -344,8 +336,8 @@ public class DraggableCardView: UIView {
         if !dragBegin {
             
             let finishPoint = CGPoint(x: -CGRectGetWidth(UIScreen.mainScreen().bounds), y: center.y)
-            
-            UIView.animateWithDuration(NSTimeInterval(cardSwipeActionAnimationDuration),
+            self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
+            UIView.animateWithDuration(cardSwipeActionAnimationDuration,
                 delay: 0.0,
                 options: .CurveLinear,
                 animations: {
@@ -358,7 +350,6 @@ public class DraggableCardView: UIView {
                     _ in
                     
                     self.removeFromSuperview()
-                    self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
                     
                     return
             })
@@ -369,8 +360,8 @@ public class DraggableCardView: UIView {
         if !dragBegin {
             
             let finishPoint = CGPoint(x: CGRectGetWidth(UIScreen.mainScreen().bounds) * 2, y: center.y)
-            
-            UIView.animateWithDuration(NSTimeInterval(cardSwipeActionAnimationDuration), delay: 0.0, options: .CurveLinear, animations: {
+            self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
+            UIView.animateWithDuration(cardSwipeActionAnimationDuration, delay: 0.0, options: .CurveLinear, animations: {
                     self.center = finishPoint
                     self.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
                     
@@ -380,7 +371,6 @@ public class DraggableCardView: UIView {
                     _ in
                     
                     self.removeFromSuperview()
-                    self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
                     
                     return
             })

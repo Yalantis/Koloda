@@ -3,9 +3,11 @@ KolodaView
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](http://Yalantis.com/?utm_source=github)
 
-Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/)
+Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/). 
+And another one [article on our blog](https://yalantis.com/blog/koloda-tinder-like-animation-version-2-prototyping-in-pixate-and-development-in-swift/)
 
-![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_example_animation.gif)
+![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v2_example_animation.gif)
+![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v1_example_animation.gif)
 
 Purpose
 --------------
@@ -23,6 +25,12 @@ ARC Compatibility
 
 KolodaView requires ARC. 
 
+Сocoapods version
+------------------
+
+```ruby
+pod 'Koloda', '~> 1.1.1'
+```
 
 Thread Safety
 --------------
@@ -36,8 +44,6 @@ To install via CocoaPods add this line to your Podfile
 use_frameworks!
 pod "Koloda"
 ```
-
-
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
 
@@ -92,6 +98,11 @@ Applies swipe left animation and action, increment currentCardNumber.
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
+```swift
+    public func frameForCardAtIndex(index: UInt) -> CGRect 
+```
+Calculates frames for cards. Useful for overriding. See example to learn more about it.
+
 Protocols
 ---------------
 
@@ -125,11 +136,28 @@ This method is called when one of cards is tapped.
 ```swift
     func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
-This method is fired on reload, when any cards are displayed. If you return YES from the method, or don't implement it, the koloda will apply appear animation.
+This method is fired on reload, when any cards are displayed. If you return YES from the method, the koloda will apply appear animation.
+```swift
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
+```
+This method is fired on start of front card swipping. If you return YES from the method, the koloda will move background card with dragging of front card.
+```swift
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
+```
+This method is fired on koloda's layout and after swiping. If you return YES from the method, the koloda will transparentize next card below front card.
+```swift
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
+```
+Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil, the koloda will apply default animation.
 
 
 Release Notes
 ----------------
+
+Version 1.1
+
+- New delegate methods
+- Fixed minor issues
 
 Version 1.0
 
