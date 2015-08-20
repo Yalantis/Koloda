@@ -9,16 +9,33 @@
 import UIKit
 import Koloda
 import pop
+import Alamofire
 
-private let numberOfCards: UInt = 5
 private let frameAnimationSpringBounciness:CGFloat = 9
 private let frameAnimationSpringSpeed:CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
 private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
 
+class KolodaPhoto {
+    var photoUrlString = ""
+    var title = ""
+    
+    init () {
+    }
+    
+    convenience init(_ dictionary: Dictionary<String, AnyObject>) {
+        self.init()
+        
+        title = (dictionary["title"] as? String)!
+        photoUrlString = (dictionary["url"] as? String)!
+    }
+}
+
 class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
 
     @IBOutlet weak var kolodaView: CustomKolodaView!
+    
+    var photos = Array<KolodaPhoto>()
     
     //MARK: Lifecycle
     override func viewDidLoad() {
@@ -28,6 +45,25 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
         kolodaView.dataSource = self
         kolodaView.delegate = self
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
+        fetchPhotos()
+    }
+    
+    //MARK: Datahandling
+    func fetchPhotos() {
+        Alamofire.request(.GET, "http://jsonplaceholder.typicode.com/photos")
+            .responseJSON { (request, response, responseDictionary, error) -> Void in
+                var photosArray = responseDictionary as! NSArray
+                photosArray.enumerateObjectsUsingBlock({ (photo, index, stop) -> Void in
+                    if index == 15 {
+                        var shouldStop: ObjCBool = true
+                        stop.initialize(shouldStop)
+                    }
+                    if let photoDictionary = photo as?  Dictionary<String, AnyObject> {
+                        self.photos.append(KolodaPhoto(photoDictionary))
+                    }
+                })
+                self.kolodaView.reloadData()
+        }
     }
     
     
@@ -46,11 +82,16 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     //MARK: KolodaViewDataSource
     func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
-        return numberOfCards
+        return UInt(self.photos.count)
     }
     
     func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
+        var photoView = NSBundle.mainBundle().loadNibNamed("KolodaPhotoView",
+            owner: self, options: nil)[0] as? KolodaPhotoView
+        let photo = photos[Int(index)]
+        photoView?.photoImageView?.imageFromUrl(photo.photoUrlString)
+        photoView?.photoTitleLabel?.text = photo.title
+        return photoView!
     }
     func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
         return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
@@ -63,8 +104,8 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     }
     
     func kolodaDidRunOutOfCards(koloda: KolodaView) {
-        //Example: reloading
-        kolodaView.resetCurrentCardNumber()
+    //Example: reloading
+        fetchPhotos()
     }
     
     func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {

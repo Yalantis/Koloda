@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="KolodaPhotoView" customModule="Koloda_Example" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5mX-uF-DHo">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dwn-QF-0fP">
+                    <rect key="frame" x="0.0" y="550" width="600" height="50"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rUN-zy-oNs">
+                            <rect key="frame" x="273" y="12" width="54" height="26"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="22"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="centerX" secondItem="rUN-zy-oNs" secondAttribute="centerX" id="6xG-99-pRf"/>
+                        <constraint firstItem="rUN-zy-oNs" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Dwn-QF-0fP" secondAttribute="leading" id="HVO-Iv-H4b"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="rUN-zy-oNs" secondAttribute="trailing" id="UOX-Zb-IIu"/>
+                        <constraint firstAttribute="centerY" secondItem="rUN-zy-oNs" secondAttribute="centerY" id="chc-Ze-UGk"/>
+                        <constraint firstAttribute="height" constant="50" id="n7V-LT-ya2"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="5mX-uF-DHo" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DId-YT-M4B"/>
+                <constraint firstAttribute="bottom" secondItem="5mX-uF-DHo" secondAttribute="bottom" id="Flv-pS-D7n"/>
+                <constraint firstAttribute="bottom" secondItem="Dwn-QF-0fP" secondAttribute="bottom" id="JtO-4s-Txt"/>
+                <constraint firstAttribute="trailing" secondItem="5mX-uF-DHo" secondAttribute="trailing" id="OTL-dY-E8c"/>
+                <constraint firstItem="5mX-uF-DHo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="U7I-Uj-my3"/>
+                <constraint firstAttribute="trailing" secondItem="Dwn-QF-0fP" secondAttribute="trailing" id="ezv-pK-RX3"/>
+                <constraint firstItem="Dwn-QF-0fP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="jst-Ge-Zjd"/>
+            </constraints>
+            <connections>
+                <outlet property="photoImageView" destination="5mX-uF-DHo" id="72Y-cj-lBB"/>
+                <outlet property="photoTitleLabel" destination="rUN-zy-oNs" id="uBq-1b-gOK"/>
+            </connections>
+        </view>
+    </objects>
+</document>
