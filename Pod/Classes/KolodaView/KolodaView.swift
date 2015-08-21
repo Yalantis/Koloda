@@ -145,7 +145,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     
                     let overlayView = overlayViewForCardAtIndex(UInt(index))
                     
-                    nextCardView.configure(nextCardContentView, overlayView: overlayView!)
+                    nextCardView.configure(nextCardContentView, overlayView: overlayView)
                     visibleCards.append(nextCardView)
                     index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
