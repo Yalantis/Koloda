@@ -274,7 +274,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func cardWasReset(card: DraggableCardView) {
         if visibleCards.count > 1 {
             
-            UIView.animateWithDuration(0.2,
+            UIView.animateWithDuration(backgroundCardFrameAnimationDuration,
                 delay: 0.0,
                 options: .CurveLinear,
                 animations: {

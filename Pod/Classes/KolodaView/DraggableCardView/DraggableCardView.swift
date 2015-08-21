@@ -196,6 +196,8 @@ public class DraggableCardView: UIView {
             animationDirection = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
             
             layer.shouldRasterize = true
+            
+            pop_removeAllAnimations()
             break
         case .Changed:
             let rotationStrength = min(xDistanceFromCenter / self.frame.size.width, rotationMax)
