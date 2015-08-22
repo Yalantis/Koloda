@@ -197,6 +197,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 let card = visibleCards[index]
                 
+                card.pop_removeAllAnimations()
                 card.frame = frame
                 card.layoutIfNeeded()
                 
