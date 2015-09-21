@@ -20,7 +20,6 @@ class CustomKolodaView: KolodaView {
 
     override func frameForCardAtIndex(index: UInt) -> CGRect {
         if index == 0 {
-            let bottomOffset:CGFloat = defaultBottomOffset
             let topOffset:CGFloat = defaultTopOffset
             let xOffset:CGFloat = defaultHorizontalOffset
             let width = CGRectGetWidth(self.frame ) - 2 * defaultHorizontalOffset

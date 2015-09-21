@@ -63,6 +63,13 @@ public protocol KolodaViewDelegate:class {
     
 }
 
+public extension KolodaViewDelegate {
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection) {}
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {}
+    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {}
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return false}
+}
+
 public class KolodaView: UIView, DraggableCardDelegate {
     
     public weak var dataSource: KolodaViewDataSource! {
@@ -85,7 +92,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
     //MARK: Lifecycle
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         configure()
     }
@@ -154,7 +161,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func layoutDeck() {
-        for (index, card) in enumerate(self.visibleCards) {
+        for (index, card) in self.visibleCards.enumerate() {
             card.frame = frameForCardAtIndex(UInt(index))
         }
     }
@@ -297,7 +304,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func cardTapped(card: DraggableCardView) {
-        let index = currentCardNumber + find(visibleCards, card)!
+        let index = currentCardNumber + visibleCards.indexOf(card)!
         
         delegate?.kolodaDidSelectCardAtIndex(self, index: UInt(index))
     }
@@ -350,7 +357,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         if !visibleCards.isEmpty {
             
-            for (index, currentCard) in enumerate(visibleCards) {
+            for (index, currentCard) in visibleCards.enumerate() {
                 var frameAnimation: POPPropertyAnimation
                 if let delegateAnimation = delegate?.kolodaBackgroundCardAnimation(self) where delegateAnimation.property.name == kPOPViewFrame {
                     frameAnimation = delegateAnimation
@@ -448,7 +455,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let cardsToAdd = min(missingCardsCount, countOfCards - currentCardNumber)
             
             for index in 1...cardsToAdd {
-                let nextCardIndex = countOfVisibleCards - cardsToAdd + index - 1
                 let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                 
                 nextCardView.alpha = alphaValueSemiTransparent
