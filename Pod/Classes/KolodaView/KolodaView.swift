@@ -52,7 +52,6 @@ public protocol KolodaViewDataSource:class {
 }
 
 public protocol KolodaViewDelegate:class {
-    
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(koloda: KolodaView)
     func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
@@ -60,14 +59,16 @@ public protocol KolodaViewDelegate:class {
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
-    
 }
 
 public extension KolodaViewDelegate {
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection) {}
     func kolodaDidRunOutOfCards(koloda: KolodaView) {}
     func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {}
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return false}
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return true}
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {return true}
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {return true}
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {return nil}
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
