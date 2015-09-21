@@ -152,7 +152,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     
                     let overlayView = overlayViewForCardAtIndex(UInt(index))
                     
-                    nextCardView.configure(nextCardContentView, overlayView: overlayView!)
+                    nextCardView.configure(nextCardContentView, overlayView: overlayView)
                     visibleCards.append(nextCardView)
                     index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
@@ -204,6 +204,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 let card = visibleCards[index]
                 
+                card.pop_removeAllAnimations()
                 card.frame = frame
                 card.layoutIfNeeded()
                 
@@ -281,7 +282,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func cardWasReset(card: DraggableCardView) {
         if visibleCards.count > 1 {
             
-            UIView.animateWithDuration(0.2,
+            UIView.animateWithDuration(backgroundCardFrameAnimationDuration,
                 delay: 0.0,
                 options: .CurveLinear,
                 animations: {
