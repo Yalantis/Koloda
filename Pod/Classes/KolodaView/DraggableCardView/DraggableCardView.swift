@@ -317,7 +317,7 @@ public class DraggableCardView: UIView {
         
         UIView.animateWithDuration(cardResetAnimationDuration,
             delay: 0.0,
-            options: (.CurveLinear | .AllowUserInteraction),
+            options: [.CurveLinear, .AllowUserInteraction],
             animations: {
                 self.transform = CGAffineTransformMakeRotation(0)
                 self.overlayView?.alpha = 0
