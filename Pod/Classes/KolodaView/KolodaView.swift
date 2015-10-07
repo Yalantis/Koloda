@@ -98,7 +98,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         configure()
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         configure()
     }
