@@ -11,7 +11,7 @@ import pop
 
 protocol DraggableCardDelegate: class {
     
-    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat)
+    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat, direction: SwipeResultDirection)
     func cardSwippedInDirection(card: DraggableCardView, direction: SwipeResultDirection)
     func cardWasReset(card: DraggableCardView)
     func cardTapped(card: DraggableCardView)
@@ -219,7 +219,9 @@ public class DraggableCardView: UIView {
             
             updateOverlayWithFinishPercent(xDistanceFromCenter / frame.size.width)
             //100% - for proportion
-            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(xDistanceFromCenter * 100 / frame.size.width), 100))
+            var dragDirection = SwipeResultDirection.None
+            dragDirection = xDistanceFromCenter > 0 ? .Right : .Left
+            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(xDistanceFromCenter * 100 / frame.size.width), 100), direction: dragDirection)
             
             break
         case .Ended:
