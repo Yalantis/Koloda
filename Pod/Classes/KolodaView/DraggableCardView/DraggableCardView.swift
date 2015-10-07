@@ -35,7 +35,7 @@ public class DraggableCardView: UIView {
     weak var delegate: DraggableCardDelegate?
     
     private var overlayView: OverlayView?
-    private var contentView: UIView?
+    private(set) var contentView: UIView?
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
