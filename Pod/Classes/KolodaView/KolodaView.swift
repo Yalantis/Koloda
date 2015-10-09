@@ -59,6 +59,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
+    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection)
 }
 
 public extension KolodaViewDelegate {
@@ -69,6 +70,7 @@ public extension KolodaViewDelegate {
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {return true}
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {return true}
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {return nil}
+    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection) {}
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -98,7 +100,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         configure()
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         configure()
     }
@@ -268,12 +270,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     //MARK: DraggableCardDelegate
     
-    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat) {
+    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat, direction: SwipeResultDirection) {
         animating = true
         
         if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self) where shouldMove == true {
             self.moveOtherCardsWithFinishPercent(percent)
         }
+        delegate?.kolodaDraggedCard(self, finishPercent: percent, direction: direction)
     }
     
     func cardSwippedInDirection(card: DraggableCardView, direction: SwipeResultDirection) {
@@ -545,4 +548,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
         reloadData()
     }
     
+    public func viewForCardAtIndex(index: Int) -> UIView? {
+        if visibleCards.count + currentCardNumber > index && index >= currentCardNumber {
+            return visibleCards[index - currentCardNumber].contentView
+        } else {
+            return nil
+        }
+    }
 }
