@@ -214,7 +214,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 //For fully visible next card, when moving top card
                 if let shouldTransparentize = delegate?.kolodaShouldTransparentizeNextCard(self) where shouldTransparentize == true {
                     if index == 1 {
-                        card.alpha = alphaValueOpaque * percent/100
+                        card.alpha = alphaValueSemiTransparent + (alphaValueOpaque - alphaValueSemiTransparent) * percent/100
                     }
                 }
             }
