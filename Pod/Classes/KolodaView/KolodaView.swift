@@ -19,7 +19,6 @@ public enum SwipeResultDirection {
 private let defaultCountOfVisibleCards = 3
 private let backgroundCardsTopMargin: CGFloat = 4.0
 private let backgroundCardsScalePercent: CGFloat = 0.95
-private let backgroundCardsLeftMargin: CGFloat = 8.0
 private let backgroundCardFrameAnimationDuration: NSTimeInterval = 0.2
 
 //Opacity values
@@ -81,6 +80,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     public weak var delegate: KolodaViewDelegate?
+    
+    private var backgroundCardsLeftMargin: CGFloat = 8.0
     
     private(set) public var currentCardNumber = 0
     private(set) public var countOfCards = 0
@@ -164,6 +165,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func layoutDeck() {
+        let minCardWidth: CGFloat = CGRectGetWidth(self.frame) * pow(backgroundCardsScalePercent, CGFloat(self.visibleCards.count - 1))
+        let maxCardWidth: CGFloat = CGRectGetWidth(self.frame)
+        if visibleCards.count >= 2 {
+            backgroundCardsLeftMargin = (maxCardWidth - minCardWidth) / (CGFloat)(visibleCards.count - 1) / 2
+        } else {
+            backgroundCardsLeftMargin = 0
+        }
+        
         for (index, card) in self.visibleCards.enumerate() {
             card.frame = frameForCardAtIndex(UInt(index))
         }
@@ -174,9 +183,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         let bottomOffset:CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(self.countOfVisibleCards - 1)
         let xOffset = backgroundCardsLeftMargin * CGFloat(index)
-        let scalePercent = backgroundCardsScalePercent
-        let width = CGRectGetWidth(self.frame) * pow(scalePercent, CGFloat(index))
-        let height = (CGRectGetHeight(self.frame) - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
+        let width = CGRectGetWidth(self.frame) * pow(backgroundCardsScalePercent, CGFloat(index))
+        let height = (CGRectGetHeight(self.frame) - bottomOffset - topOffset) * pow(backgroundCardsScalePercent, CGFloat(index))
         let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
         let previousCardFrame = index > 0 ? frameForCardAtIndex(max(index - 1, 0)) : CGRectZero
         let yOffset = (CGRectGetHeight(previousCardFrame) - height + previousCardFrame.origin.y + backgroundCardsTopMargin) * multiplier
