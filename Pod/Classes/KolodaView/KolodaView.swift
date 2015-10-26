@@ -354,7 +354,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 lastCardView.delegate = self
                 
-                insertSubview(lastCardView, belowSubview: visibleCards.last!)
+                if let lastCard = visibleCards.last {
+                    insertSubview(lastCardView, belowSubview:lastCard)
+                } else {
+                    addSubview(lastCardView)
+                }
                 visibleCards.append(lastCardView)
             }
         }
