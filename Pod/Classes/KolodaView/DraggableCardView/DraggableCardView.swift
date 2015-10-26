@@ -211,11 +211,11 @@ public class DraggableCardView: UIView {
             
             layer.rasterizationScale = scale * UIScreen.mainScreen().scale
             
-            let transform = CGAffineTransformMakeRotation(rotationAngle)
-            let scaleTransform = CGAffineTransformScale(transform, scale, scale)
+            let scaleTransform = CGAffineTransformMakeScale(scale, scale)
+            let rotationTransform = CGAffineTransformRotate(scaleTransform, rotationAngle)
+            let moveTransform = CGAffineTransformTranslate(rotationTransform, xDistanceFromCenter, yDistanceFromCenter)
             
-            self.transform = scaleTransform
-            center = CGPoint(x: originalLocation.x + xDistanceFromCenter, y: originalLocation.y + yDistanceFromCenter)
+            self.transform = moveTransform
             
             updateOverlayWithFinishPercent(xDistanceFromCenter / frame.size.width)
             //100% - for proportion
