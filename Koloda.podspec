@@ -18,4 +18,5 @@ s.source_files = 'Pod/Classes/**/*'
 
 s.frameworks = 'UIKit'
 s.dependency 'pop', '~> 1.0'
+s.dependency 'JNWSpringAnimation', '> 0.7'
 end

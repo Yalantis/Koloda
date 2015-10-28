@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import pop
+import JNWSpringAnimation
 
 protocol DraggableCardDelegate: class {
     
@@ -25,9 +25,6 @@ private let scaleMin: CGFloat = 0.8
 public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
 
 //Reset animation constants
-private let cardResetAnimationSpringBounciness: CGFloat = 10.0
-private let cardResetAnimationSpringSpeed: CGFloat = 20.0
-private let cardResetAnimationKey = "resetPositionAnimation"
 private let cardResetAnimationDuration: NSTimeInterval = 0.2
 
 public class DraggableCardView: UIView {
@@ -194,6 +191,15 @@ public class DraggableCardView: UIView {
             if firstTouch {
                 originalLocation = center
                 firstTouch = false
+                
+                let firstTouchPoint = gestureRecognizer.locationInView(self)
+                let newAnchorPoint = CGPointMake(firstTouchPoint.x / bounds.width, firstTouchPoint.y / bounds.height)
+                
+                let oldPosition = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y: bounds.size.height * layer.anchorPoint.y)
+                let newPosition = CGPoint(x: bounds.size.width * newAnchorPoint.x, y: bounds.size.height * newAnchorPoint.y)
+                
+                layer.anchorPoint = newAnchorPoint
+                layer.position = CGPoint(x: layer.position.x - oldPosition.x + newPosition.x, y: layer.position.y - oldPosition.y + newPosition.y)
             }
             dragBegin = true
             
@@ -201,7 +207,7 @@ public class DraggableCardView: UIView {
             
             layer.shouldRasterize = true
             
-            pop_removeAllAnimations()
+            layer.removeAllAnimations()
             break
         case .Changed:
             let rotationStrength = min(xDistanceFromCenter / self.frame.size.width, rotationMax)
@@ -211,11 +217,12 @@ public class DraggableCardView: UIView {
             
             layer.rasterizationScale = scale * UIScreen.mainScreen().scale
             
-            let scaleTransform = CGAffineTransformMakeScale(scale, scale)
-            let rotationTransform = CGAffineTransformRotate(scaleTransform, rotationAngle)
-            let moveTransform = CGAffineTransformTranslate(rotationTransform, xDistanceFromCenter, yDistanceFromCenter)
+            var transform = CATransform3DIdentity
+            transform = CATransform3DScale(transform, scale, scale, 1)
+            transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)
+            transform = CATransform3DTranslate(transform, xDistanceFromCenter, yDistanceFromCenter, 0)
             
-            self.transform = moveTransform
+            layer.transform = transform
             
             updateOverlayWithFinishPercent(xDistanceFromCenter / frame.size.width)
             //100% - for proportion
@@ -228,6 +235,7 @@ public class DraggableCardView: UIView {
             swipeMadeAction()
             
             layer.shouldRasterize = false
+            firstTouch = true
         default :
             break
         }
@@ -263,13 +271,12 @@ public class DraggableCardView: UIView {
         
         self.overlayView?.overlayState = OverlayMode.Right
         self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
+        self.delegate?.cardSwippedInDirection(self, direction: .Right)
         UIView.animateWithDuration(cardSwipeActionAnimationDuration,
             delay: 0.0,
             options: .CurveLinear,
             animations: {
                 self.center = finishPoint
-                
             },
             completion: {
                 _ in
@@ -285,7 +292,7 @@ public class DraggableCardView: UIView {
         
         self.overlayView?.overlayState = OverlayMode.Left
         self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
+        self.delegate?.cardSwippedInDirection(self, direction: .Left)
         UIView.animateWithDuration(cardSwipeActionAnimationDuration,
             delay: 0.0,
             options: .CurveLinear,
@@ -304,36 +311,52 @@ public class DraggableCardView: UIView {
     private func resetViewPositionAndTransformations() {
         self.delegate?.cardWasReset(self)
         
-        let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerPosition)
+        let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+        let anchorPointAnimation = CABasicAnimation(keyPath: "anchorPoint")
+        anchorPointAnimation.duration = cardResetAnimationDuration
+        anchorPointAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        anchorPointAnimation.removedOnCompletion = true
+        anchorPointAnimation.fillMode = kCAFillModeForwards
+        anchorPointAnimation.fromValue = NSValue(CGPoint: layer.anchorPoint)
+        anchorPointAnimation.toValue = NSValue(CGPoint: newAnchorPoint)
         
-        resetPositionAnimation.toValue = NSValue(CGPoint: originalLocation)
-        resetPositionAnimation.springBounciness = cardResetAnimationSpringBounciness
-        resetPositionAnimation.springSpeed = cardResetAnimationSpringSpeed
-        resetPositionAnimation.completionBlock = {
-            (_, _) in
-            
+
+        let newPosition = CGPoint(x: layer.bounds.width / 2, y: layer.bounds.height / 2)
+        let positionAnimation = CABasicAnimation(keyPath: "position")
+        positionAnimation.duration = cardResetAnimationDuration
+        positionAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        positionAnimation.removedOnCompletion = true
+        positionAnimation.fillMode = kCAFillModeForwards
+        positionAnimation.fromValue = NSValue(CGPoint: layer.position)
+        positionAnimation.toValue = NSValue(CGPoint: newPosition)
+        
+        
+        let newTransform = CATransform3DIdentity
+        let transformAnimation = JNWSpringAnimation(keyPath: "transform")
+        transformAnimation.stiffness = 600
+        transformAnimation.damping = 60
+        transformAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        transformAnimation.removedOnCompletion = true
+        transformAnimation.fillMode = kCAFillModeForwards
+        transformAnimation.fromValue = NSValue(CATransform3D: layer.transform)
+        transformAnimation.toValue = NSValue(CATransform3D: newTransform)
+        
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
             self.dragBegin = false
+            self.layer.anchorPoint = newAnchorPoint
+            self.layer.position = newPosition
+            self.layer.transform = newTransform
         }
+        layer.addAnimation(anchorPointAnimation, forKey: "resetAnchorPoint")
+        layer.addAnimation(positionAnimation, forKey: "resetPosition")
+        layer.addAnimation(transformAnimation, forKey: "resetTransform")
+        CATransaction.commit()
         
-        pop_addAnimation(resetPositionAnimation, forKey: cardResetAnimationKey)
-        
-        UIView.animateWithDuration(cardResetAnimationDuration,
-            delay: 0.0,
-            options: [.CurveLinear, .AllowUserInteraction],
-            animations: {
-                self.transform = CGAffineTransformMakeRotation(0)
-                self.overlayView?.alpha = 0
-                self.layoutIfNeeded()
-                
-                return
-            },
-            completion: {
-                _ in
-                
-                self.transform = CGAffineTransformIdentity
-                
-                return
-        })
+        UIView.animateWithDuration(cardResetAnimationDuration) {
+            self.overlayView?.alpha = 0
+        }
     }
     
     //MARK: Public
