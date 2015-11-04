@@ -51,7 +51,7 @@ post_install do |installer|
     `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
 end
 ```
-To install via Carthage add this lines to your Carfile
+To install via Carthage add this lines to your Cartfile
 ```ruby
 github "Yalantis/Koloda" "carthage"
 ```
