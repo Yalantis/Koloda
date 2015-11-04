@@ -44,6 +44,13 @@ To install via CocoaPods add this line to your Podfile
 use_frameworks!
 pod "Koloda"
 ```
+Note: Due to [CocoaPods/CocoaPods#4420 issue](https://github.com/CocoaPods/CocoaPods/issues/4420) there is problem with compiling project with XCode 7.1 and Cocoapods v0.39.0. However there is a temporary workaround for this:
+Add next lines to the end of your Podfile
+```ruby
+post_install do |installer|
+    `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
+end
+```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
 
