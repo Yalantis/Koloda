@@ -39,7 +39,7 @@ KolodaView is subclassed from UIView and - as with all UIKit components - it sho
 
 Installation
 --------------
-To install via CocoaPods add this line to your Podfile
+To install via CocoaPods add this lines to your Podfile
 ```ruby
 use_frameworks!
 pod "Koloda"
@@ -50,6 +50,10 @@ Add next lines to the end of your Podfile
 post_install do |installer|
     `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
 end
+```
+To install via Carthage add this lines to your Carfile
+```ruby
+github "Yalantis/Koloda" "carthage"
 ```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
