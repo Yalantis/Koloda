@@ -146,14 +146,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
             
             for index in 0..<countOfNeededCards {
-                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index)) {
+                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index+currentCardNumber)) {
                     let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                     
                     nextCardView.delegate = self
                     nextCardView.alpha = index == 0 ? alphaValueOpaque : alphaValueSemiTransparent
                     nextCardView.userInteractionEnabled = index == 0
                     
-                    let overlayView = overlayViewForCardAtIndex(UInt(index))
+                    let overlayView = overlayViewForCardAtIndex(UInt(index+currentCardNumber))
                     
                     nextCardView.configure(nextCardContentView, overlayView: overlayView)
                     visibleCards.append(nextCardView)
