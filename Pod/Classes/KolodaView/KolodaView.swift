@@ -173,9 +173,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public func frameForCardAtIndex(index: UInt) -> CGRect {
         let bottomOffset:CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(self.countOfVisibleCards - 1)
-        let xOffset = backgroundCardsLeftMargin * CGFloat(index)
         let scalePercent = backgroundCardsScalePercent
         let width = CGRectGetWidth(self.frame) * pow(scalePercent, CGFloat(index))
+        let xOffset = (CGRectGetWidth(self.frame) - width) / 2
         let height = (CGRectGetHeight(self.frame) - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
         let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
         let previousCardFrame = index > 0 ? frameForCardAtIndex(max(index - 1, 0)) : CGRectZero
