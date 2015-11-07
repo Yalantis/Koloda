@@ -1,7 +1,7 @@
 KolodaView
 --------------
 
-[![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](http://Yalantis.com/?utm_source=github)
+[![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
 Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/). 
 And another one [article on our blog](https://yalantis.com/blog/koloda-tinder-like-animation-version-2-prototyping-in-pixate-and-development-in-swift/)
@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 8.0 (Xcode 6.2)
+* Supported build target - iOS 9.0 (Xcode 7)
 
 
 ARC Compatibility
@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 1.1.1'
+pod 'Koloda', '~> 2.0.4'
 ```
 
 Thread Safety
@@ -39,10 +39,21 @@ KolodaView is subclassed from UIView and - as with all UIKit components - it sho
 
 Installation
 --------------
-To install via CocoaPods add this line to your Podfile
+To install via CocoaPods add this lines to your Podfile
 ```ruby
 use_frameworks!
 pod "Koloda"
+```
+Note: Due to [CocoaPods/CocoaPods#4420 issue](https://github.com/CocoaPods/CocoaPods/issues/4420) there is problem with compiling project with XCode 7.1 and Cocoapods v0.39.0. However there is a temporary workaround for this:
+Add next lines to the end of your Podfile
+```ruby
+post_install do |installer|
+    `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
+end
+```
+To install via Carthage add this lines to your Cartfile
+```ruby
+github "Yalantis/Koloda" "carthage"
 ```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
@@ -153,6 +164,10 @@ Return a pop frame animation to be applied to backround cards after swipe. This 
 
 Release Notes
 ----------------
+
+Version 2.0
+
+- Swift 2.0 support
 
 Version 1.1
 

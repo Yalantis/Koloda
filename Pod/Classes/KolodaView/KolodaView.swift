@@ -52,7 +52,6 @@ public protocol KolodaViewDataSource:class {
 }
 
 public protocol KolodaViewDelegate:class {
-    
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(koloda: KolodaView)
     func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
@@ -60,7 +59,18 @@ public protocol KolodaViewDelegate:class {
     func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
     func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
-    
+    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection)
+}
+
+public extension KolodaViewDelegate {
+    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection) {}
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {}
+    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {}
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return true}
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {return true}
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {return true}
+    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {return nil}
+    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection) {}
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -85,12 +95,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
     //MARK: Lifecycle
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         configure()
     }
     
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         configure()
     }
@@ -136,16 +146,16 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
             
             for index in 0..<countOfNeededCards {
-                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index)) {
+                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index+currentCardNumber)) {
                     let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                     
                     nextCardView.delegate = self
                     nextCardView.alpha = index == 0 ? alphaValueOpaque : alphaValueSemiTransparent
                     nextCardView.userInteractionEnabled = index == 0
                     
-                    let overlayView = overlayViewForCardAtIndex(UInt(index))
+                    let overlayView = overlayViewForCardAtIndex(UInt(index+currentCardNumber))
                     
-                    nextCardView.configure(nextCardContentView, overlayView: overlayView!)
+                    nextCardView.configure(nextCardContentView, overlayView: overlayView)
                     visibleCards.append(nextCardView)
                     index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
@@ -154,7 +164,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func layoutDeck() {
-        for (index, card) in enumerate(self.visibleCards) {
+        for (index, card) in self.visibleCards.enumerate() {
             card.frame = frameForCardAtIndex(UInt(index))
         }
     }
@@ -163,9 +173,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public func frameForCardAtIndex(index: UInt) -> CGRect {
         let bottomOffset:CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(self.countOfVisibleCards - 1)
-        let xOffset = backgroundCardsLeftMargin * CGFloat(index)
         let scalePercent = backgroundCardsScalePercent
         let width = CGRectGetWidth(self.frame) * pow(scalePercent, CGFloat(index))
+        let xOffset = (CGRectGetWidth(self.frame) - width) / 2
         let height = (CGRectGetHeight(self.frame) - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
         let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
         let previousCardFrame = index > 0 ? frameForCardAtIndex(max(index - 1, 0)) : CGRectZero
@@ -197,13 +207,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 let card = visibleCards[index]
                 
+                card.pop_removeAllAnimations()
                 card.frame = frame
                 card.layoutIfNeeded()
                 
                 //For fully visible next card, when moving top card
                 if let shouldTransparentize = delegate?.kolodaShouldTransparentizeNextCard(self) where shouldTransparentize == true {
                     if index == 1 {
-                        card.alpha = alphaValueOpaque
+                        card.alpha = alphaValueSemiTransparent + (alphaValueOpaque - alphaValueSemiTransparent) * percent/100
                     }
                 }
             }
@@ -259,12 +270,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     //MARK: DraggableCardDelegate
     
-    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat) {
+    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat, direction: SwipeResultDirection) {
         animating = true
         
         if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self) where shouldMove == true {
             self.moveOtherCardsWithFinishPercent(percent)
         }
+        delegate?.kolodaDraggedCard(self, finishPercent: percent, direction: direction)
     }
     
     func cardSwippedInDirection(card: DraggableCardView, direction: SwipeResultDirection) {
@@ -274,7 +286,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func cardWasReset(card: DraggableCardView) {
         if visibleCards.count > 1 {
             
-            UIView.animateWithDuration(0.2,
+            UIView.animateWithDuration(backgroundCardFrameAnimationDuration,
                 delay: 0.0,
                 options: .CurveLinear,
                 animations: {
@@ -296,7 +308,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func cardTapped(card: DraggableCardView) {
-        let index = currentCardNumber + find(visibleCards, card)!
+        let index = currentCardNumber + visibleCards.indexOf(card)!
         
         delegate?.kolodaDidSelectCardAtIndex(self, index: UInt(index))
     }
@@ -342,14 +354,18 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 lastCardView.delegate = self
                 
-                insertSubview(lastCardView, belowSubview: visibleCards.last!)
+                if let lastCard = visibleCards.last {
+                    insertSubview(lastCardView, belowSubview:lastCard)
+                } else {
+                    addSubview(lastCardView)
+                }
                 visibleCards.append(lastCardView)
             }
         }
         
         if !visibleCards.isEmpty {
             
-            for (index, currentCard) in enumerate(visibleCards) {
+            for (index, currentCard) in visibleCards.enumerate() {
                 var frameAnimation: POPPropertyAnimation
                 if let delegateAnimation = delegate?.kolodaBackgroundCardAnimation(self) where delegateAnimation.property.name == kPOPViewFrame {
                     frameAnimation = delegateAnimation
@@ -447,7 +463,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let cardsToAdd = min(missingCardsCount, countOfCards - currentCardNumber)
             
             for index in 1...cardsToAdd {
-                let nextCardIndex = countOfVisibleCards - cardsToAdd + index - 1
                 let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                 
                 nextCardView.alpha = alphaValueSemiTransparent
@@ -537,4 +552,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
         reloadData()
     }
     
+    public func viewForCardAtIndex(index: Int) -> UIView? {
+        if visibleCards.count + currentCardNumber > index && index >= currentCardNumber {
+            return visibleCards[index - currentCardNumber].contentView
+        } else {
+            return nil
+        }
+    }
 }
