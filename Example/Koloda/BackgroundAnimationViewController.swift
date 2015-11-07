@@ -32,7 +32,7 @@ class KolodaPhoto {
 }
 
 class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
-
+    
     @IBOutlet weak var kolodaView: CustomKolodaView!
     
     var photos = Array<KolodaPhoto>()
@@ -51,18 +51,19 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     //MARK: Datahandling
     func fetchPhotos() {
         Alamofire.request(.GET, "http://jsonplaceholder.typicode.com/photos")
-            .responseJSON { (request, response, responseDictionary, error) -> Void in
-                var photosArray = responseDictionary as! NSArray
-                photosArray.enumerateObjectsUsingBlock({ (photo, index, stop) -> Void in
-                    if index == 15 {
-                        var shouldStop: ObjCBool = true
-                        stop.initialize(shouldStop)
-                    }
-                    if let photoDictionary = photo as?  Dictionary<String, AnyObject> {
-                        self.photos.append(KolodaPhoto(photoDictionary))
-                    }
-                })
-                self.kolodaView.reloadData()
+            .responseJSON { response -> Void in
+                if let photosArray = response.result.value as? NSArray {
+                    photosArray.enumerateObjectsUsingBlock({ (photo, index, stop) -> Void in
+                        if index == 15 {
+                            let shouldStop: ObjCBool = true
+                            stop.initialize(shouldStop)
+                        }
+                        if let photoDictionary = photo as?  Dictionary<String, AnyObject> {
+                            self.photos.append(KolodaPhoto(photoDictionary))
+                        }
+                    })
+                    self.kolodaView.reloadData()
+                }
         }
     }
     
@@ -86,7 +87,7 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     }
     
     func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        var photoView = NSBundle.mainBundle().loadNibNamed("KolodaPhotoView",
+        let photoView = NSBundle.mainBundle().loadNibNamed("KolodaPhotoView",
             owner: self, options: nil)[0] as? KolodaPhotoView
         let photo = photos[Int(index)]
         photoView?.photoImageView?.imageFromUrl(photo.photoUrlString)
@@ -104,7 +105,7 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     }
     
     func kolodaDidRunOutOfCards(koloda: KolodaView) {
-    //Example: reloading
+        //Example: reloading
         fetchPhotos()
     }
     
