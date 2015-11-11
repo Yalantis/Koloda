@@ -341,13 +341,14 @@ public class DraggableCardView: UIView {
         transformAnimation.fromValue = NSValue(CATransform3D: layer.transform)
         transformAnimation.toValue = NSValue(CATransform3D: newTransform)
         
+
+        layer.anchorPoint = newAnchorPoint
+        layer.position = newPosition
+        layer.transform = newTransform
         
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             self.dragBegin = false
-            self.layer.anchorPoint = newAnchorPoint
-            self.layer.position = newPosition
-            self.layer.transform = newTransform
         }
         layer.addAnimation(anchorPointAnimation, forKey: "resetAnchorPoint")
         layer.addAnimation(positionAnimation, forKey: "resetPosition")
