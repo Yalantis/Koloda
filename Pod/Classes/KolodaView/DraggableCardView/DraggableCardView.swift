@@ -256,56 +256,34 @@ public class DraggableCardView: UIView {
     }
     
     private func swipeMadeAction() {
-        if xDistanceFromCenter > actionMargin {
-            rightAction()
-        } else if xDistanceFromCenter < -actionMargin {
-            leftAction()
+        if abs(xDistanceFromCenter) > actionMargin {
+            let left = xDistanceFromCenter < 0
+            let xDistance = left ? -CGRectGetWidth(UIScreen.mainScreen().bounds) : CGRectGetWidth(UIScreen.mainScreen().bounds) * 2
+            
+            overlayView?.overlayState = left ? .Left : .Right
+            overlayView?.alpha = 1.0
+            delegate?.cardSwippedInDirection(self, direction: left ? .Left : .Right)
+            
+            let newTransform = CATransform3DConcat(layer.transform, CATransform3DMakeTranslation(xDistance, 0, 0))
+            let transformAnimation = CABasicAnimation(keyPath: "transform")
+            transformAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+            transformAnimation.duration = cardSwipeActionAnimationDuration
+            transformAnimation.removedOnCompletion = true
+            transformAnimation.fillMode = kCAFillModeForwards
+            transformAnimation.fromValue = NSValue(CATransform3D: layer.transform)
+            transformAnimation.toValue = NSValue(CATransform3D: newTransform)
+            
+            layer.transform = newTransform
+            CATransaction.begin()
+            CATransaction.setCompletionBlock {
+                self.dragBegin = false
+                self.removeFromSuperview()
+            }
+            layer.addAnimation(transformAnimation, forKey: "transform")
+            CATransaction.commit()
         } else {
             resetViewPositionAndTransformations()
         }
-    }
-    
-    private func rightAction() {
-        let finishY = originalLocation.y + yDistanceFromCenter
-        let finishPoint = CGPoint(x: CGRectGetWidth(UIScreen.mainScreen().bounds) * 2, y: finishY)
-        
-        self.overlayView?.overlayState = OverlayMode.Right
-        self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: .Right)
-        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
-            delay: 0.0,
-            options: .CurveLinear,
-            animations: {
-                self.center = finishPoint
-            },
-            completion: {
-                _ in
-                
-                self.dragBegin = false
-                self.removeFromSuperview()
-        })
-    }
-    
-    private func leftAction() {
-        let finishY = originalLocation.y + yDistanceFromCenter
-        let finishPoint = CGPoint(x: -CGRectGetWidth(UIScreen.mainScreen().bounds), y: finishY)
-        
-        self.overlayView?.overlayState = OverlayMode.Left
-        self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: .Left)
-        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
-            delay: 0.0,
-            options: .CurveLinear,
-            animations: {
-                self.center = finishPoint
-                
-            },
-            completion: {
-                _ in
-                
-                self.dragBegin = false
-                self.removeFromSuperview()
-        })
     }
     
     private func resetViewPositionAndTransformations() {
