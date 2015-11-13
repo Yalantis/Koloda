@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import pop
+import JNWSpringAnimation
 
 protocol DraggableCardDelegate: class {
     
@@ -25,9 +25,6 @@ private let scaleMin: CGFloat = 0.8
 public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
 
 //Reset animation constants
-private let cardResetAnimationSpringBounciness: CGFloat = 10.0
-private let cardResetAnimationSpringSpeed: CGFloat = 20.0
-private let cardResetAnimationKey = "resetPositionAnimation"
 private let cardResetAnimationDuration: NSTimeInterval = 0.2
 
 public class DraggableCardView: UIView {
@@ -39,11 +36,9 @@ public class DraggableCardView: UIView {
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
-    private var originalLocation: CGPoint = CGPoint(x: 0.0, y: 0.0)
     private var animationDirection: CGFloat = 1.0
     private var dragBegin = false
-    private var xDistanceFromCenter: CGFloat = 0.0
-    private var yDistanceFromCenter: CGFloat = 0.0
+    private var dragDistance = CGPointZero
     private var actionMargin: CGFloat = 0.0
     private var firstTouch = true
     
@@ -184,16 +179,23 @@ public class DraggableCardView: UIView {
     //MARK: GestureRecozniers
     
     func panGestureRecognized(gestureRecognizer: UIPanGestureRecognizer) {
-        xDistanceFromCenter = gestureRecognizer.translationInView(self).x
-        yDistanceFromCenter = gestureRecognizer.translationInView(self).y
+        dragDistance = gestureRecognizer.translationInView(self)
         
         let touchLocation = gestureRecognizer.locationInView(self)
         
         switch gestureRecognizer.state {
         case .Began:
             if firstTouch {
-                originalLocation = center
                 firstTouch = false
+                
+                let firstTouchPoint = gestureRecognizer.locationInView(self)
+                let newAnchorPoint = CGPointMake(firstTouchPoint.x / bounds.width, firstTouchPoint.y / bounds.height)
+                
+                let oldPosition = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y: bounds.size.height * layer.anchorPoint.y)
+                let newPosition = CGPoint(x: bounds.size.width * newAnchorPoint.x, y: bounds.size.height * newAnchorPoint.y)
+                
+                layer.anchorPoint = newAnchorPoint
+                layer.position = CGPoint(x: layer.position.x - oldPosition.x + newPosition.x, y: layer.position.y - oldPosition.y + newPosition.y)
             }
             dragBegin = true
             
@@ -201,33 +203,33 @@ public class DraggableCardView: UIView {
             
             layer.shouldRasterize = true
             
-            pop_removeAllAnimations()
+            layer.removeAllAnimations()
             break
         case .Changed:
-            let rotationStrength = min(xDistanceFromCenter / self.frame.size.width, rotationMax)
+            let rotationStrength = min(dragDistance.x / self.frame.size.width, rotationMax)
             let rotationAngle = animationDirection * defaultRotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
             
             layer.rasterizationScale = scale * UIScreen.mainScreen().scale
             
-            let transform = CGAffineTransformMakeRotation(rotationAngle)
-            let scaleTransform = CGAffineTransformScale(transform, scale, scale)
+            var transform = CATransform3DIdentity
+            transform = CATransform3DScale(transform, scale, scale, 1)
+            transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)
+            transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             
-            self.transform = scaleTransform
-            center = CGPoint(x: originalLocation.x + xDistanceFromCenter, y: originalLocation.y + yDistanceFromCenter)
+            layer.transform = transform
             
-            updateOverlayWithFinishPercent(xDistanceFromCenter / frame.size.width)
+            updateOverlayWithFinishPercent(dragDistance.x / frame.size.width)
             //100% - for proportion
-            var dragDirection = SwipeResultDirection.None
-            dragDirection = xDistanceFromCenter > 0 ? .Right : .Left
-            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(xDistanceFromCenter * 100 / frame.size.width), 100), direction: dragDirection)
+            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(dragDistance.x * 100 / frame.size.width), 100), direction: dragDirection)
             
             break
         case .Ended:
             swipeMadeAction()
             
             layer.shouldRasterize = false
+            firstTouch = true
         default :
             break
         }
@@ -238,6 +240,11 @@ public class DraggableCardView: UIView {
     }
     
     //MARK: Private
+    
+    private var dragDirection: SwipeResultDirection {
+        return dragDistance.x > 0 ? .Right : .Left
+    }
+    
     private func updateOverlayWithFinishPercent(percent: CGFloat) {
         if let overlayView = self.overlayView {
             overlayView.overlayState = percent > 0.0 ? OverlayMode.Right : OverlayMode.Left
@@ -248,92 +255,85 @@ public class DraggableCardView: UIView {
     }
     
     private func swipeMadeAction() {
-        if xDistanceFromCenter > actionMargin {
-            rightAction()
-        } else if xDistanceFromCenter < -actionMargin {
-            leftAction()
+        if abs(dragDistance.x) > actionMargin {
+            let xDistance = dragDirection == .Left ? -CGRectGetWidth(UIScreen.mainScreen().bounds) : CGRectGetWidth(UIScreen.mainScreen().bounds) * 2
+            
+            overlayView?.overlayState = dragDirection == .Left ? .Left : .Right
+            overlayView?.alpha = 1.0
+            delegate?.cardSwippedInDirection(self, direction: dragDirection)
+            
+            let newTransform = CATransform3DConcat(layer.transform, CATransform3DMakeTranslation(xDistance, 0, 0))
+            let transformAnimation = CABasicAnimation(keyPath: "transform")
+            transformAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+            transformAnimation.duration = cardSwipeActionAnimationDuration
+            transformAnimation.removedOnCompletion = true
+            transformAnimation.fillMode = kCAFillModeForwards
+            transformAnimation.fromValue = NSValue(CATransform3D: layer.transform)
+            transformAnimation.toValue = NSValue(CATransform3D: newTransform)
+            
+            layer.transform = newTransform
+            CATransaction.begin()
+            CATransaction.setCompletionBlock {
+                self.dragBegin = false
+                self.removeFromSuperview()
+            }
+            layer.addAnimation(transformAnimation, forKey: "transform")
+            CATransaction.commit()
         } else {
             resetViewPositionAndTransformations()
         }
     }
     
-    private func rightAction() {
-        let finishY = originalLocation.y + yDistanceFromCenter
-        let finishPoint = CGPoint(x: CGRectGetWidth(UIScreen.mainScreen().bounds) * 2, y: finishY)
-        
-        self.overlayView?.overlayState = OverlayMode.Right
-        self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Right)
-        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
-            delay: 0.0,
-            options: .CurveLinear,
-            animations: {
-                self.center = finishPoint
-                
-            },
-            completion: {
-                _ in
-                
-                self.dragBegin = false
-                self.removeFromSuperview()
-        })
-    }
-    
-    private func leftAction() {
-        let finishY = originalLocation.y + yDistanceFromCenter
-        let finishPoint = CGPoint(x: -CGRectGetWidth(UIScreen.mainScreen().bounds), y: finishY)
-        
-        self.overlayView?.overlayState = OverlayMode.Left
-        self.overlayView?.alpha = 1.0
-        self.delegate?.cardSwippedInDirection(self, direction: SwipeResultDirection.Left)
-        UIView.animateWithDuration(cardSwipeActionAnimationDuration,
-            delay: 0.0,
-            options: .CurveLinear,
-            animations: {
-                self.center = finishPoint
-                
-            },
-            completion: {
-                _ in
-                
-                self.dragBegin = false
-                self.removeFromSuperview()
-        })
-    }
-    
     private func resetViewPositionAndTransformations() {
         self.delegate?.cardWasReset(self)
         
-        let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerPosition)
+        let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+        let anchorPointAnimation = CABasicAnimation(keyPath: "anchorPoint")
+        anchorPointAnimation.duration = cardResetAnimationDuration
+        anchorPointAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        anchorPointAnimation.removedOnCompletion = true
+        anchorPointAnimation.fillMode = kCAFillModeForwards
+        anchorPointAnimation.fromValue = NSValue(CGPoint: layer.anchorPoint)
+        anchorPointAnimation.toValue = NSValue(CGPoint: newAnchorPoint)
         
-        resetPositionAnimation.toValue = NSValue(CGPoint: originalLocation)
-        resetPositionAnimation.springBounciness = cardResetAnimationSpringBounciness
-        resetPositionAnimation.springSpeed = cardResetAnimationSpringSpeed
-        resetPositionAnimation.completionBlock = {
-            (_, _) in
-            
+
+        let newPosition = CGPoint(x: layer.bounds.width / 2, y: layer.bounds.height / 2)
+        let positionAnimation = CABasicAnimation(keyPath: "position")
+        positionAnimation.duration = cardResetAnimationDuration
+        positionAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        positionAnimation.removedOnCompletion = true
+        positionAnimation.fillMode = kCAFillModeForwards
+        positionAnimation.fromValue = NSValue(CGPoint: layer.position)
+        positionAnimation.toValue = NSValue(CGPoint: newPosition)
+        
+        
+        let newTransform = CATransform3DIdentity
+        let transformAnimation = JNWSpringAnimation(keyPath: "transform")
+        transformAnimation.stiffness = 600
+        transformAnimation.damping = 60
+        transformAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        transformAnimation.removedOnCompletion = true
+        transformAnimation.fillMode = kCAFillModeForwards
+        transformAnimation.fromValue = NSValue(CATransform3D: layer.transform)
+        transformAnimation.toValue = NSValue(CATransform3D: newTransform)
+        
+
+        layer.anchorPoint = newAnchorPoint
+        layer.position = newPosition
+        layer.transform = newTransform
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
             self.dragBegin = false
         }
+        layer.addAnimation(anchorPointAnimation, forKey: "anchorPoint")
+        layer.addAnimation(positionAnimation, forKey: "position")
+        layer.addAnimation(transformAnimation, forKey: "transform")
+        CATransaction.commit()
         
-        pop_addAnimation(resetPositionAnimation, forKey: cardResetAnimationKey)
-        
-        UIView.animateWithDuration(cardResetAnimationDuration,
-            delay: 0.0,
-            options: [.CurveLinear, .AllowUserInteraction],
-            animations: {
-                self.transform = CGAffineTransformMakeRotation(0)
-                self.overlayView?.alpha = 0
-                self.layoutIfNeeded()
-                
-                return
-            },
-            completion: {
-                _ in
-                
-                self.transform = CGAffineTransformIdentity
-                
-                return
-        })
+        UIView.animateWithDuration(cardResetAnimationDuration) {
+            self.overlayView?.alpha = 0
+        }
     }
     
     //MARK: Public

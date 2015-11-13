@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import pop
 
 public enum OverlayMode{
     case None

@@ -8,7 +8,6 @@
 
 import UIKit
 import Koloda
-import pop
 
 private var numberOfCards: UInt = 5
 
@@ -71,22 +70,5 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
     func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
-    
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
-        return nil
-    }
-
 }
 
