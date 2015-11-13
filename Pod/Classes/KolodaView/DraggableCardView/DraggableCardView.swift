@@ -350,9 +350,9 @@ public class DraggableCardView: UIView {
         CATransaction.setCompletionBlock {
             self.dragBegin = false
         }
-        layer.addAnimation(anchorPointAnimation, forKey: "resetAnchorPoint")
-        layer.addAnimation(positionAnimation, forKey: "resetPosition")
-        layer.addAnimation(transformAnimation, forKey: "resetTransform")
+        layer.addAnimation(anchorPointAnimation, forKey: "anchorPoint")
+        layer.addAnimation(positionAnimation, forKey: "position")
+        layer.addAnimation(transformAnimation, forKey: "transform")
         CATransaction.commit()
         
         UIView.animateWithDuration(cardResetAnimationDuration) {
