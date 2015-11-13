@@ -39,8 +39,7 @@ public class DraggableCardView: UIView {
     private var originalLocation: CGPoint = CGPoint(x: 0.0, y: 0.0)
     private var animationDirection: CGFloat = 1.0
     private var dragBegin = false
-    private var xDistanceFromCenter: CGFloat = 0.0
-    private var yDistanceFromCenter: CGFloat = 0.0
+    private var dragDistance = CGPointZero
     private var actionMargin: CGFloat = 0.0
     private var firstTouch = true
     
@@ -181,8 +180,7 @@ public class DraggableCardView: UIView {
     //MARK: GestureRecozniers
     
     func panGestureRecognized(gestureRecognizer: UIPanGestureRecognizer) {
-        xDistanceFromCenter = gestureRecognizer.translationInView(self).x
-        yDistanceFromCenter = gestureRecognizer.translationInView(self).y
+        dragDistance = gestureRecognizer.translationInView(self)
         
         let touchLocation = gestureRecognizer.locationInView(self)
         
@@ -210,7 +208,7 @@ public class DraggableCardView: UIView {
             layer.removeAllAnimations()
             break
         case .Changed:
-            let rotationStrength = min(xDistanceFromCenter / self.frame.size.width, rotationMax)
+            let rotationStrength = min(dragDistance.x / self.frame.size.width, rotationMax)
             let rotationAngle = animationDirection * defaultRotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
@@ -220,15 +218,13 @@ public class DraggableCardView: UIView {
             var transform = CATransform3DIdentity
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)
-            transform = CATransform3DTranslate(transform, xDistanceFromCenter, yDistanceFromCenter, 0)
+            transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             
             layer.transform = transform
             
-            updateOverlayWithFinishPercent(xDistanceFromCenter / frame.size.width)
+            updateOverlayWithFinishPercent(dragDistance.x / frame.size.width)
             //100% - for proportion
-            var dragDirection = SwipeResultDirection.None
-            dragDirection = xDistanceFromCenter > 0 ? .Right : .Left
-            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(xDistanceFromCenter * 100 / frame.size.width), 100), direction: dragDirection)
+            delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(dragDistance.x * 100 / frame.size.width), 100), direction: dragDirection)
             
             break
         case .Ended:
@@ -246,6 +242,11 @@ public class DraggableCardView: UIView {
     }
     
     //MARK: Private
+    
+    private var dragDirection: SwipeResultDirection {
+        return dragDistance.x > 0 ? .Right : .Left
+    }
+    
     private func updateOverlayWithFinishPercent(percent: CGFloat) {
         if let overlayView = self.overlayView {
             overlayView.overlayState = percent > 0.0 ? OverlayMode.Right : OverlayMode.Left
@@ -256,13 +257,12 @@ public class DraggableCardView: UIView {
     }
     
     private func swipeMadeAction() {
-        if abs(xDistanceFromCenter) > actionMargin {
-            let left = xDistanceFromCenter < 0
-            let xDistance = left ? -CGRectGetWidth(UIScreen.mainScreen().bounds) : CGRectGetWidth(UIScreen.mainScreen().bounds) * 2
+        if abs(dragDistance.x) > actionMargin {
+            let xDistance = dragDirection == .Left ? -CGRectGetWidth(UIScreen.mainScreen().bounds) : CGRectGetWidth(UIScreen.mainScreen().bounds) * 2
             
-            overlayView?.overlayState = left ? .Left : .Right
+            overlayView?.overlayState = dragDirection == .Left ? .Left : .Right
             overlayView?.alpha = 1.0
-            delegate?.cardSwippedInDirection(self, direction: left ? .Left : .Right)
+            delegate?.cardSwippedInDirection(self, direction: dragDirection)
             
             let newTransform = CATransform3DConcat(layer.transform, CATransform3DMakeTranslation(xDistance, 0, 0))
             let transformAnimation = CABasicAnimation(keyPath: "transform")
