@@ -112,7 +112,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     override public func layoutSubviews() {
         super.layoutSubviews()
         
-        if !self.configured {
+        if self.dataSource != nil && !self.configured {
             
             if self.visibleCards.isEmpty {
                 reloadData()
