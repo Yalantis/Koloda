@@ -1,6 +1,6 @@
 //
 //  DraggableCardView.swift
-//  TinderCardsSwift
+//  Koloda
 //
 //  Created by Eugene Andreyev on 4/23/15.
 //  Copyright (c) 2015 Yalantis. All rights reserved.
