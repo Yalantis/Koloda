@@ -270,7 +270,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     //MARK: DraggableCardDelegate
     
-    func cardDraggedWithFinishPercent(card: DraggableCardView, percent: CGFloat, direction: SwipeResultDirection) {
+    func card(card: DraggableCardView, wasDraggedWithFinishPercent percent: CGFloat, inDirection direction: SwipeResultDirection) {
         animating = true
         
         if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self) where shouldMove == true {
@@ -279,11 +279,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
         delegate?.kolodaDraggedCard(self, finishPercent: percent, direction: direction)
     }
     
-    func cardSwippedInDirection(card: DraggableCardView, direction: SwipeResultDirection) {
+    func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection) {
         swipedAction(direction)
     }
     
-    func cardWasReset(card: DraggableCardView) {
+    func card(cardWasReset card: DraggableCardView) {
         if visibleCards.count > 1 {
             
             UIView.animateWithDuration(backgroundCardFrameAnimationDuration,
@@ -304,17 +304,15 @@ public class KolodaView: UIView, DraggableCardDelegate {
         } else {
             animating = false
         }
-        
     }
     
-    func cardTapped(card: DraggableCardView) {
+    func card(cardWasTapped card: DraggableCardView) {
         let index = currentCardNumber + visibleCards.indexOf(card)!
         
         delegate?.kolodaDidSelectCardAtIndex(self, index: UInt(index))
     }
     
     //MARK: Private
-    
     private func clear() {
         currentCardNumber = 0
         
