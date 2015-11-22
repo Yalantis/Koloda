@@ -534,15 +534,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                         nextCard.alpha = alphaValueOpaque
                     }
                 }
-                
-                switch direction {
-                case SwipeResultDirection.None:
-                    return
-                case SwipeResultDirection.Left:
-                    frontCard.swipeLeft()
-                case SwipeResultDirection.Right:
-                    frontCard.swipeRight()
-                }
+                frontCard.swipe(direction)
             }
         }
     }
