@@ -16,7 +16,7 @@ private let frameAnimationSpringSpeed:CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
 private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
 
-class BackgroundAnimationViewController: UIViewController, KolodaViewDelegate {
+class BackgroundAnimationViewController: UIViewController {
 
     @IBOutlet weak var kolodaView: CustomKolodaView!
     
@@ -43,34 +43,32 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDelegate {
     @IBAction func undoButtonTapped() {
         kolodaView?.revertAction()
     }
-    
-    //MARK: KolodaViewDelegate
-    
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
-    }
-    
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
+}
+
+//MARK: KolodaViewDelegate
+extension BackgroundAnimationViewController: KolodaViewDelegate {
+    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView) {
         //Example: reloading
         kolodaView.resetCurrentCardNumber()
     }
     
-    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {
+    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
     
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
+    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool {
         return true
     }
     
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
+    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool {
         return false
     }
     
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
+    func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool {
         return false
     }
     
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
+    func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation? {
         let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
         animation.springBounciness = frameAnimationSpringBounciness
         animation.springSpeed = frameAnimationSpringSpeed

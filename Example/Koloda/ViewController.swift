@@ -11,7 +11,7 @@ import Koloda
 
 private var numberOfCards: UInt = 5
 
-class ViewController: UIViewController, KolodaViewDelegate {
+class ViewController: UIViewController {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
@@ -38,26 +38,27 @@ class ViewController: UIViewController, KolodaViewDelegate {
     @IBAction func undoButtonTapped() {
         kolodaView?.revertAction()
     }
+}
+
+//MARK: KolodaViewDelegate
+extension ViewController: KolodaViewDelegate {
     
-    //MARK: KolodaViewDelegate
-    
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
-    //Example: loading more cards
+    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) {
+        //Example: loading more cards
         if index >= 3 {
             numberOfCards = 6
             kolodaView.reloadData()
         }
     }
     
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
-    //Example: reloading
+    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView) {
+        //Example: reloading
         kolodaView.resetCurrentCardNumber()
     }
     
-    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {
+    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
-
 }
 
 //MARK: KolodaViewDataSource
@@ -68,7 +69,7 @@ extension ViewController: KolodaViewDataSource {
     }
     
     func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
-       return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
+        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
     }
     
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
