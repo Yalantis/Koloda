@@ -50,6 +50,13 @@ public protocol KolodaViewDataSource:class {
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
 }
 
+public extension KolodaViewDataSource {
+    
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        return nil
+    }
+}
+
 public protocol KolodaViewDelegate:class {
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(koloda: KolodaView)
