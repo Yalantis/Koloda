@@ -39,7 +39,6 @@ public class DraggableCardView: UIView {
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
-    private var originalLocation: CGPoint = CGPoint(x: 0.0, y: 0.0)
     private var animationDirection: CGFloat = 1.0
     private var dragBegin = false
     private var dragDistance = CGPointZero
@@ -189,7 +188,6 @@ public class DraggableCardView: UIView {
         switch gestureRecognizer.state {
         case .Began:
             if firstTouch {
-                originalLocation = center
                 firstTouch = false
             }
             layer.pop_removeAllAnimations()
