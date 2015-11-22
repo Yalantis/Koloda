@@ -45,10 +45,9 @@ private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
 
 public protocol KolodaViewDataSource:class {
     
-    func kolodaNumberOfCards(koloda: KolodaView) -> UInt
-    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
-    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView?
-    
+    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
 }
 
 public protocol KolodaViewDelegate:class {
@@ -139,14 +138,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func setupDeck() {
-        countOfCards = Int(dataSource!.kolodaNumberOfCards(self))
+        countOfCards = Int(dataSource!.koloda(kolodaNumberOfCards: self))
         
         if countOfCards - currentCardNumber > 0 {
             
             let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardNumber)
             
             for index in 0..<countOfNeededCards {
-                if let nextCardContentView = dataSource?.kolodaViewForCardAtIndex(self, index: UInt(index+currentCardNumber)) {
+                if let nextCardContentView = dataSource?.koloda(self, viewForCardAtIndex: UInt(index+currentCardNumber)) {
                     let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                     
                     nextCardView.delegate = self
@@ -325,7 +324,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func overlayViewForCardAtIndex(index: UInt) -> OverlayView? {
-        return dataSource.kolodaViewForCardOverlayAtIndex(self, index: index)
+        return dataSource.koloda(self, viewForCardOverlayAtIndex: index)
     }
     
     //MARK: Actions
@@ -340,8 +339,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             if let dataSource = self.dataSource {
                 
-                let lastCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(shownCardsCount - 1))
-                let lastCardOverlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(shownCardsCount - 1))
+                let lastCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(shownCardsCount - 1))
+                let lastCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(shownCardsCount - 1))
                 let lastCardFrame = frameForCardAtIndex(UInt(currentCardNumber + visibleCards.count))
                 let lastCardView = DraggableCardView(frame: lastCardFrame)
                 
@@ -424,8 +423,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             
             if let dataSource = self.dataSource {
-                let firstCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber))
-                let firstCardOverlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber))
+                let firstCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(currentCardNumber))
+                let firstCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(currentCardNumber))
                 let firstCardView = DraggableCardView()
                 
                 firstCardView.alpha = alphaValueTransparent
@@ -478,8 +477,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         for index in 0..<visibleCards.count {
             if let dataSource = self.dataSource {
                 
-                let currentCardContentView = dataSource.kolodaViewForCardAtIndex(self, index: UInt(currentCardNumber + index))
-                let overlayView = dataSource.kolodaViewForCardOverlayAtIndex(self, index: UInt(currentCardNumber + index))
+                let currentCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(currentCardNumber + index))
+                let overlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(currentCardNumber + index))
                 let currentCard = visibleCards[index]
                 
                 currentCard.configure(currentCardContentView, overlayView: overlayView)
@@ -488,7 +487,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func reloadData() {
-        countOfCards = Int(dataSource!.kolodaNumberOfCards(self))
+        countOfCards = Int(dataSource!.koloda(kolodaNumberOfCards: self))
         let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
         
         if countOfCards == 0 {

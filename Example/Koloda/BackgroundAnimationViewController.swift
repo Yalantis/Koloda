@@ -16,7 +16,7 @@ private let frameAnimationSpringSpeed:CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
 private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
 
-class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
+class BackgroundAnimationViewController: UIViewController, KolodaViewDelegate {
 
     @IBOutlet weak var kolodaView: CustomKolodaView!
     
@@ -42,19 +42,6 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
     
     @IBAction func undoButtonTapped() {
         kolodaView?.revertAction()
-    }
-    
-    //MARK: KolodaViewDataSource
-    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
-        return numberOfCards
-    }
-    
-    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
-    }
-    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
-            owner: self, options: nil)[0] as? OverlayView
     }
     
     //MARK: KolodaViewDelegate
@@ -88,5 +75,22 @@ class BackgroundAnimationViewController: UIViewController, KolodaViewDataSource,
         animation.springBounciness = frameAnimationSpringBounciness
         animation.springSpeed = frameAnimationSpringSpeed
         return animation
+    }
+}
+
+//MARK: KolodaViewDataSource
+extension BackgroundAnimationViewController: KolodaViewDataSource {
+    
+    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
+        return numberOfCards
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+        return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
+            owner: self, options: nil)[0] as? OverlayView
     }
 }

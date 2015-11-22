@@ -11,7 +11,7 @@ import Koloda
 
 private var numberOfCards: UInt = 5
 
-class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
+class ViewController: UIViewController, KolodaViewDelegate {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
@@ -39,19 +39,6 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         kolodaView?.revertAction()
     }
     
-    //MARK: KolodaViewDataSource
-    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
-        return numberOfCards
-    }
-    
-    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
-    }
-    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("OverlayView",
-            owner: self, options: nil)[0] as? OverlayView
-    }
-    
     //MARK: KolodaViewDelegate
     
     func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
@@ -71,5 +58,22 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
 
+}
+
+//MARK: KolodaViewDataSource
+extension ViewController: KolodaViewDataSource {
+    
+    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
+        return numberOfCards
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+       return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        return NSBundle.mainBundle().loadNibNamed("OverlayView",
+            owner: self, options: nil)[0] as? OverlayView
+    }
 }
 
