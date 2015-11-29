@@ -189,7 +189,7 @@ public class DraggableCardView: UIView {
             if firstTouch {
                 firstTouch = false
             }
-            layer.pop_removeAllAnimations()
+            removeAnimations()
             
             dragBegin = true
             
@@ -272,6 +272,8 @@ public class DraggableCardView: UIView {
     private func resetViewPositionAndTransformations() {
         delegate?.card(cardWasReset: self)
         
+        removeAnimations()
+        
         let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
         resetPositionAnimation.fromValue = NSValue(CGPoint: CGPoint(x: dragDistance.x, y: dragDistance.y))
         resetPositionAnimation.toValue = NSValue(CGPoint: CGPointZero)
@@ -279,7 +281,7 @@ public class DraggableCardView: UIView {
         resetPositionAnimation.springSpeed = cardResetAnimationSpringSpeed
         resetPositionAnimation.completionBlock = {
             (_, _) in
-            
+            self.layer.transform = CATransform3DIdentity
             self.dragBegin = false
         }
         
@@ -304,6 +306,11 @@ public class DraggableCardView: UIView {
         resetScaleAnimation.toValue = NSValue(CGPoint: CGPoint(x: 1.0, y: 1.0))
         resetScaleAnimation.duration = cardResetAnimationDuration
         layer.pop_addAnimation(resetScaleAnimation, forKey: "resetScaleAnimation")
+    }
+    
+    private func removeAnimations() {
+        pop_removeAllAnimations()
+        layer.pop_removeAllAnimations()
     }
     
     //MARK: Public
