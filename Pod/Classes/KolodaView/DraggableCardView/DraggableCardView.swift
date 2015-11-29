@@ -42,7 +42,6 @@ public class DraggableCardView: UIView {
     private var dragBegin = false
     private var dragDistance = CGPointZero
     private var actionMargin: CGFloat = 0.0
-    private var firstTouch = true
     
     //MARK: Lifecycle
     init() {
@@ -186,9 +185,13 @@ public class DraggableCardView: UIView {
         
         switch gestureRecognizer.state {
         case .Began:
-            if firstTouch {
-                firstTouch = false
-            }
+            
+            let firstTouchPoint = gestureRecognizer.locationInView(self)
+            let newAnchorPoint = CGPointMake(firstTouchPoint.x / bounds.width, firstTouchPoint.y / bounds.height)
+            let oldPosition = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y: bounds.size.height * layer.anchorPoint.y)
+            let newPosition = CGPoint(x: bounds.size.width * newAnchorPoint.x, y: bounds.size.height * newAnchorPoint.y)
+            layer.anchorPoint = newAnchorPoint
+            layer.position = CGPoint(x: layer.position.x - oldPosition.x + newPosition.x, y: layer.position.y - oldPosition.y + newPosition.y)
             removeAnimations()
             
             dragBegin = true
