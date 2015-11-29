@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 2.0.4'
+pod 'Koloda', '~> 2.0.5'
 ```
 
 Thread Safety
@@ -91,7 +91,13 @@ The KolodaView class has the following methods:
 ```swift
 	func reloadData()
 ```
-This reloads all KolodaView item views from the dataSource and refreshes the display.
+
+This method reloads all KolodaView item views from the dataSource and refreshes the display.
+```swift
+func resetCurrentCardNumber()
+```
+
+This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
 ```swift
 	func revertAction()
 ```	
@@ -119,48 +125,51 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-	func kolodaNumberOfCards(koloda: KolodaView) -> UInt
+	func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
-	func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
+	func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
 ```
 Return a view to be displayed at the specified index in the KolodaView. 
 ```swift
-   func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView?
+   func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
 ```   
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
 ```swift    
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
+    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
 ```    
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func kolodaDidRunOutOfCards(koloda: KolodaView)
+    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView)
 ```    
 This method is called when the KolodaView has no cards to display.
 ```swift
-	func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
+	func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
+    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool
 ```
-This method is fired on reload, when any cards are displayed. If you return YES from the method, the koloda will apply appear animation.
+This method is fired on reload, when any cards are displayed. If you return YES from the method or don't implement it, the koloda will apply appear animation.
 ```swift
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
+    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool
 ```
-This method is fired on start of front card swipping. If you return YES from the method, the koloda will move background card with dragging of front card.
+This method is fired on start of front card swipping. If you return YES from the method or don't implement it, the koloda will move background card with dragging of front card.
 ```swift
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
+    func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool
 ```
-This method is fired on koloda's layout and after swiping. If you return YES from the method, the koloda will transparentize next card below front card.
+This method is fired on koloda's layout and after swiping. If you return YES from the method or don't implement it, the koloda will transparentize next card below front card.
 ```swift
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
+    func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation?
 ```
-Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil, the koloda will apply default animation.
-
+Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil(don't implement this method), the koloda will apply default animation.
+```swift
+func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
+```
+This method is called whenever the KolodaView recognizes card dragging event. 
 
 Release Notes
 ----------------
