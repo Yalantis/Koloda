@@ -257,7 +257,9 @@ public class DraggableCardView: UIView {
     private func swipeAction(direction: SwipeResultDirection) {
         
         let screenWidth = CGRectGetWidth(UIScreen.mainScreen().bounds)
-        let finishTranslation = direction == .Left ? -screenWidth : screenWidth
+        let translation = screenWidth + (screenWidth / 2)
+        let directionMultiplier: CGFloat = direction == .Left ? -1 : 1
+        let finishTranslation = directionMultiplier * translation
         
         overlayView?.overlayState = direction == .Left ? .Left : .Right
         overlayView?.alpha = 1.0
