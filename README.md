@@ -143,7 +143,7 @@ The KolodaViewDelegate protocol has the following methods:
 ```    
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView)
+    func koloda(kolodaDidRunOutOfCards koloda: KolodaView)
 ```    
 This method is called when the KolodaView has no cards to display.
 ```swift

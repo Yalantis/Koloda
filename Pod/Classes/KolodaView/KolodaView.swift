@@ -60,7 +60,7 @@ public extension KolodaViewDataSource {
 public protocol KolodaViewDelegate:class {
     
     func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
-    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView)
+    func koloda(kolodaDidRunOutOfCards koloda: KolodaView)
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
     func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool
     func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool
@@ -72,7 +72,7 @@ public protocol KolodaViewDelegate:class {
 public extension KolodaViewDelegate {
     
     func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) {}
-    func koloda(kolodaDidRuntOutOfCards koloda: KolodaView) {}
+    func koloda(kolodaDidRunOutOfCards koloda: KolodaView) {}
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {}
     func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool {return true}
     func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool {return true}
@@ -415,7 +415,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         } else {
             delegate?.koloda(self, didSwipedCardAtIndex: UInt(currentCardNumber - 1), inDirection: direction)
             animating = false
-            delegate?.koloda(kolodaDidRuntOutOfCards: self)
+            delegate?.koloda(kolodaDidRunOutOfCards: self)
         }
         
     }
