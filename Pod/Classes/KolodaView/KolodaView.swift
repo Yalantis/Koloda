@@ -382,17 +382,20 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 let shouldTransparentize = delegate?.koloda(kolodaShouldTransparentizeNextCard: self)
+                let cardFrame = frameForCardAtIndex(UInt(index))
                 
                 if index != 0 {
                     currentCard.alpha = alphaValueSemiTransparent
                 } else {
-                    frameAnimation.completionBlock = {(_, _) in
+                    frameAnimation.completionBlock = {(animation, finished) in
                         self.visibleCards.last?.hidden = false
                         self.animating = false
+                        currentCard.frame = cardFrame
                         self.delegate?.koloda(self, didSwipedCardAtIndex: UInt(self.currentCardNumber - 1), inDirection: direction)
                         if (shouldTransparentize == false) {
                             currentCard.alpha = self.alphaValueOpaque
                         }
+                        print(finished)
                     }
                     if (shouldTransparentize == true) {
                         currentCard.alpha = alphaValueOpaque
@@ -405,9 +408,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 currentCard.userInteractionEnabled = index == 0
-                frameAnimation.toValue = NSValue(CGRect: frameForCardAtIndex(UInt(index)))
-                currentCard.pop_removeAllAnimations()
-                currentCard.layer.removeAllAnimations()
+                frameAnimation.toValue = NSValue(CGRect: cardFrame)
+                currentCard.removeAnimations()
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         } else {

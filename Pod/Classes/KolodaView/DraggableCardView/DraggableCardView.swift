@@ -313,12 +313,12 @@ public class DraggableCardView: UIView {
         layer.pop_addAnimation(resetScaleAnimation, forKey: "resetScaleAnimation")
     }
     
-    private func removeAnimations() {
+    //MARK: Public
+    func removeAnimations() {
         pop_removeAllAnimations()
         layer.pop_removeAllAnimations()
     }
     
-    //MARK: Public
     func swipe(direction: SwipeResultDirection) {
         if !dragBegin {
             delegate?.card(self, wasSwipedInDirection: direction)
