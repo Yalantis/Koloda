@@ -236,7 +236,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         userInteractionEnabled = false
         animating = true
         
-        let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPViewScaleXY)
+        let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
         kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
         kolodaAppearScaleAnimation.duration = kolodaAppearScaleAnimationDuration
@@ -257,7 +257,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         kolodaAppearAlphaAnimation.duration = kolodaAppearAlphaAnimationDuration
         
         pop_addAnimation(kolodaAppearAlphaAnimation, forKey: kolodaAppearAlphaAnimationName)
-        pop_addAnimation(kolodaAppearScaleAnimation, forKey: kolodaAppearScaleAnimationName)
+        layer.pop_addAnimation(kolodaAppearScaleAnimation, forKey: kolodaAppearScaleAnimationName)
     }
     
     func applyRevertAnimation(card: DraggableCardView) {
