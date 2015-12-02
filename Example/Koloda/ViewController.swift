@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  TinderCardsSwift
+//  Koloda
 //
 //  Created by Eugene Andreyev on 4/23/15.
 //  Copyright (c) 2015 Eugene Andreyev. All rights reserved.
@@ -8,11 +8,10 @@
 
 import UIKit
 import Koloda
-import pop
 
 private var numberOfCards: UInt = 5
 
-class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate {
+class ViewController: UIViewController {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
@@ -39,54 +38,43 @@ class ViewController: UIViewController, KolodaViewDataSource, KolodaViewDelegate
     @IBAction func undoButtonTapped() {
         kolodaView?.revertAction()
     }
+}
+
+//MARK: KolodaViewDelegate
+extension ViewController: KolodaViewDelegate {
     
-    //MARK: KolodaViewDataSource
-    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
-        return numberOfCards
-    }
-    
-    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
-    }
-    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("OverlayView",
-            owner: self, options: nil)[0] as? OverlayView
-    }
-    
-    //MARK: KolodaViewDelegate
-    
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView, index: UInt, direction: SwipeResultDirection) {
-    //Example: loading more cards
+    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) {
+        //Example: loading more cards
         if index >= 3 {
             numberOfCards = 6
             kolodaView.reloadData()
         }
     }
     
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
-    //Example: reloading
+    func koloda(kolodaDidRunOutOfCards koloda: KolodaView) {
+        //Example: reloading
         kolodaView.resetCurrentCardNumber()
     }
     
-    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {
+    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
-    
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
-        return true
-    }
-    
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
-        return nil
-    }
+}
 
+//MARK: KolodaViewDataSource
+extension ViewController: KolodaViewDataSource {
+    
+    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
+        return numberOfCards
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
+    }
+    
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        return NSBundle.mainBundle().loadNibNamed("OverlayView",
+            owner: self, options: nil)[0] as? OverlayView
+    }
 }
 
