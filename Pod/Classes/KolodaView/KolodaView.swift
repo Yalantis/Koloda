@@ -67,6 +67,7 @@ public protocol KolodaViewDelegate:class {
     func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool
     func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation?
     func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
+    func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
 }
 
 public extension KolodaViewDelegate {
@@ -79,6 +80,7 @@ public extension KolodaViewDelegate {
     func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool {return true}
     func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation? {return nil}
     func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection) {}
+    func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat? {return nil}
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -319,6 +321,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
         let index = currentCardNumber + visibleCards.indexOf(card)!
         
         delegate?.koloda(self, didSelectCardAtIndex: UInt(index))
+    }
+    
+    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat {
+        return delegate?.koloda(kolodaSwipeThresholdMargin: self) ?? card.frame.size.width / 2.0
     }
     
     //MARK: Private
