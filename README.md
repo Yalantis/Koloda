@@ -170,6 +170,10 @@ Return a pop frame animation to be applied to backround cards after swipe. This 
 func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
+```swift
+func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
+```
+Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
 
 Release Notes
 ----------------

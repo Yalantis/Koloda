@@ -15,6 +15,7 @@ protocol DraggableCardDelegate: class {
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
+    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat?
 }
 
 //Drag animation constants
@@ -61,7 +62,7 @@ public class DraggableCardView: UIView {
     
     override public var frame: CGRect {
         didSet {
-            actionMargin = frame.size.width / 2.0
+            actionMargin = delegate?.card(cardSwipeThresholdMargin: self) ?? frame.size.width / 2.0
         }
     }
     
