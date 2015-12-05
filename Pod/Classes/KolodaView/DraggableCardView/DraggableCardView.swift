@@ -15,7 +15,7 @@ protocol DraggableCardDelegate: class {
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
-    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat
+    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat?
 }
 
 //Drag animation constants

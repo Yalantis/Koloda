@@ -327,8 +327,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         delegate?.koloda(self, didSelectCardAtIndex: UInt(index))
     }
     
-    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat {
-        return delegate?.koloda(kolodaSwipeThresholdMargin: self) ?? card.frame.size.width / 2.0
+    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat? {
+        return delegate?.koloda(kolodaSwipeThresholdMargin: self)
     }
     
     //MARK: Private
