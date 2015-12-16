@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 2.0.5'
+pod 'Koloda', '~> 2.0.6'
 ```
 
 Thread Safety
