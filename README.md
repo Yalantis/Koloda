@@ -174,6 +174,10 @@ This method is called whenever the KolodaView recognizes card dragging event.
 func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
 ```
 Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
+```swift
+func koloda(kolodaDidResetCard koloda: KolodaView)
+```
+This method is fired after resetting the card.
 
 Release Notes
 ----------------
