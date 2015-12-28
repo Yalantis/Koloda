@@ -405,7 +405,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                         if (shouldTransparentize == false) {
                             currentCard.alpha = self.alphaValueOpaque
                         }
-                        print(finished)
                     }
                     if (shouldTransparentize == true) {
                         currentCard.alpha = alphaValueOpaque
