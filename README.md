@@ -178,6 +178,11 @@ Return the distance that a card may be dragged in order to trigger a swipe. The 
 func koloda(kolodaDidResetCard koloda: KolodaView)
 ```
 This method is fired after resetting the card.
+```swift
+func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
+```
+This method is called after a card has been shown, after animation is complete
+
 
 Release Notes
 ----------------

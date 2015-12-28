@@ -69,6 +69,7 @@ public protocol KolodaViewDelegate:class {
     func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
     func koloda(kolodaDidResetCard koloda: KolodaView)
     func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
+    func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
 }
 
 public extension KolodaViewDelegate {
@@ -83,6 +84,7 @@ public extension KolodaViewDelegate {
     func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection) {}
     func koloda(kolodaDidResetCard koloda: KolodaView) {}
     func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat? {return nil}
+    func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt) {}
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -172,6 +174,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     visibleCards.append(nextCardView)
                     index == 0 ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
+                self.delegate?.koloda(self, didShowCardAtIndex: UInt(currentCardNumber))
             }
         }
     }
@@ -264,7 +267,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         layer.pop_addAnimation(kolodaAppearScaleAnimation, forKey: kolodaAppearScaleAnimationName)
     }
     
-    func applyRevertAnimation(card: DraggableCardView) {
+    func applyRevertAnimation(card: DraggableCardView, complete: (() -> Void)? = nil) {
         animating = true
         
         let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
@@ -276,6 +279,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             (_, _) in
             
             self.animating = false
+            complete?()
         }
         
         card.pop_addAnimation(firstCardAppearAnimation, forKey: revertCardAnimationName)
@@ -402,6 +406,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                         self.animating = false
                         currentCard.frame = cardFrame
                         self.delegate?.koloda(self, didSwipedCardAtIndex: UInt(self.currentCardNumber - 1), inDirection: direction)
+                        self.delegate?.koloda(self, didShowCardAtIndex: UInt(self.currentCardNumber))
                         if (shouldTransparentize == false) {
                             currentCard.alpha = self.alphaValueOpaque
                         }
@@ -459,7 +464,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 firstCardView.frame = frameForCardAtIndex(0)
                 
-                applyRevertAnimation(firstCardView)
+                applyRevertAnimation(firstCardView, complete: {
+                    self.delegate?.koloda(self, didShowCardAtIndex: UInt(self.currentCardNumber))
+                })
             }
             
             for index in 1..<visibleCards.count {
