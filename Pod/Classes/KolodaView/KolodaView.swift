@@ -9,7 +9,7 @@
 import UIKit
 import pop
 
-public enum SwipeResultDirection {
+@objc public enum SwipeResultDirection: Int {
     case None
     case Left
     case Right
@@ -43,7 +43,7 @@ private let kolodaAppearAlphaAnimationToValue: CGFloat = 1.0
 private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
 
 
-public protocol KolodaViewDataSource:class {
+@objc public protocol KolodaViewDataSource:class {
     
     func kolodaNumberOfCards(koloda: KolodaView) -> UInt
     func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
@@ -51,26 +51,15 @@ public protocol KolodaViewDataSource:class {
     
 }
 
-public protocol KolodaViewDelegate:class {
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
-    func kolodaDidRunOutOfCards(koloda: KolodaView)
-    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
-    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection)
-}
-
-public extension KolodaViewDelegate {
-    func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection) {}
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {}
-    func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt) {}
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {return true}
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {return true}
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {return true}
-    func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {return nil}
-    func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection) {}
+@objc public protocol KolodaViewDelegate:class {
+    optional func kolodaDidSwipedCardAtIndex(koloda: KolodaView,index: UInt, direction: SwipeResultDirection)
+    optional func kolodaDidRunOutOfCards(koloda: KolodaView)
+    optional func kolodaDidSelectCardAtIndex(koloda: KolodaView, index: UInt)
+    optional func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
+    optional func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
+    optional func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
+    optional func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
+    optional func kolodaDraggedCard(koloda: KolodaView, finishPercent: CGFloat, direction: SwipeResultDirection)
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
