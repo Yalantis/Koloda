@@ -391,6 +391,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         if !visibleCards.isEmpty {
             
             for (index, currentCard) in visibleCards.enumerate() {
+                currentCard.removeAnimations()
+                
                 var frameAnimation: POPPropertyAnimation
                 if let delegateAnimation = delegate?.koloda(kolodaBackgroundCardAnimation: self) where delegateAnimation.property.name == kPOPViewFrame {
                     frameAnimation = delegateAnimation
@@ -428,7 +430,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 currentCard.userInteractionEnabled = index == 0
                 frameAnimation.toValue = NSValue(CGRect: cardFrame)
-                currentCard.removeAnimations()
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         } else {
