@@ -25,8 +25,8 @@ class BackgroundAnimationViewController: UIViewController {
         super.viewDidLoad()
         kolodaView.alphaValueSemiTransparent = kolodaAlphaValueSemiTransparent
         kolodaView.countOfVisibleCards = kolodaCountOfVisibleCards
-        kolodaView.dataSource = self
         kolodaView.delegate = self
+        kolodaView.dataSource = self
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     
@@ -65,7 +65,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     }
     
     func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool {
-        return false
+        return true
     }
     
     func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation? {
