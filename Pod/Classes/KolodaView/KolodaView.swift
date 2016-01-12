@@ -533,6 +533,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
             }
         }
     }
+
+    public func dataSourceDidUpdate() {
+        if let dataSource = dataSource {
+            countOfCards = Int(dataSource.koloda(kolodaNumberOfCards: self))
+        }
+    }
     
     public func reloadData() {
         guard let numberOfCards = dataSource?.koloda(kolodaNumberOfCards: self) where numberOfCards > 0 else {
