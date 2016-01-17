@@ -538,7 +538,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         guard let numberOfCards = dataSource?.koloda(kolodaNumberOfCards: self) where numberOfCards > 0 else {
             return
         }
-        let countOfCards = Int(numberOfCards)
+        countOfCards = Int(numberOfCards)
         
         let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
         
