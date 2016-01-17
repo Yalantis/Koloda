@@ -102,7 +102,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var countOfVisibleCards = defaultCountOfVisibleCards
     private var visibleCards = [DraggableCardView]()
     private var animating = false
-    private var configured = false
     
     public var alphaValueOpaque: CGFloat = defaultAlphaValueOpaque
     public var alphaValueTransparent: CGFloat = defaultAlphaValueTransparent
@@ -133,15 +132,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
     override public func layoutSubviews() {
         super.layoutSubviews()
         
-        if !self.configured {
+        if !animating {
             
             if self.visibleCards.isEmpty {
                 reloadData()
             } else {
                 layoutDeck()
             }
-            
-            self.configured = true
         }
     }
     
@@ -169,7 +166,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 for index in 0..<countOfNeededCards {
                     let nextCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(index+currentCardNumber))
-                    let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
+                    let nextCardView = DraggableCardView(frame: frameForCardAtIndex(0))
                     
                     nextCardView.delegate = self
                     if shouldTransparentize {
@@ -189,8 +186,26 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func layoutDeck() {
-        for (index, card) in self.visibleCards.enumerate() {
-            card.frame = frameForCardAtIndex(UInt(index))
+        if !visibleCards.isEmpty {
+            let topCardFrame = frameForCardAtIndex(0)
+            for (index, card) in visibleCards.enumerate() {
+                if index == 0 {
+                    card.frame = topCardFrame
+                    card.layer.transform = CATransform3DIdentity
+                } else {
+                    var currentCardFrame = frameForCardAtIndex(UInt(index))
+                    card.frame = topCardFrame
+                    
+                    let transform = CATransform3DIdentity
+                    let widthScale = currentCardFrame.width / topCardFrame.width
+                    let heightScale = currentCardFrame.height / topCardFrame.height
+                    card.layer.transform = CATransform3DScale(transform,  widthScale, heightScale, 1.0)
+
+                    currentCardFrame.size = topCardFrame.size
+                    card.frame = currentCardFrame
+                }
+                
+            }
         }
     }
     
@@ -213,9 +228,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
     private func moveOtherCardsWithFinishPercent(percent: CGFloat) {
         if visibleCards.count > 1 {
             
+            let topCardFrame = frameForCardAtIndex(0)
             for index in 1..<visibleCards.count {
                 let previousCardFrame = frameForCardAtIndex(UInt(index - 1))
                 var frame = frameForCardAtIndex(UInt(index))
+                
                 let distanceToMoveY: CGFloat = (frame.origin.y - previousCardFrame.origin.y) * (percent / 100)
                 
                 frame.origin.y -= distanceToMoveY
@@ -224,17 +241,20 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 frame.origin.x += distanceToMoveX
                 
-                let widthScale = (previousCardFrame.size.width - frame.size.width) * (percent / 100)
-                let heightScale = (previousCardFrame.size.height - frame.size.height) * (percent / 100)
+                let widthDelta = (previousCardFrame.size.width - frame.size.width) * (percent / 100)
+                let heightDelta = (previousCardFrame.size.height - frame.size.height) * (percent / 100)
                 
-                frame.size.width += widthScale
-                frame.size.height += heightScale
+                frame.size.width += widthDelta
+                frame.size.height += heightDelta
+                
+                let widthScale = frame.width / topCardFrame.width
+                let heightScale = frame.height / topCardFrame.height
                 
                 let card = visibleCards[index]
-                
-                card.pop_removeAllAnimations()
+
+                card.layer.transform = CATransform3DScale(CATransform3DIdentity, widthScale, heightScale, 1.0)
+                frame.size = topCardFrame.size
                 card.frame = frame
-                card.layoutIfNeeded()
                 
                 //For fully visible next card, when moving top card
                 if shouldTransparentize {
@@ -376,9 +396,18 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 let lastCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(shownCardsCount - 1))
                 let lastCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(shownCardsCount - 1))
-                let lastCardFrame = frameForCardAtIndex(UInt(currentCardNumber + visibleCards.count))
-                let lastCardView = DraggableCardView(frame: lastCardFrame)
                 
+                var lastCardFrame = frameForCardAtIndex(UInt(visibleCards.count))
+                let topCardFrame = frameForCardAtIndex(0)
+                let lastCardView = DraggableCardView(frame: topCardFrame)
+                
+                let transform = CATransform3DIdentity
+                let widthScale = lastCardFrame.width / topCardFrame.width
+                let heightScale = lastCardFrame.height / topCardFrame.height
+                lastCardView.layer.transform = CATransform3DScale(transform,  widthScale, heightScale, 1.0)
+                
+                lastCardFrame.size = topCardFrame.size
+                lastCardView.frame = lastCardFrame
                 lastCardView.hidden = true
                 lastCardView.userInteractionEnabled = true
                 
@@ -396,19 +425,31 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
         
         if !visibleCards.isEmpty {
-            
+
+            let topCardFrame = frameForCardAtIndex(0)
             for (index, currentCard) in visibleCards.enumerate() {
                 currentCard.removeAnimations()
                 
+                var currentCardFrame = frameForCardAtIndex(UInt(index))
+                
+                let widthScale = currentCardFrame.width / topCardFrame.width
+                let heightScale = currentCardFrame.height / topCardFrame.height
+                currentCardFrame.size = topCardFrame.size
+                
                 var frameAnimation: POPPropertyAnimation
-                if let delegateAnimation = delegate?.koloda(kolodaBackgroundCardAnimation: self) where delegateAnimation.property.name == kPOPViewFrame {
-                    frameAnimation = delegateAnimation
+                var scaleAnimation: POPPropertyAnimation
+                if let delegateAnimation = delegate?.koloda(kolodaBackgroundCardAnimation: self) {
+                    frameAnimation = delegateAnimation.copy() as! POPPropertyAnimation
+                    scaleAnimation = delegateAnimation.copy() as! POPPropertyAnimation
+                    
+                    frameAnimation.property = POPAnimatableProperty.propertyWithName(kPOPViewFrame) as! POPAnimatableProperty
+                    scaleAnimation.property = POPAnimatableProperty.propertyWithName(kPOPLayerScaleXY) as! POPAnimatableProperty
                 } else {
                     frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                     (frameAnimation as! POPBasicAnimation).duration = backgroundCardFrameAnimationDuration
+                    scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
+                    (scaleAnimation as! POPBasicAnimation).duration = backgroundCardFrameAnimationDuration
                 }
-                
-                let cardFrame = frameForCardAtIndex(UInt(index))
                 
                 if index != 0 {
                     if shouldTransparentize {
@@ -418,7 +459,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     frameAnimation.completionBlock = {(animation, finished) in
                         self.visibleCards.last?.hidden = false
                         self.animating = false
-                        currentCard.frame = cardFrame
+                        
                         self.delegate?.koloda(self, didSwipedCardAtIndex: UInt(self.currentCardNumber - 1), inDirection: direction)
                         self.delegate?.koloda(self, didShowCardAtIndex: UInt(self.currentCardNumber))
                         if self.shouldTransparentize {
@@ -436,7 +477,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 currentCard.userInteractionEnabled = index == 0
-                frameAnimation.toValue = NSValue(CGRect: cardFrame)
+                scaleAnimation.toValue = NSValue(CGSize: CGSize(width: widthScale, height: heightScale))
+                currentCard.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
+                
+                frameAnimation.toValue = NSValue(CGRect: currentCardFrame)
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         } else {
@@ -484,17 +528,29 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 })
             }
             
+            let topCardFrame = frameForCardAtIndex(0)
             for index in 1..<visibleCards.count {
                 let currentCard = visibleCards[index]
-                let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 
-                frameAnimation.duration = backgroundCardFrameAnimationDuration
                 if shouldTransparentize {
                     currentCard.alpha = alphaValueSemiTransparent
                 }
-                frameAnimation.toValue = NSValue(CGRect: frameForCardAtIndex(UInt(index)))
-                currentCard.userInteractionEnabled = false
                 
+                currentCard.userInteractionEnabled = false
+                var currentCardFrame = frameForCardAtIndex(UInt(index))
+                
+                let widthScale = currentCardFrame.width / topCardFrame.width
+                let heightScale = currentCardFrame.height / topCardFrame.height
+                currentCardFrame.size = topCardFrame.size
+                
+                let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
+                scaleAnimation.duration = backgroundCardFrameAnimationDuration
+                scaleAnimation.toValue = NSValue(CGSize: CGSize(width: widthScale, height: heightScale))
+                currentCard.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
+                
+                let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
+                frameAnimation.duration = backgroundCardFrameAnimationDuration
+                frameAnimation.toValue = NSValue(CGRect: currentCardFrame)
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         }
