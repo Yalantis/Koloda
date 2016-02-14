@@ -166,7 +166,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 for index in 0..<countOfNeededCards {
                     let nextCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(index+currentCardNumber))
-                    let nextCardView = DraggableCardView(frame: frameForCardAtIndex(0))
+                    let nextCardView = DraggableCardView(frame: frameForTopCard())
                     
                     nextCardView.delegate = self
                     if shouldTransparentize {
@@ -187,22 +187,17 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     public func layoutDeck() {
         if !visibleCards.isEmpty {
-            let topCardFrame = frameForCardAtIndex(0)
             for (index, card) in visibleCards.enumerate() {
                 if index == 0 {
-                    card.frame = topCardFrame
+                    card.frame = frameForTopCard()
                     card.layer.transform = CATransform3DIdentity
                 } else {
-                    var currentCardFrame = frameForCardAtIndex(UInt(index))
-                    card.frame = topCardFrame
+                    let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
                     
-                    let transform = CATransform3DIdentity
-                    let widthScale = currentCardFrame.width / topCardFrame.width
-                    let heightScale = currentCardFrame.height / topCardFrame.height
-                    card.layer.transform = CATransform3DScale(transform,  widthScale, heightScale, 1.0)
+                    let scale = cardParameters.scale
+                    card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
 
-                    currentCardFrame.size = topCardFrame.size
-                    card.frame = currentCardFrame
+                    card.frame = cardParameters.frame
                 }
                 
             }
@@ -225,41 +220,55 @@ public class KolodaView: UIView, DraggableCardDelegate {
         return frame
     }
     
+    private func frameForTopCard() -> CGRect {
+        return frameForCardAtIndex(0)
+    }
+    
+    private func backgroundCardParametersForFrame(initialFrame: CGRect) -> (frame: CGRect, scale: CGSize) {
+        var finalFrame = frameForTopCard()
+        finalFrame.origin = initialFrame.origin
+        
+        var scale = CGSize.zero
+        scale.width = initialFrame.width / finalFrame.width
+        scale.height = initialFrame.height / finalFrame.height
+
+        return (finalFrame, scale)
+    }
+    
     private func moveOtherCardsWithFinishPercent(percent: CGFloat) {
         if visibleCards.count > 1 {
             
-            let topCardFrame = frameForCardAtIndex(0)
             for index in 1..<visibleCards.count {
                 let previousCardFrame = frameForCardAtIndex(UInt(index - 1))
                 var frame = frameForCardAtIndex(UInt(index))
+                let percentage = percent / 100
                 
-                let distanceToMoveY: CGFloat = (frame.origin.y - previousCardFrame.origin.y) * (percent / 100)
+                let distanceToMoveY: CGFloat = (frame.origin.y - previousCardFrame.origin.y) * percentage
                 
                 frame.origin.y -= distanceToMoveY
                 
-                let distanceToMoveX: CGFloat = (previousCardFrame.origin.x - frame.origin.x) * (percent / 100)
+                let distanceToMoveX: CGFloat = (previousCardFrame.origin.x - frame.origin.x) * percentage
                 
                 frame.origin.x += distanceToMoveX
                 
-                let widthDelta = (previousCardFrame.size.width - frame.size.width) * (percent / 100)
-                let heightDelta = (previousCardFrame.size.height - frame.size.height) * (percent / 100)
+                let widthDelta = (previousCardFrame.size.width - frame.size.width) * percentage
+                let heightDelta = (previousCardFrame.size.height - frame.size.height) * percentage
                 
                 frame.size.width += widthDelta
                 frame.size.height += heightDelta
                 
-                let widthScale = frame.width / topCardFrame.width
-                let heightScale = frame.height / topCardFrame.height
+                let cardParameters = backgroundCardParametersForFrame(frame)
+                let scale = cardParameters.scale
                 
                 let card = visibleCards[index]
 
-                card.layer.transform = CATransform3DScale(CATransform3DIdentity, widthScale, heightScale, 1.0)
-                frame.size = topCardFrame.size
-                card.frame = frame
+                card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
+                card.frame = cardParameters.frame
                 
                 //For fully visible next card, when moving top card
                 if shouldTransparentize {
                     if index == 1 {
-                        card.alpha = alphaValueSemiTransparent + (alphaValueOpaque - alphaValueSemiTransparent) * percent/100
+                        card.alpha = alphaValueSemiTransparent + (alphaValueOpaque - alphaValueSemiTransparent) * percentage
                     }
                 }
             }
@@ -267,7 +276,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Animations
-    
     public func applyAppearAnimation() {
         userInteractionEnabled = false
         animating = true
@@ -383,10 +391,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Actions
-    
     private func swipedAction(direction: SwipeResultDirection) {
         animating = true
-        visibleCards.removeAtIndex(0)
+        visibleCards.removeFirst()
         
         currentCardNumber++
         let shownCardsCount = currentCardNumber + countOfVisibleCards
@@ -398,16 +405,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 let lastCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(shownCardsCount - 1))
                 
                 var lastCardFrame = frameForCardAtIndex(UInt(visibleCards.count))
-                let topCardFrame = frameForCardAtIndex(0)
-                let lastCardView = DraggableCardView(frame: topCardFrame)
+                let cardParameters = backgroundCardParametersForFrame(lastCardFrame)
+
+                let lastCardView = DraggableCardView(frame: cardParameters.frame)
                 
-                let transform = CATransform3DIdentity
-                let widthScale = lastCardFrame.width / topCardFrame.width
-                let heightScale = lastCardFrame.height / topCardFrame.height
-                lastCardView.layer.transform = CATransform3DScale(transform,  widthScale, heightScale, 1.0)
                 
-                lastCardFrame.size = topCardFrame.size
-                lastCardView.frame = lastCardFrame
+                let scale = cardParameters.scale
+                lastCardView.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
+                
                 lastCardView.hidden = true
                 lastCardView.userInteractionEnabled = true
                 
@@ -426,15 +431,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         if !visibleCards.isEmpty {
 
-            let topCardFrame = frameForCardAtIndex(0)
             for (index, currentCard) in visibleCards.enumerate() {
                 currentCard.removeAnimations()
-                
-                var currentCardFrame = frameForCardAtIndex(UInt(index))
-                
-                let widthScale = currentCardFrame.width / topCardFrame.width
-                let heightScale = currentCardFrame.height / topCardFrame.height
-                currentCardFrame.size = topCardFrame.size
                 
                 var frameAnimation: POPPropertyAnimation
                 var scaleAnimation: POPPropertyAnimation
@@ -476,11 +474,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     }
                 }
                 
+                let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
+                
                 currentCard.userInteractionEnabled = index == 0
-                scaleAnimation.toValue = NSValue(CGSize: CGSize(width: widthScale, height: heightScale))
+                scaleAnimation.toValue = NSValue(CGSize: cardParameters.scale)
                 currentCard.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
                 
-                frameAnimation.toValue = NSValue(CGRect: currentCardFrame)
+                frameAnimation.toValue = NSValue(CGRect: cardParameters.frame)
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         } else {
@@ -521,14 +521,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 addSubview(firstCardView)
                 visibleCards.insert(firstCardView, atIndex: 0)
                 
-                firstCardView.frame = frameForCardAtIndex(0)
+                firstCardView.frame = frameForTopCard()
                 
                 applyRevertAnimation(firstCardView, complete: {
                     self.delegate?.koloda(self, didShowCardAtIndex: UInt(self.currentCardNumber))
                 })
             }
             
-            let topCardFrame = frameForCardAtIndex(0)
             for index in 1..<visibleCards.count {
                 let currentCard = visibleCards[index]
                 
@@ -537,20 +536,17 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 currentCard.userInteractionEnabled = false
-                var currentCardFrame = frameForCardAtIndex(UInt(index))
                 
-                let widthScale = currentCardFrame.width / topCardFrame.width
-                let heightScale = currentCardFrame.height / topCardFrame.height
-                currentCardFrame.size = topCardFrame.size
+                let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
                 
                 let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
                 scaleAnimation.duration = backgroundCardFrameAnimationDuration
-                scaleAnimation.toValue = NSValue(CGSize: CGSize(width: widthScale, height: heightScale))
+                scaleAnimation.toValue = NSValue(CGSize: cardParameters.scale)
                 currentCard.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
                 
                 let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
                 frameAnimation.duration = backgroundCardFrameAnimationDuration
-                frameAnimation.toValue = NSValue(CGRect: currentCardFrame)
+                frameAnimation.toValue = NSValue(CGRect: cardParameters.frame)
                 currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
             }
         }
