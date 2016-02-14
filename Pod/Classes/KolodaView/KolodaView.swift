@@ -504,8 +504,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
         if missingCardsCount > 0 {
             
             let cardsToAdd = min(missingCardsCount, countOfCards - currentCardNumber)
+            let startIndex = visibleCards.count
+            let endIndex = startIndex + cardsToAdd - 1
             
-            for index in 1...cardsToAdd {
+            for index in startIndex...endIndex {
                 let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
                 
                 if shouldTransparentize {
