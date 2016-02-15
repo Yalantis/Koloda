@@ -404,7 +404,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 let lastCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(shownCardsCount - 1))
                 let lastCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(shownCardsCount - 1))
                 
-                var lastCardFrame = frameForCardAtIndex(UInt(visibleCards.count))
+                let lastCardFrame = frameForCardAtIndex(UInt(visibleCards.count))
                 let cardParameters = backgroundCardParametersForFrame(lastCardFrame)
 
                 let lastCardView = DraggableCardView(frame: cardParameters.frame)
