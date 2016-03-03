@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 2.0.8'
+pod 'Koloda', '~> 2.0.10'
 ```
 
 Thread Safety
@@ -44,7 +44,7 @@ To install via CocoaPods add this lines to your Podfile
 use_frameworks!
 pod "Koloda"
 ```
-Note: Due to [CocoaPods/CocoaPods#4420 issue](https://github.com/CocoaPods/CocoaPods/issues/4420) there is problem with compiling project with XCode 7.1 and Cocoapods v0.39.0. However there is a temporary workaround for this:
+Note: Due to [CocoaPods/CocoaPods#4420 issue](https://github.com/CocoaPods/CocoaPods/issues/4420) there is problem with compiling project with Xcode 7.1 and CocoaPods v0.39.0. However there is a temporary workaround for this:
 Add next lines to the end of your Podfile
 ```ruby
 post_install do |installer|

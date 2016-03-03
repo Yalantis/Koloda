@@ -81,6 +81,7 @@ public class DraggableCardView: UIView {
     //MARK: Configurations
     func configure(view: UIView, overlayView: OverlayView?) {
         self.overlayView?.removeFromSuperview()
+        self.contentView?.removeFromSuperview()
         
         if let overlay = overlayView {
             self.overlayView = overlay
@@ -92,7 +93,6 @@ public class DraggableCardView: UIView {
             self.addSubview(view)
         }
         
-        self.contentView?.removeFromSuperview()
         self.contentView = view
         configureContentView()
     }
