@@ -45,7 +45,7 @@ private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
 
 public protocol KolodaViewDataSource:class {
     
-    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+    func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
     func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
 }
