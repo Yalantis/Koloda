@@ -11,10 +11,10 @@ import Koloda
 import pop
 
 private let numberOfCards: UInt = 5
-private let frameAnimationSpringBounciness:CGFloat = 9
-private let frameAnimationSpringSpeed:CGFloat = 16
+private let frameAnimationSpringBounciness: CGFloat = 9
+private let frameAnimationSpringSpeed: CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
-private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
+private let kolodaAlphaValueSemiTransparent: CGFloat = 0.1
 
 class BackgroundAnimationViewController: UIViewController {
 
@@ -79,7 +79,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
-    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
+    func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt {
         return numberOfCards
     }
     
