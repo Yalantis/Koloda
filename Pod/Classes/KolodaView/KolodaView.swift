@@ -114,21 +114,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
         return true
     }
     
-    //MARK: Lifecycle
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configure()
-    }
-    
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        configure()
-    }
-    
-    deinit {
-        unsubsribeFromNotifications()
-    }
-    
     override public func layoutSubviews() {
         super.layoutSubviews()
         
@@ -143,18 +128,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Configurations
-    
-    private func subscribeForNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutDeck", name: UIDeviceOrientationDidChangeNotification, object: nil)
-    }
-    
-    private func unsubsribeFromNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-    private func configure() {
-        subscribeForNotifications()
-    }
     
     private func setupDeck() {
         if let dataSource = dataSource {
