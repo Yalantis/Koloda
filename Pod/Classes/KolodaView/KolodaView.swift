@@ -107,7 +107,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
         super.layoutSubviews()
         
         if !animating {
-            
             if self.visibleCards.isEmpty {
                 reloadData()
             } else {
@@ -434,7 +433,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func revertAction() {
-        if currentCardNumber > 0 && animating == false {
+        if currentCardNumber > 0 && !animating {
             
             if countOfCards - currentCardNumber >= countOfVisibleCards {
                 
@@ -534,8 +533,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         guard let numberOfCards = dataSource?.koloda(kolodaNumberOfCards: self) where numberOfCards > 0 else {
             return
         }
-        countOfCards = Int(numberOfCards)
         
+        countOfCards = Int(numberOfCards)
         let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
         
         
@@ -564,7 +563,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func swipe(direction: SwipeResultDirection) {
-        if (animating == false) {
+        if !animating {
             
             if let frontCard = visibleCards.first {
                 
