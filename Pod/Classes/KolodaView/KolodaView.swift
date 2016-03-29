@@ -27,10 +27,6 @@ private let defaultAlphaValueOpaque: CGFloat = 1.0
 private let defaultAlphaValueTransparent: CGFloat = 0.0
 private let defaultAlphaValueSemiTransparent: CGFloat = 0.7
 
-private let revertCardAnimationName = "revertCardAlphaAnimation"
-private let revertCardAnimationDuration: NSTimeInterval = 1.0
-private let revertCardAnimationToValue: CGFloat = 1.0
-private let revertCardAnimationFromValue: CGFloat = 0.0
 public protocol KolodaViewDataSource:class {
     
     func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
@@ -245,22 +241,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
             self?.userInteractionEnabled = true
             self?.animating = false
         }
-    func applyRevertAnimation(card: DraggableCardView, complete: (() -> Void)? = nil) {
-        animating = true
-        
-        let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-        
-        firstCardAppearAnimation.toValue = NSNumber(float: Float(revertCardAnimationToValue))
-        firstCardAppearAnimation.fromValue =  NSNumber(float: Float(revertCardAnimationFromValue))
-        firstCardAppearAnimation.duration = revertCardAnimationDuration
-        firstCardAppearAnimation.completionBlock = {
-            (_, _) in
-            
-            self.animating = false
-            complete?()
-        }
-        
-        card.pop_addAnimation(firstCardAppearAnimation, forKey: revertCardAnimationName)
     }
     
     //MARK: DraggableCardDelegate
@@ -464,8 +444,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 firstCardView.frame = frameForTopCard()
                 
-                applyRevertAnimation(firstCardView, complete: {
-                    self.delegate?.koloda(self, didShowCardAtIndex: UInt(self.currentCardNumber))
+                animating = true
+                applyRevertAnimation(firstCardView, completion: { [weak self] in
+                    if let _self = self {
+                        _self.animating = false
+                        _self.delegate?.koloda(_self, didShowCardAtIndex: UInt(_self.currentCardNumber))
+                    }
                 })
             }
             
