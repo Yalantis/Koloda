@@ -27,22 +27,10 @@ private let defaultAlphaValueOpaque: CGFloat = 1.0
 private let defaultAlphaValueTransparent: CGFloat = 0.0
 private let defaultAlphaValueSemiTransparent: CGFloat = 0.7
 
-//Animations constants
 private let revertCardAnimationName = "revertCardAlphaAnimation"
 private let revertCardAnimationDuration: NSTimeInterval = 1.0
 private let revertCardAnimationToValue: CGFloat = 1.0
 private let revertCardAnimationFromValue: CGFloat = 0.0
-
-private let kolodaAppearScaleAnimationName = "kolodaAppearScaleAnimation"
-private let kolodaAppearScaleAnimationFromValue = CGPoint(x: 0.1, y: 0.1)
-private let kolodaAppearScaleAnimationToValue = CGPoint(x: 1.0, y: 1.0)
-private let kolodaAppearScaleAnimationDuration: NSTimeInterval = 0.8
-private let kolodaAppearAlphaAnimationName = "kolodaAppearAlphaAnimation"
-private let kolodaAppearAlphaAnimationFromValue: CGFloat = 0.0
-private let kolodaAppearAlphaAnimationToValue: CGFloat = 1.0
-private let kolodaAppearAlphaAnimationDuration: NSTimeInterval = 0.8
-
-
 public protocol KolodaViewDataSource:class {
     
     func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
@@ -94,6 +82,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             setupDeck()
         }
     }
+    
     public weak var delegate: KolodaViewDelegate?
     
     private(set) public var currentCardNumber = 0
@@ -101,7 +90,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     public var countOfVisibleCards = defaultCountOfVisibleCards
     private var visibleCards = [DraggableCardView]()
-    private var animating = false
+    internal var animating = false
     
     public var alphaValueOpaque: CGFloat = defaultAlphaValueOpaque
     public var alphaValueTransparent: CGFloat = defaultAlphaValueTransparent
@@ -253,30 +242,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
         userInteractionEnabled = false
         animating = true
         
-        let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
-        
-        kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
-        kolodaAppearScaleAnimation.duration = kolodaAppearScaleAnimationDuration
-        kolodaAppearScaleAnimation.fromValue = NSValue(CGPoint: kolodaAppearScaleAnimationFromValue)
-        kolodaAppearScaleAnimation.toValue = NSValue(CGPoint: kolodaAppearScaleAnimationToValue)
-        kolodaAppearScaleAnimation.completionBlock = {
-            (_, _) in
-            
-            self.userInteractionEnabled = true
-            self.animating = false
+        animateAppearance { [weak self] _ in
+            self?.userInteractionEnabled = true
+            self?.animating = false
         }
-        
-        let kolodaAppearAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-        
-        kolodaAppearAlphaAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
-        kolodaAppearAlphaAnimation.fromValue = NSNumber(float: Float(kolodaAppearAlphaAnimationFromValue))
-        kolodaAppearAlphaAnimation.toValue = NSNumber(float: Float(kolodaAppearAlphaAnimationToValue))
-        kolodaAppearAlphaAnimation.duration = kolodaAppearAlphaAnimationDuration
-        
-        pop_addAnimation(kolodaAppearAlphaAnimation, forKey: kolodaAppearAlphaAnimationName)
-        layer.pop_addAnimation(kolodaAppearScaleAnimation, forKey: kolodaAppearScaleAnimationName)
-    }
-    
     func applyRevertAnimation(card: DraggableCardView, complete: (() -> Void)? = nil) {
         animating = true
         
