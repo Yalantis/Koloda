@@ -62,4 +62,17 @@ extension KolodaView {
         card.pop_addAnimation(firstCardAppearAnimation, forKey: revertCardAnimationName)
     }
     
+    internal func resetBackgroundCards(completion: ((Bool) -> Void)? = nil) {
+        UIView.animateWithDuration(
+            0.2,
+            delay: 0.0,
+            options: .CurveLinear,
+            animations: {
+                self.moveOtherCardsWithFinishPercent(0)
+            },
+            completion: { finished in
+                completion?(finished)
+        })
+    }
+    
 }
