@@ -296,7 +296,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
         
         visibleCards.removeAll(keepCapacity: true)
-        
     }
     
     private func overlayViewForCardAtIndex(index: UInt) -> OverlayView? {
@@ -321,7 +320,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 let cardParameters = backgroundCardParametersForFrame(lastCardFrame)
 
                 let lastCardView = DraggableCardView(frame: cardParameters.frame)
-                
                 
                 let scale = cardParameters.scale
                 lastCardView.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
@@ -444,27 +442,21 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     }
                 })
             }
-            
-            for index in 1..<visibleCards.count {
-                let currentCard = visibleCards[index]
-                
+            let slicedArray = visibleCards.dropFirst()
+            for (index, card) in visibleCards.dropFirst().enumerate() {
                 if shouldTransparentizeNextCard {
-                    currentCard.alpha = alphaValueSemiTransparent
+                    card.alpha = alphaValueSemiTransparent
                 }
+                card.userInteractionEnabled = false
                 
-                currentCard.userInteractionEnabled = false
-                
-                let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
-                
-                let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
-                scaleAnimation.duration = backgroundCardFrameAnimationDuration
-                scaleAnimation.toValue = NSValue(CGSize: cardParameters.scale)
-                currentCard.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
-                
-                let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
-                frameAnimation.duration = backgroundCardFrameAnimationDuration
-                frameAnimation.toValue = NSValue(CGRect: cardParameters.frame)
-                currentCard.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
+                let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index + 1)))
+                applyScaleAnimation(
+                    card,
+                    scale: cardParameters.scale,
+                    frame: cardParameters.frame,
+                    duration: backgroundCardFrameAnimationDuration,
+                    completion: nil
+                )
             }
         }
     }

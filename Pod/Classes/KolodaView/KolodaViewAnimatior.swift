@@ -62,6 +62,18 @@ extension KolodaView {
         card.pop_addAnimation(firstCardAppearAnimation, forKey: revertCardAnimationName)
     }
     
+    func applyScaleAnimation(card: DraggableCardView, scale: CGSize, frame: CGRect, duration: NSTimeInterval, completion: ((Bool) -> Void)?) {
+        let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
+        scaleAnimation.duration = duration
+        scaleAnimation.toValue = NSValue(CGSize: scale)
+        card.layer.pop_addAnimation(scaleAnimation, forKey: "scaleAnimation")
+        
+        let frameAnimation = POPBasicAnimation(propertyNamed: kPOPViewFrame)
+        frameAnimation.duration = duration
+        frameAnimation.toValue = NSValue(CGRect: frame)
+        card.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
+    }
+    
     internal func resetBackgroundCards(completion: ((Bool) -> Void)? = nil) {
         UIView.animateWithDuration(
             0.2,
