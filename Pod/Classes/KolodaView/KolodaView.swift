@@ -98,9 +98,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         super.layoutSubviews()
         
         if !animating {
-            if self.visibleCards.isEmpty {
-                reloadData()
-            } else {
+            if !visibleCards.isEmpty {
                 layoutDeck()
             }
         }
@@ -133,21 +131,22 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func layoutDeck() {
-        if !visibleCards.isEmpty {
-            for (index, card) in visibleCards.enumerate() {
-                if index == 0 {
-                    card.frame = frameForTopCard()
-                    card.layer.transform = CATransform3DIdentity
-                } else {
-                    let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
-                    
-                    let scale = cardParameters.scale
-                    card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
-
-                    card.frame = cardParameters.frame
-                }
-                
-            }
+        for (index, card) in visibleCards.enumerate() {
+            layoutCard(card, AtIndex: UInt(index))
+        }
+    }
+    
+    private func layoutCard(card: DraggableCardView, AtIndex index: UInt) {
+        if index == 0 {
+            card.frame = frameForTopCard()
+            card.layer.transform = CATransform3DIdentity
+        } else {
+            let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index)))
+            
+            let scale = cardParameters.scale
+            card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
+            
+            card.frame = cardParameters.frame
         }
     }
     
@@ -184,7 +183,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     internal func moveOtherCardsWithFinishPercent(percent: CGFloat) {
         if visibleCards.count > 1 {
-            
             for index in 1..<visibleCards.count {
                 let previousCardFrame = frameForCardAtIndex(UInt(index - 1))
                 var frame = frameForCardAtIndex(UInt(index))
@@ -434,16 +432,15 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let endIndex = startIndex + cardsToAdd - 1
             
             for index in startIndex...endIndex {
-                // TODO: Apply Transformations
-                let nextCardView = generateCard(frameForCardAtIndex(UInt(index)))
+                let nextCardView = generateCard(frameForTopCard())
+                layoutCard(nextCardView, AtIndex: UInt(index))
                 nextCardView.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
                 
                 visibleCards.append(nextCardView)
                 insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                configureCard(nextCardView, atIndex: UInt(currentCardNumber + index))
             }
         }
-        
-        reconfigureCards()
     }
     
     private func reconfigureCards() {
@@ -453,6 +450,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 configureCard(card, atIndex: actualIndex)
             }
         }
+    }
+    
+    private func calculateMissingCardsCount() -> Int {
+       return min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
     }
     
     // MARK: Public
@@ -470,7 +471,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         countOfCards = Int(numberOfCards)
         if countOfCards - (currentCardNumber + visibleCards.count) > 0 {
             if !visibleCards.isEmpty {
-                let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
+                let missingCards = calculateMissingCardsCount()
                 loadMissingCards(missingCards)
             } else {
                 setupDeck()
@@ -509,4 +510,64 @@ public class KolodaView: UIView, DraggableCardDelegate {
             return nil
         }
     }
+    
+    // MARK: Cards managing
+    
+    private func removeLastCard() {
+        let card = visibleCards[visibleCards.count - 1]
+        card.delegate = nil
+        card.swipe(.Right)
+        visibleCards.removeLast()
+    }
+    
+    private func proceedInsertion(insertionIndex: Int) {
+        if insertionIndex < currentCardNumber {
+            insertCardToTop()
+        } else if insertionIndex >= currentCardNumber && insertionIndex < currentCardNumber + countOfVisibleCards {
+            insertCardInTheVisibleRange(insertionIndex)
+        }
+    }
+    
+    private func insertCardToTop() {
+        let previousCard = createCardAtIndex(UInt(currentCardNumber), frame: frameForTopCard())
+        previousCard.alpha = alphaValueOpaque
+        moveOtherCardsWithFinishPercent(0)
+        if visibleCards.isEmpty {
+            addSubview(previousCard)
+        }
+        visibleCards.insert(previousCard, atIndex: 0)
+        moveOtherCardsWithFinishPercent(0)
+    }
+    
+    private func insertCardInTheVisibleRange(insertionIndex: Int) {
+        let card = createCardAtIndex(UInt(insertionIndex))
+        let visibleCardIndex = insertionIndex - currentCardNumber
+        visibleCards.insert(card, atIndex: visibleCardIndex)
+        
+        if visibleCardIndex == 0 {
+            card.frame = frameForTopCard()
+            card.layer.transform = CATransform3DIdentity
+            card.alpha = alphaValueOpaque
+            insertSubview(card, atIndex: visibleCards.count - 1)
+        } else {
+            insertSubview(card, belowSubview: visibleCards[visibleCardIndex - 1])
+        }
+        moveOtherCardsWithFinishPercent(0)
+    }
+    
+    public func insertCardAtIndexSet(indexSet: Set<Int>, animated: Bool) {
+        let currentItemsCount = countOfCards
+        indexSet.sort().forEach { insertionIndex in
+            proceedInsertion(insertionIndex)
+            if visibleCards.count > countOfVisibleCards {
+                removeLastCard()
+            }
+            visibleCards.dropFirst().forEach({ card in
+                card.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
+                card.userInteractionEnabled = false
+            })
+            countOfCards += 1
+        }
+    }
+    
 }
