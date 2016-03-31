@@ -12,17 +12,23 @@ import UIKit
 extension KolodaView {
     
     func createCardAtIndex(index: UInt, frame: CGRect? = nil) -> DraggableCardView {
-        let nextCardContentView = dataSource!.koloda(self, viewForCardAtIndex: index)
-        let nextCardView = DraggableCardView(frame: frame ?? frameForTopCard())
+        let cardView = generateCard(frame ?? frameForTopCard())
+        configureCard(cardView, atIndex: index)
         
-        nextCardView.delegate = self
-        if shouldTransparentizeNextCard {
-            nextCardView.alpha = index == 0 ? alphaValueOpaque : alphaValueSemiTransparent
-        }
+        return cardView
+    }
+    
+    func generateCard(frame: CGRect) -> DraggableCardView {
+        let cardView = DraggableCardView(frame: frame)
+        cardView.delegate = self
         
-        nextCardView.configure(nextCardContentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAtIndex: index))
+        return cardView
+    }
+    
+    func configureCard(card: DraggableCardView, atIndex index: UInt) {
+        let contentView = dataSource!.koloda(self, viewForCardAtIndex: index)
         
-        return nextCardView
+        card.configure(contentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAtIndex: index))
     }
     
 }

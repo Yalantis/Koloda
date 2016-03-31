@@ -120,6 +120,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     let nextCardView = createCardAtIndex(actualIndex)
                     let isTop = index == 0
                     nextCardView.userInteractionEnabled = isTop
+                    nextCardView.alpha = alphaValueOpaque
+                    if shouldTransparentizeNextCard && !isTop {
+                        nextCardView.alpha = alphaValueSemiTransparent
+                    }
                     visibleCards.append(nextCardView)
                     isTop ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
@@ -219,13 +223,16 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Animations
-    public func applyAppearAnimation() {
-        userInteractionEnabled = false
-        animating = true
-        
-        animateAppearance { [weak self] _ in
-            self?.userInteractionEnabled = true
-            self?.animating = false
+    public func applyAppearAnimationIfNeeded() {
+        if let shouldApply = delegate?.koloda(kolodaShouldApplyAppearAnimation: self) where shouldApply == true {
+            self.alpha = 0
+            userInteractionEnabled = false
+            animating = true
+            
+            animateAppearance { [weak self] _ in
+                self?.userInteractionEnabled = true
+                self?.animating = false
+            }
         }
     }
     
@@ -381,21 +388,17 @@ public class KolodaView: UIView, DraggableCardDelegate {
             currentCardNumber--
             
             if let dataSource = self.dataSource {
-                let firstCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(currentCardNumber))
-                let firstCardOverlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(currentCardNumber))
-                let firstCardView = DraggableCardView()
+                let firstCardView = createCardAtIndex(UInt(currentCardNumber), frame: frameForTopCard())
                 
                 if shouldTransparentizeNextCard {
                     firstCardView.alpha = alphaValueTransparent
                 }
                 
-                firstCardView.configure(firstCardContentView, overlayView: firstCardOverlayView)
                 firstCardView.delegate = self
                 
                 addSubview(firstCardView)
                 visibleCards.insert(firstCardView, atIndex: 0)
                 
-                firstCardView.frame = frameForTopCard()
                 
                 animating = true
                 applyRevertAnimation(firstCardView, completion: { [weak self] in
@@ -426,18 +429,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     private func loadMissingCards(missingCardsCount: Int) {
         if missingCardsCount > 0 {
-            
             let cardsToAdd = min(missingCardsCount, countOfCards - currentCardNumber)
             let startIndex = visibleCards.count
             let endIndex = startIndex + cardsToAdd - 1
             
             for index in startIndex...endIndex {
-                let nextCardView = DraggableCardView(frame: frameForCardAtIndex(UInt(index)))
-                
-                if shouldTransparentizeNextCard {
-                    nextCardView.alpha = alphaValueSemiTransparent
-                }
-                nextCardView.delegate = self
+                // TODO: Apply Transformations
+                let nextCardView = generateCard(frameForCardAtIndex(UInt(index)))
+                nextCardView.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
                 
                 visibleCards.append(nextCardView)
                 insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
@@ -448,45 +447,36 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func reconfigureCards() {
-        for index in 0..<visibleCards.count {
+        for (index, card) in visibleCards.enumerate() {
             if let dataSource = self.dataSource {
-                
-                let currentCardContentView = dataSource.koloda(self, viewForCardAtIndex: UInt(currentCardNumber + index))
-                let overlayView = dataSource.koloda(self, viewForCardOverlayAtIndex: UInt(currentCardNumber + index))
-                let currentCard = visibleCards[index]
-                
-                currentCard.configure(currentCardContentView, overlayView: overlayView)
+                let actualIndex = UInt(currentCardNumber + index)
+                configureCard(card, atIndex: actualIndex)
             }
         }
     }
     
+    // MARK: Public
+    
     public func reloadData() {
         guard let numberOfCards = dataSource?.koloda(kolodaNumberOfCards: self) where numberOfCards > 0 else {
+            clear()
             return
         }
-        
-        countOfCards = Int(numberOfCards)
-        let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
-        
         
         if currentCardNumber == 0 {
             clear()
         }
         
+        countOfCards = Int(numberOfCards)
         if countOfCards - (currentCardNumber + visibleCards.count) > 0 {
-            
             if !visibleCards.isEmpty {
+                let missingCards = min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardNumber + 1))
                 loadMissingCards(missingCards)
             } else {
                 setupDeck()
                 layoutDeck()
-                
-                if let shouldApply = delegate?.koloda(kolodaShouldApplyAppearAnimation: self) where shouldApply == true {
-                    self.alpha = 0
-                    applyAppearAnimation()
-                }
+                applyAppearAnimationIfNeeded()
             }
-            
         } else {
             reconfigureCards()
         }
@@ -498,12 +488,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 animating = true
                 
                 if visibleCards.count > 1 {
-                    if shouldTransparentizeNextCard {
-                        let nextCard = visibleCards[1]
-                        nextCard.alpha = alphaValueOpaque
-                    }
+                    let nextCard = visibleCards[1]
+                    nextCard.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
                 }
                 frontCard.swipe(direction)
+                frontCard.delegate = nil
             }
         }
     }
