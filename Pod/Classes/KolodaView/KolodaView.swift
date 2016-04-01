@@ -90,6 +90,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueTransparent: CGFloat = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
+    public lazy var animator: KolodaViewAnimator = {
+       return KolodaViewAnimator(koloda: self)
+    }()
+    
     internal var shouldTransparentizeNextCard: Bool {
         return delegate?.koloda(kolodaShouldTransparentizeNextCard: self) ?? true
     }
@@ -98,9 +102,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         super.layoutSubviews()
         
         if !animating {
-            if !visibleCards.isEmpty {
-                layoutDeck()
-            }
+            layoutDeck()
         }
     }
     
@@ -221,13 +223,14 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Animations
+    
     public func applyAppearAnimationIfNeeded() {
         if let shouldApply = delegate?.koloda(kolodaShouldApplyAppearAnimation: self) where shouldApply == true {
             self.alpha = 0
             userInteractionEnabled = false
             animating = true
             
-            animateAppearance { [weak self] _ in
+            animator.animateAppearance { [weak self] _ in
                 self?.userInteractionEnabled = true
                 self?.animating = false
             }
@@ -252,7 +255,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func card(cardWasReset card: DraggableCardView) {
         if visibleCards.count > 1 {
             animating = true
-            resetBackgroundCards { [weak self] _ in
+            animator.resetBackgroundCards { [weak self] _ in
                 if let _self = self {
                     _self.animating = false
                     
@@ -355,13 +358,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 if shouldTransparentizeNextCard {
-                    applyAlphaAnimation(currentCard, alpha: alphaValueOpaque)
+                    animator.applyAlphaAnimation(currentCard, alpha: alphaValueOpaque)
                 } else {
                     currentCard.alpha = alphaValueOpaque
                 }
             }
             
-            applyScaleAnimation(
+            animator.applyScaleAnimation(
                 currentCard,
                 scale: cardParameters.scale,
                 frame: cardParameters.frame,
@@ -399,7 +402,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 
                 animating = true
-                applyRevertAnimation(firstCardView, completion: { [weak self] in
+                animator.applyRevertAnimation(firstCardView, completion: { [weak self] in
                     if let _self = self {
                         _self.animating = false
                         _self.delegate?.koloda(_self, didShowCardAtIndex: UInt(_self.currentCardNumber))
@@ -414,7 +417,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 card.userInteractionEnabled = false
                 
                 let cardParameters = backgroundCardParametersForFrame(frameForCardAtIndex(UInt(index + 1)))
-                applyScaleAnimation(
+                animator.applyScaleAnimation(
                     card,
                     scale: cardParameters.scale,
                     frame: cardParameters.frame,
@@ -533,14 +536,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
         return insertedCards
     }
     
-    private func insertVisibleCardsWithIndexes(visibleIndexes: [Int], animated: Bool) {
-        if animated {
-            
-        } else {
-            
-        }
-    }
-    
     private func removeCards(cards: [DraggableCardView]) {
         cards.forEach { card in
             card.delegate = nil
@@ -551,7 +546,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     private func removeCards(cards: [DraggableCardView], animated: Bool) {
         if animated {
-            applyRemovalAnimation(
+            animator.applyRemovalAnimation(
                 cards,
                 completion: { _ in
                     self.removeCards(cards)
@@ -572,9 +567,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
                 card.userInteractionEnabled = index == 0
             }
-            moveOtherCardsWithFinishPercent(0)
+            animator.resetBackgroundCards()
             if animated {
-                applyInsertionAnimation(insertedCards)
+               animator.applyInsertionAnimation(insertedCards)
             }
             
             countOfCards = Int(dataSource.koloda(kolodaNumberOfCards: self))
