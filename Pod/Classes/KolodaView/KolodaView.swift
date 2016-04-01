@@ -402,7 +402,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 
                 animating = true
-                animator.applyRevertAnimation(firstCardView, completion: { [weak self] in
+                animator.applyRevertAnimation(firstCardView, completion: { [weak self] _ in
                     if let _self = self {
                         _self.animating = false
                         _self.delegate?.koloda(_self, didShowCardAtIndex: UInt(_self.currentCardNumber))
@@ -569,7 +569,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
             }
             animator.resetBackgroundCards()
             if animated {
-               animator.applyInsertionAnimation(insertedCards)
+               animating = true
+                animator.applyInsertionAnimation(
+                    insertedCards,
+                    completion: { _ in
+                        self.animating = false
+                    }
+                )
             }
             
             countOfCards = Int(dataSource.koloda(kolodaNumberOfCards: self))

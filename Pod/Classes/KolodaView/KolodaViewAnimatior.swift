@@ -12,13 +12,15 @@ import pop
 
 public class KolodaViewAnimator {
     
+    public typealias AnimationCompletionBlock = ((Bool) -> Void)?
+    
     private weak var koloda: KolodaView?
     
     init(koloda: KolodaView) {
         self.koloda = koloda
     }
     
-    public func animateAppearance(completion: ((Bool) -> Void)? = nil) {
+    public func animateAppearance(completion: AnimationCompletionBlock = nil) {
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
         kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
@@ -40,20 +42,20 @@ public class KolodaViewAnimator {
         koloda?.layer.pop_addAnimation(kolodaAppearScaleAnimation, forKey: "kolodaAppearAlphaAnimation")
     }
     
-    public func applyRevertAnimation(card: DraggableCardView, completion: (() -> Void)? = nil) {
+    public func applyRevertAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
         let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         
         firstCardAppearAnimation.toValue = NSNumber(float: 1.0)
         firstCardAppearAnimation.fromValue =  NSNumber(float: 0.0)
         firstCardAppearAnimation.duration = 1.0
-        firstCardAppearAnimation.completionBlock = { (_, _) in
-            completion?()
+        firstCardAppearAnimation.completionBlock = { _, finished in
+            completion?(finished)
         }
         
         card.pop_addAnimation(firstCardAppearAnimation, forKey: "revertCardAlphaAnimation")
     }
     
-    public func applyScaleAnimation(card: DraggableCardView, scale: CGSize, frame: CGRect, duration: NSTimeInterval, completion: ((Bool) -> Void)? = nil) {
+    public func applyScaleAnimation(card: DraggableCardView, scale: CGSize, frame: CGRect, duration: NSTimeInterval, completion: AnimationCompletionBlock = nil) {
         let scaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         scaleAnimation.duration = duration
         scaleAnimation.toValue = NSValue(CGSize: scale)
@@ -70,14 +72,17 @@ public class KolodaViewAnimator {
         card.pop_addAnimation(frameAnimation, forKey: "frameAnimation")
     }
     
-    public func applyAlphaAnimation(card: DraggableCardView, alpha: CGFloat, duration: NSTimeInterval = 0.2, completion: ((Bool) -> Void)? = nil) {
+    public func applyAlphaAnimation(card: DraggableCardView, alpha: CGFloat, duration: NSTimeInterval = 0.2, completion: AnimationCompletionBlock = nil) {
         let alphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         alphaAnimation.toValue = alpha
         alphaAnimation.duration = duration
+        alphaAnimation.completionBlock = { _, finished in
+            completion?(finished)
+        }
         card.pop_addAnimation(alphaAnimation, forKey: "alpha")
     }
     
-    public func applyInsertionAnimation(cards: [DraggableCardView], completion: ((Bool) -> Void)? = nil) {
+    public func applyInsertionAnimation(cards: [DraggableCardView], completion: AnimationCompletionBlock = nil) {
         cards.forEach { $0.alpha = 0.0 }
         UIView.animateWithDuration(
             0.2,
@@ -90,7 +95,7 @@ public class KolodaViewAnimator {
         )
     }
     
-    public func applyRemovalAnimation(cards: [DraggableCardView], completion: ((Bool) -> Void)? = nil) {
+    public func applyRemovalAnimation(cards: [DraggableCardView], completion: AnimationCompletionBlock = nil) {
         UIView.animateWithDuration(
             0.05,
             animations: {
@@ -102,7 +107,7 @@ public class KolodaViewAnimator {
         )
     }
     
-    internal func resetBackgroundCards(completion: ((Bool) -> Void)? = nil) {
+    internal func resetBackgroundCards(completion: AnimationCompletionBlock = nil) {
         UIView.animateWithDuration(
             0.2,
             delay: 0.0,
