@@ -86,6 +86,31 @@ extension KolodaView {
         card.pop_addAnimation(alphaAnimation, forKey: "alpha")
     }
     
+    func applyInsertionAnimation(cards: [DraggableCardView], completion: ((Bool) -> Void)? = nil) {
+        cards.forEach { $0.alpha = 0.0 }
+        UIView.animateWithDuration(
+            0.2,
+            animations: {
+                cards.forEach { $0.alpha = 1.0 }
+            },
+            completion: { finished in
+                completion?(finished)
+            }
+        )
+    }
+    
+    func applyRemovalAnimation(cards: [DraggableCardView], completion: ((Bool) -> Void)? = nil) {
+        UIView.animateWithDuration(
+            0.05,
+            animations: {
+                cards.forEach { $0.alpha = 0.0 }
+            },
+            completion: { finished in
+                completion?(finished)
+            }
+        )
+    }
+    
     internal func resetBackgroundCards(completion: ((Bool) -> Void)? = nil) {
         UIView.animateWithDuration(
             0.2,
