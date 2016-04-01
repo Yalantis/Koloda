@@ -512,65 +512,77 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     // MARK: Cards managing - Insertion
-    
-    private func removeVisibleCardAtIndex(index: Int) {
-        let card = visibleCards[index]
-        card.delegate = nil
-        card.swipe(.Right)
-        visibleCards.removeAtIndex(index)
-    }
-    
-    private func removeLastCard() {
-        removeVisibleCardAtIndex(visibleCards.count - 1)
-    }
-    
-    private func proceedInsertion(insertionIndex: Int) {
-        if insertionIndex < currentCardNumber {
-            assertionFailure("Insertion supported unsupported for index \(insertionIndex)")
-        } else if insertionIndex >= currentCardNumber && insertionIndex < currentCardNumber + countOfVisibleCards {
-            insertCardInTheVisibleRange(insertionIndex)
-        }
-    }
-    
-    private func insertCardToTop() {
-        let previousCard = createCardAtIndex(UInt(currentCardNumber), frame: frameForTopCard())
-        previousCard.alpha = alphaValueOpaque
-        addSubview(previousCard)
-        visibleCards.insert(previousCard, atIndex: 0)
-        moveOtherCardsWithFinishPercent(0)
-    }
-    
-    private func insertCardInTheVisibleRange(insertionIndex: Int) {
-        let card = createCardAtIndex(UInt(insertionIndex))
-        let visibleCardIndex = insertionIndex - currentCardNumber
-        visibleCards.insert(card, atIndex: visibleCardIndex)
-        
-        if visibleCardIndex == 0 {
-            card.frame = frameForTopCard()
-            card.layer.transform = CATransform3DIdentity
-            card.alpha = alphaValueOpaque
-            insertSubview(card, atIndex: visibleCards.count - 1)
-        } else {
-            insertSubview(card, belowSubview: visibleCards[visibleCardIndex - 1])
-        }
-        moveOtherCardsWithFinishPercent(0)
-    }
-    
-    public func insertCardAtIndexSet(indexSet: Set<Int>, animated: Bool) {
-        let currentItemsCount = countOfCards
-        indexSet.sort().forEach { insertionIndex in
-            proceedInsertion(insertionIndex)
-            if visibleCards.count > countOfVisibleCards {
-                removeLastCard()
+
+    private func insertVisibleCardsWithIndexes(visibleIndexes: [Int]) -> [DraggableCardView] {
+        var insertedCards: [DraggableCardView] = []
+        visibleIndexes.forEach { insertionIndex in
+            let card = createCardAtIndex(UInt(insertionIndex))
+            let visibleCardIndex = insertionIndex - currentCardNumber
+            visibleCards.insert(card, atIndex: visibleCardIndex)
+            if visibleCardIndex == 0 {
+                card.frame = frameForTopCard()
+                card.layer.transform = CATransform3DIdentity
+                card.alpha = alphaValueOpaque
+                insertSubview(card, atIndex: visibleCards.count - 1)
+            } else {
+                insertSubview(card, belowSubview: visibleCards[visibleCardIndex - 1])
             }
-            visibleCards.dropFirst().forEach({ card in
-                card.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
-                card.userInteractionEnabled = false
-            })
-            countOfCards += 1
+            insertedCards.append(card)
         }
         
-        assert(currentItemsCount + indexSet.count == countOfCards, "Issue appeared")
+        return insertedCards
+    }
+    
+    private func insertVisibleCardsWithIndexes(visibleIndexes: [Int], animated: Bool) {
+        if animated {
+            
+        } else {
+            
+        }
+    }
+    
+    private func removeCards(cards: [DraggableCardView]) {
+        cards.forEach { card in
+            card.delegate = nil
+            card.removeFromSuperview()
+        }
+        visibleCards.removeLast(cards.count)
+    }
+    
+    private func removeCards(cards: [DraggableCardView], animated: Bool) {
+        if animated {
+            applyRemovalAnimation(
+                cards,
+                completion: { _ in
+                    self.removeCards(cards)
+                }
+            )
+        } else {
+            self.removeCards(cards)
+        }
+    }
+    
+    public func insertCardAtIndexSet(indexRange: Range<Int>, animated: Bool = true) {
+        if let dataSource = dataSource {
+            let currentItemsCount = countOfCards
+            let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardNumber && $0 < currentCardNumber + countOfVisibleCards }
+            let insertedCards = insertVisibleCardsWithIndexes(visibleIndexes.sort())
+            removeCards(visibleCards.dropFirst(countOfVisibleCards).map { $0 }, animated: animated)
+            for (index, card) in visibleCards.enumerate() {
+                card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
+                card.userInteractionEnabled = index == 0
+            }
+            moveOtherCardsWithFinishPercent(0)
+            if animated {
+                applyInsertionAnimation(insertedCards)
+            }
+            
+            countOfCards = Int(dataSource.koloda(kolodaNumberOfCards: self))
+            assert(
+                currentItemsCount + indexRange.count == countOfCards,
+                "Cards count after update is not equal to data source count"
+            )
+        }
     }
     
     // MARK: Cards managing - Deletion
@@ -587,21 +599,27 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func removeCardAtIndexRange(indexRange: Range<Int>, animated: Bool) {
-        animating = true
-        let currentItemsCount = countOfCards
-        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardNumber && $0 < currentCardNumber + countOfVisibleCards }
-        if !visibleIndexes.isEmpty {
-             proceedDeletion(visibleIndexes[0]...visibleIndexes[visibleIndexes.count - 1])
+        if let dataSource = dataSource {
+            animating = true
+            let currentItemsCount = countOfCards
+            let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardNumber && $0 < currentCardNumber + countOfVisibleCards }
+            if !visibleIndexes.isEmpty {
+                proceedDeletion(visibleIndexes[0]...visibleIndexes[visibleIndexes.count - 1])
+            }
+            loadMissingCards(calculateMissingCardsCount())
+            layoutDeck()
+            for (index, card) in visibleCards.enumerate() {
+                card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
+                card.userInteractionEnabled = index == 0
+            }
+            animating = false
+            
+            countOfCards = Int(dataSource.koloda(kolodaNumberOfCards: self))
+            assert(
+                currentItemsCount - indexRange.count == countOfCards,
+                "Cards count after update is not equal to data source count"
+            )
         }
-        countOfCards -= indexRange.count
-        loadMissingCards(calculateMissingCardsCount())
-        layoutDeck()
-        for (index, card) in visibleCards.enumerate() {
-            card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
-            card.userInteractionEnabled = index == 0
-        }
-        animating = false
-        assert(currentItemsCount - indexRange.count == countOfCards, "Issue appeared")
     }
     
 }
