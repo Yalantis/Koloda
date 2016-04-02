@@ -305,7 +305,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         animating = true
         visibleCards.removeFirst()
         
-        currentCardIndex++
+        currentCardIndex += 1
         let shownCardsCount = currentCardIndex + countOfVisibleCards
         if shownCardsCount - 1 < countOfCards {
             loadNextCard()
@@ -330,7 +330,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func loadNextCard() {
-        guard let dataSource = dataSource else {
+        guard dataSource != nil else {
             return
         }
         
@@ -392,9 +392,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     visibleCards.removeLast()
                 }
             }
-            currentCardIndex--
+            currentCardIndex -= 1
             
-            if let dataSource = self.dataSource {
+            if dataSource != nil {
                 let firstCardView = createCardAtIndex(UInt(currentCardIndex), frame: frameForTopCard())
                 
                 if shouldTransparentizeNextCard {
@@ -453,8 +453,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func reconfigureCards() {
-        for (index, card) in visibleCards.enumerate() {
-            if let dataSource = self.dataSource {
+        if dataSource != nil {
+            for (index, card) in visibleCards.enumerate() {
                 let actualIndex = UInt(currentCardIndex + index)
                 configureCard(card, atIndex: actualIndex)
             }
@@ -635,7 +635,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     // MARK: Cards managing - Reloading
     
     public func reloadCardsInIndexRange(indexRange: Range<Int>) {
-        guard let dataSource = dataSource else {
+        guard dataSource != nil else {
             return
         }
         
