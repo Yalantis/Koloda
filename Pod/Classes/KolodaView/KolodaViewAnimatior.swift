@@ -20,7 +20,7 @@ public class KolodaViewAnimator {
         self.koloda = koloda
     }
     
-    public func animateAppearance(completion: AnimationCompletionBlock = nil) {
+    public func animateAppearanceWithCompletion(completion: AnimationCompletionBlock = nil) {
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
         kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
@@ -42,7 +42,7 @@ public class KolodaViewAnimator {
         koloda?.layer.pop_addAnimation(kolodaAppearScaleAnimation, forKey: "kolodaAppearAlphaAnimation")
     }
     
-    public func applyRevertAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
+    public func applyReverseAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
         let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         
         firstCardAppearAnimation.toValue = NSNumber(float: 1.0)
@@ -52,7 +52,7 @@ public class KolodaViewAnimator {
             completion?(finished)
         }
         
-        card.pop_addAnimation(firstCardAppearAnimation, forKey: "revertCardAlphaAnimation")
+        card.pop_addAnimation(firstCardAppearAnimation, forKey: "reverseCardAlphaAnimation")
     }
     
     public func applyScaleAnimation(card: DraggableCardView, scale: CGSize, frame: CGRect, duration: NSTimeInterval, completion: AnimationCompletionBlock = nil) {
@@ -107,13 +107,13 @@ public class KolodaViewAnimator {
         )
     }
     
-    internal func resetBackgroundCards(completion: AnimationCompletionBlock = nil) {
+    internal func resetBackgroundCardsWithCompletion(completion: AnimationCompletionBlock = nil) {
         UIView.animateWithDuration(
             0.2,
             delay: 0.0,
             options: .CurveLinear,
             animations: {
-                self.koloda?.moveOtherCardsWithFinishPercent(0)
+                self.koloda?.moveOtherCardsWithPercentage(0)
             },
             completion: { finished in
                 completion?(finished)
