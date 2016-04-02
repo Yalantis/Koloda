@@ -198,7 +198,7 @@ public class DraggableCardView: UIView {
             dragBegin = true
             
             animationDirection = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
-            
+            layer.rasterizationScale = UIScreen.mainScreen().scale
             layer.shouldRasterize = true
             
             break
