@@ -632,4 +632,21 @@ public class KolodaView: UIView, DraggableCardDelegate {
         )
     }
     
+    // MARK: Cards managing - Reloading
+    
+    public func reloadCardsInIndexRange(indexRange: Range<Int>) {
+        guard let dataSource = dataSource else {
+            return
+        }
+        
+        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        visibleIndexes.forEach { index in
+            let visibleCardIndex = index - currentCardIndex
+            if visibleCards.count > visibleCardIndex {
+                let card = visibleCards[visibleCardIndex]
+                configureCard(card, atIndex: UInt(index))
+            }
+        }
+    }
+    
 }
