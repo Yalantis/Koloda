@@ -27,6 +27,8 @@ class BackgroundAnimationViewController: UIViewController {
         kolodaView.countOfVisibleCards = kolodaCountOfVisibleCards
         kolodaView.delegate = self
         kolodaView.dataSource = self
+        kolodaView.animator = BackgroundKolodaAnimator(koloda: kolodaView)
+        
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     

@@ -16,7 +16,7 @@ public class KolodaViewAnimator {
     
     private weak var koloda: KolodaView?
     
-    init(koloda: KolodaView) {
+    public init(koloda: KolodaView) {
         self.koloda = koloda
     }
     
