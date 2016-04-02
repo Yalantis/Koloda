@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 2.0.10'
+pod 'Koloda', '~> 3.0.0'
 ```
 
 Thread Safety
@@ -163,10 +163,6 @@ This method is fired on start of front card swipping. If you return YES from the
 ```
 This method is fired on koloda's layout and after swiping. If you return YES from the method or don't implement it, the koloda will transparentize next card below front card.
 ```swift
-    func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation?
-```
-Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil(don't implement this method), the koloda will apply default animation.
-```swift
 func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
@@ -186,6 +182,12 @@ This method is called after a card has been shown, after animation is complete
 
 Release Notes
 ----------------
+
+Version 3.0
+
+- Ability to dynamically insert/delete/reload specific cards
+- External animator
+- Major refactoring
 
 Version 2.0
 

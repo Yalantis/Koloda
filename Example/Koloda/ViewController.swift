@@ -15,6 +15,15 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
+    private var dataSource: Array<UIImage> = {
+        var array: Array<UIImage> = []
+        for index in 0..<numberOfCards {
+            array.append(UIImage(named: "Card_like_\(index + 1)")!)
+        }
+        
+        return array
+    }()
+    
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,17 +52,10 @@ class ViewController: UIViewController {
 //MARK: KolodaViewDelegate
 extension ViewController: KolodaViewDelegate {
     
-    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) {
-        //Example: loading more cards
-        if index >= 3 {
-            numberOfCards = 6
-            kolodaView.reloadData()
-        }
-    }
-    
-    func koloda(kolodaDidRunOutOfCards koloda: KolodaView) {
-        //Example: reloading
-        kolodaView.resetCurrentCardNumber()
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {
+        dataSource.insert(UIImage(named: "Card_like_6")!, atIndex: kolodaView.currentCardIndex - 1)
+        let position = kolodaView.currentCardIndex
+        kolodaView.insertCardAtIndexRange(position...position, animated: true)
     }
     
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
@@ -64,12 +66,12 @@ extension ViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension ViewController: KolodaViewDataSource {
     
-    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
-        return numberOfCards
+    func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
+        return UInt(dataSource.count)
     }
     
     func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
-        return UIImageView(image: UIImage(named: "Card_like_\(index + 1)"))
+        return UIImageView(image: dataSource[Int(index)])
     }
     
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
