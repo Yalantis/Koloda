@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7)
+* Supported build target - iOS 9.0 (Xcode 7.3)
 
 
 ARC Compatibility
@@ -72,7 +72,7 @@ An object that supports the KolodaViewDataSource protocol and can provide views 
 ```
 An object that supports the KolodaViewDelegate protocol and can respond to KolodaView events.
 ```swift
-    public var currentCardNumber
+    public var currentCardIndex
 ```
 The index of front card in the KolodaView (read only).
 ```swift
@@ -139,11 +139,11 @@ Return a view for card overlay at the specified index. For setting custom overla
 
 The KolodaViewDelegate protocol has the following methods:
 ```swift    
-    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
+    func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
 ```    
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func koloda(kolodaDidRunOutOfCards koloda: KolodaView)
+    func kolodaDidRunOutOfCards(koloda: KolodaView)
 ```    
 This method is called when the KolodaView has no cards to display.
 ```swift
@@ -151,27 +151,27 @@ This method is called when the KolodaView has no cards to display.
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
 This method is fired on reload, when any cards are displayed. If you return YES from the method or don't implement it, the koloda will apply appear animation.
 ```swift
-    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on start of front card swipping. If you return YES from the method or don't implement it, the koloda will move background card with dragging of front card.
 ```swift
-    func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on koloda's layout and after swiping. If you return YES from the method or don't implement it, the koloda will transparentize next card below front card.
 ```swift
-func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
+func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection)
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
 ```swift
-func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
+func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat?
 ```
 Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
 ```swift
-func koloda(kolodaDidResetCard koloda: KolodaView)
+func kolodaDidResetCard(koloda: KolodaView)
 ```
 This method is fired after resetting the card.
 ```swift
@@ -188,6 +188,7 @@ Version 3.0
 - Ability to dynamically insert/delete/reload specific cards
 - External animator
 - Major refactoring
+- Swift 2.2 support
 
 Version 2.0
 
