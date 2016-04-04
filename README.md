@@ -1,4 +1,4 @@
-KolodaView
+KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 2.2.x](https://img.shields.io/badge/Swift-2.2.x-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -53,7 +53,7 @@ end
 ```
 To install via Carthage add this lines to your Cartfile
 ```ruby
-github "Yalantis/Koloda" "master"
+github "Yalantis/Koloda"
 ```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
