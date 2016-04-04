@@ -11,7 +11,7 @@ import pop
 
 protocol DraggableCardDelegate: class {
     
-    func card(card: DraggableCardView, wasDraggedWithFinishPercent percent: CGFloat, inDirection direction: SwipeResultDirection)
+    func card(card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
@@ -72,9 +72,9 @@ public class DraggableCardView: UIView {
     }
     
     private func setup() {
-        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: Selector("panGestureRecognized:"))
+        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(DraggableCardView.panGestureRecognized(_:)))
         addGestureRecognizer(panGestureRecognizer)
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("tapRecognized:"))
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DraggableCardView.tapRecognized(_:)))
         addGestureRecognizer(tapGestureRecognizer)
     }
     
@@ -198,7 +198,7 @@ public class DraggableCardView: UIView {
             dragBegin = true
             
             animationDirection = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
-            
+            layer.rasterizationScale = UIScreen.mainScreen().scale
             layer.shouldRasterize = true
             
             break
@@ -216,7 +216,7 @@ public class DraggableCardView: UIView {
             
             updateOverlayWithFinishPercent(dragDistance.x / CGRectGetWidth(frame))
             //100% - for proportion
-            delegate?.card(self, wasDraggedWithFinishPercent: min(fabs(dragDistance.x * 100 / CGRectGetWidth(frame)), 100), inDirection: dragDirection)
+            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(dragDistance.x * 100 / CGRectGetWidth(frame)), 100), inDirection: dragDirection)
             
             break
         case .Ended:
