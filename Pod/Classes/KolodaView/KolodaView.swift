@@ -511,6 +511,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
         reloadData()
     }
     
+    public func changeCurrentCardIndex(to index:Int) {
+        clear()
+        currentCardIndex = index
+        reloadData()
+    }
+    
     public func viewForCardAtIndex(index: Int) -> UIView? {
         if visibleCards.count + currentCardIndex > index && index >= currentCardIndex {
             return visibleCards[index - currentCardIndex].contentView
