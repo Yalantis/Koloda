@@ -30,6 +30,7 @@ class ViewController: UIViewController {
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
+        kolodaView.allowedDirections = [.Up, .Left, .Down, .Right]
         
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
@@ -37,15 +38,23 @@ class ViewController: UIViewController {
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipe(SwipeResultDirection.Left)
+        kolodaView.swipe(.Left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipe(SwipeResultDirection.Right)
+        kolodaView.swipe(.Right)
+    }
+    
+    @IBAction func upButtonTapped(sender: AnyObject) {
+        kolodaView.swipe(.Up)
+    }
+    
+    @IBAction func downButtonTapped(sender: AnyObject){
+        kolodaView.swipe(.Down)
     }
     
     @IBAction func undoButtonTapped() {
-        kolodaView?.revertAction()
+        kolodaView.revertAction()
     }
 }
 

@@ -15,7 +15,8 @@ protocol DraggableCardDelegate: class {
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
-    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat?
+    func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
+    var allowedDirections:[SwipeResultDirection] { get }
 }
 
 //Drag animation constants
@@ -23,6 +24,8 @@ private let rotationMax: CGFloat = 1.0
 private let defaultRotationAngle = CGFloat(M_PI) / 10.0
 private let scaleMin: CGFloat = 0.8
 public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
+
+private let screenSize = UIScreen.mainScreen().bounds.size
 
 //Reset animation constants
 private let cardResetAnimationSpringBounciness: CGFloat = 10.0
@@ -39,10 +42,10 @@ public class DraggableCardView: UIView {
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
-    private var animationDirection: CGFloat = 1.0
+    private var animationDirectionY: CGFloat = 1.0
     private var dragBegin = false
     private var dragDistance = CGPointZero
-    private var actionMargin: CGFloat = 0.0
+    private var swipePercentageMargin: CGFloat = 0.0
     
     //MARK: Lifecycle
     init() {
@@ -62,7 +65,11 @@ public class DraggableCardView: UIView {
     
     override public var frame: CGRect {
         didSet {
-            actionMargin = delegate?.card(cardSwipeThresholdMargin: self) ?? frame.size.width / 2.0
+            if let r = delegate?.card(cardSwipeThresholdRatioMargin: self) where r != 0 {
+                swipePercentageMargin = r
+            } else {
+                swipePercentageMargin = 1.0
+            }
         }
     }
     
@@ -197,14 +204,14 @@ public class DraggableCardView: UIView {
             
             dragBegin = true
             
-            animationDirection = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
+            animationDirectionY = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
             layer.rasterizationScale = UIScreen.mainScreen().scale
             layer.shouldRasterize = true
             
             break
         case .Changed:
             let rotationStrength = min(dragDistance.x / CGRectGetWidth(frame), rotationMax)
-            let rotationAngle = animationDirection * defaultRotationAngle * rotationStrength
+            let rotationAngle = animationDirectionY * defaultRotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     
@@ -214,9 +221,9 @@ public class DraggableCardView: UIView {
             transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             layer.transform = transform
             
-            updateOverlayWithFinishPercent(dragDistance.x / CGRectGetWidth(frame))
+            updateOverlayWithFinishPercent(dragPercentage, direction:dragDirection)
             //100% - for proportion
-            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(dragDistance.x * 100 / CGRectGetWidth(frame)), 100), inDirection: dragDirection)
+            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * dragPercentage), 100), inDirection: dragDirection)
             
             break
         case .Ended:
@@ -233,42 +240,89 @@ public class DraggableCardView: UIView {
     }
     
     //MARK: Private
-    private var dragDirection: SwipeResultDirection {
-        return dragDistance.x > 0 ? .Right : .Left
+    
+    private var directions:[SwipeResultDirection] {
+        return delegate?.allowedDirections ?? [.Left, .Right]
     }
     
-    private func updateOverlayWithFinishPercent(percent: CGFloat) {
+    private var dragDirection: SwipeResultDirection {
+        //find closest direction
+        let normalizedDragPoint = dragDistance.normalizedPointForSize(bounds.size)
+        return directions.reduce((CGFloat.infinity, .None)) { min, dir in
+            let d = dir.point.distanceTo(normalizedDragPoint)
+            if d < min.0 {
+                return (d,dir)
+            }
+            return min
+        }.1
+    }
+    
+    private var dragPercentage:CGFloat {
+        
+        // normalize dragDistance then convert project closesest direction vector
+        let normalizedDragPoint = dragDistance.normalizedPointForSize(bounds.size)
+        let swipePoint = normalizedDragPoint.scalarProjectionPointWith(dragDirection.point)
+        
+        // rect to represent bounds of card in normalized coordinate system
+        let rect = SwipeResultDirection.boundsRect
+        
+        // if point is outside rect, percentage of swipe in direction is over 100%
+        if !rect.contains(swipePoint) {
+            return 1.0
+        } else {
+            let centerDistance = swipePoint.distanceTo(.zero)
+            let targetLine = (swipePoint, CGPoint.zero)
+            // check 4 borders for intersection with line between touchpoint and center of card
+            return rect.perimeterLines.reduce(CGFloat.infinity) { minPer, line in
+                // return minimum distance of intersection point to swipePoint
+                if let point = CGPoint.intersectionBetweenLines(targetLine, line2: line) {
+                    return min(minPer, centerDistance / point.distanceTo(.zero))
+                }
+                return minPer
+            }
+            
+        }
+    }
+    
+    
+    private func updateOverlayWithFinishPercent(percent: CGFloat, direction:SwipeResultDirection) {
         if let overlayView = self.overlayView {
-            overlayView.overlayState = percent > 0.0 ? OverlayMode.Right : OverlayMode.Left
-            //Overlay is fully visible on half way
-            let overlayStrength = min(fabs(2 * percent), 1.0)
+            overlayView.overlayState = direction
+            //Overlay is fully visible over swipePercentageMargin
+            let overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
             overlayView.alpha = overlayStrength
         }
     }
     
     private func swipeMadeAction() {
         
-        if abs(dragDistance.x) >= actionMargin {
+        if dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()
         }
     }
     
+    private func animationPointForDirection(direction:SwipeResultDirection) -> CGPoint {
+        let point = direction.point
+        let animatePoint = CGPoint(x: point.x * 4, y: point.y * 4) //should be 2
+        let retPoint = animatePoint.screenPointForSize(screenSize)
+        return retPoint
+    }
+    
+    private func animationRotationForDirection(direction:SwipeResultDirection) -> CGFloat {
+        return CGFloat(direction.bearing/2.0 - M_PI_4)
+    }
+
+    
     private func swipeAction(direction: SwipeResultDirection) {
-        
-        let screenWidth = CGRectGetWidth(UIScreen.mainScreen().bounds)
-        let translation = screenWidth + (screenWidth / 2)
-        let directionMultiplier: CGFloat = direction == .Left ? -1 : 1
-        let finishTranslation = directionMultiplier * translation
-        
-        overlayView?.overlayState = direction == .Left ? .Left : .Right
+        overlayView?.overlayState = direction
         overlayView?.alpha = 1.0
         delegate?.card(self, wasSwipedInDirection: direction)
-        let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationX)
+        let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
         translationAnimation.duration = cardSwipeActionAnimationDuration
-        translationAnimation.fromValue = POPLayerGetTranslationX(layer)
-        translationAnimation.toValue = finishTranslation
+        translationAnimation.fromValue = NSValue(CGPoint: POPLayerGetTranslationXY(layer))
+        translationAnimation.toValue = NSValue(CGPoint: animationPointForDirection(direction))
         translationAnimation.completionBlock = { _, _ in
             self.removeFromSuperview()
         }
@@ -281,7 +335,7 @@ public class DraggableCardView: UIView {
         removeAnimations()
         
         let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
-        resetPositionAnimation.fromValue = NSValue(CGPoint: CGPoint(x: dragDistance.x, y: dragDistance.y))
+        resetPositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
         resetPositionAnimation.toValue = NSValue(CGPoint: CGPointZero)
         resetPositionAnimation.springBounciness = cardResetAnimationSpringBounciness
         resetPositionAnimation.springSpeed = cardResetAnimationSpringSpeed
@@ -327,8 +381,9 @@ public class DraggableCardView: UIView {
             let screenWidth = CGRectGetWidth(UIScreen.mainScreen().bounds)
             let finalPosition = direction == .Left ? -screenWidth : 2 * screenWidth
             
-            let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerPositionX)
-            swipePositionAnimation.toValue = finalPosition
+            let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
+            swipePositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
+            swipePositionAnimation.toValue = NSValue(CGPoint:animationPointForDirection(direction))
             swipePositionAnimation.duration = cardSwipeActionAnimationDuration
             swipePositionAnimation.completionBlock = {
                 (_, _) in
@@ -339,12 +394,12 @@ public class DraggableCardView: UIView {
             
             let swipeRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
             swipeRotationAnimation.fromValue = POPLayerGetRotationZ(layer)
-            swipeRotationAnimation.toValue = CGFloat(direction == .Left ? -M_PI_4 : M_PI_4)
+            swipeRotationAnimation.toValue = CGFloat(animationRotationForDirection(direction))
             swipeRotationAnimation.duration = cardSwipeActionAnimationDuration
             
             layer.pop_addAnimation(swipeRotationAnimation, forKey: "swipeRotationAnimation")
             
-            overlayView?.overlayState = direction == .Left ? .Left : .Right
+            overlayView?.overlayState = direction
             let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
             overlayAlphaAnimation.toValue = 1.0
             overlayAlphaAnimation.duration = cardSwipeActionAnimationDuration

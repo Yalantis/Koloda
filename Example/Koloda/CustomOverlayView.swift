@@ -23,7 +23,7 @@ class CustomOverlayView: OverlayView {
         return imageView
         }()
     
-    override var overlayState:OverlayMode  {
+    override var overlayState:SwipeResultDirection  {
         didSet {
             switch overlayState {
             case .Left :

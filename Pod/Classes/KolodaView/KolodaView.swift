@@ -9,12 +9,6 @@
 import UIKit
 import pop
 
-public enum SwipeResultDirection {
-    case None
-    case Left
-    case Right
-}
-
 //Default values
 private let defaultCountOfVisibleCards = 3
 private let backgroundCardsTopMargin: CGFloat = 4.0
@@ -51,7 +45,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
     func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection)
     func kolodaDidResetCard(koloda: KolodaView)
-    func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat?
+    func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
 }
 
@@ -65,7 +59,7 @@ public extension KolodaViewDelegate {
     func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool { return true }
     func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection) {}
     func kolodaDidResetCard(koloda: KolodaView) {}
-    func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat? { return nil}
+    func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt) {}
     
 }
@@ -79,6 +73,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public weak var delegate: KolodaViewDelegate?
+    
+    public var allowedDirections:[SwipeResultDirection] = [.Left, .Right]
     
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
@@ -285,8 +281,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         delegate?.koloda(self, didSelectCardAtIndex: UInt(index))
     }
     
-    func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat? {
-        return delegate?.kolodaSwipeThresholdMargin(self)
+    func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat? {
+        return delegate?.kolodaSwipeThresholdRatioMargin(self)
     }
     
     //MARK: Private
@@ -493,6 +489,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func swipe(direction: SwipeResultDirection) {
+        
+        guard allowedDirections.contains(direction) else { return }
+        
         if !animating {
             if let frontCard = visibleCards.first {
                 animating = true
