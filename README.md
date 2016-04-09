@@ -167,7 +167,7 @@ func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFl
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
 ```swift
-func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat?
+func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
 ```
 Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
 ```swift
@@ -182,6 +182,11 @@ This method is called after a card has been shown, after animation is complete
 
 Release Notes
 ----------------
+
+Version 3.1
+
+- Multiple Direction Support
+- Ability to change current card index
 
 Version 3.0
 
