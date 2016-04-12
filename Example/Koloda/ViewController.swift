@@ -30,7 +30,6 @@ class ViewController: UIViewController {
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
-        kolodaView.allowedDirections = [.Up, .Left, .Down, .Right]
         
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
@@ -69,6 +68,10 @@ extension ViewController: KolodaViewDelegate {
     
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+    }
+    
+    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection] {
+        return [.Left, .Right, .Up, .Down]
     }
 }
 

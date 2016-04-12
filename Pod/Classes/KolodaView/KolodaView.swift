@@ -37,6 +37,8 @@ public extension KolodaViewDataSource {
 
 public protocol KolodaViewDelegate:class {
     
+    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
+    func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
     func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
     func kolodaDidRunOutOfCards(koloda: KolodaView)
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
@@ -50,7 +52,9 @@ public protocol KolodaViewDelegate:class {
 }
 
 public extension KolodaViewDelegate {
-    
+    func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool { return true }
+
+    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection] { return [.Left, .Right] }
     func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) {}
     func kolodaDidRunOutOfCards(koloda: KolodaView) {}
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {}
@@ -73,8 +77,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public weak var delegate: KolodaViewDelegate?
-    
-    public var allowedDirections:[SwipeResultDirection] = [.Left, .Right]
     
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
@@ -245,6 +247,15 @@ public class KolodaView: UIView, DraggableCardDelegate {
             self.moveOtherCardsWithPercentage(percentage)
         }
         delegate?.koloda(self, draggedCardWithPercentage: percentage, inDirection: direction)
+    }
+    
+    func card(card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool {
+        return delegate?.koloda(self, shouldSwipeCardAtIndex: UInt(self.currentCardIndex), inDirection: direction) ?? true
+    }
+    
+    func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection] {
+        let index = currentCardIndex + visibleCards.indexOf(card)!
+        return delegate?.koloda(self, allowedDirectionsForIndex: UInt(index)) ?? [.Left, .Right]
     }
     
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection) {
@@ -490,7 +501,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     public func swipe(direction: SwipeResultDirection) {
         
-        guard allowedDirections.contains(direction) else { return }
+        let validDirection = delegate?.koloda(self, allowedDirectionsForIndex: UInt(currentCardIndex)).contains(direction) ?? true
+        guard validDirection else { return }
         
         if !animating {
             if let frontCard = visibleCards.first {

@@ -13,10 +13,11 @@ protocol DraggableCardDelegate: class {
     
     func card(card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
+    func card(card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
-    var allowedDirections:[SwipeResultDirection] { get }
+    func card(cardAllowedDirections card:DraggableCardView) -> [SwipeResultDirection]
 }
 
 //Drag animation constants
@@ -242,7 +243,7 @@ public class DraggableCardView: UIView {
     //MARK: Private
     
     private var directions:[SwipeResultDirection] {
-        return delegate?.allowedDirections ?? [.Left, .Right]
+        return delegate?.card(cardAllowedDirections: self) ?? [.Left, .Right]
     }
     
     private var dragDirection: SwipeResultDirection {
@@ -295,8 +296,8 @@ public class DraggableCardView: UIView {
     }
     
     private func swipeMadeAction() {
-        
-        if dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
+        let shouldSwipe = delegate?.card(self, shouldSwipeInDirection: dragDirection) ?? true
+        if shouldSwipe && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()
