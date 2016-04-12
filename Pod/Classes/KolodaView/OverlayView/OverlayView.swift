@@ -11,5 +11,10 @@ import UIKit
 public class OverlayView: UIView {
     
     public var overlayState = SwipeResultDirection.None
+    public var overlayStrength:CGFloat = 0.0 {
+        didSet {
+            self.alpha = overlayStrength
+        }
+    }
 
 }

@@ -290,8 +290,7 @@ public class DraggableCardView: UIView {
         if let overlayView = self.overlayView {
             overlayView.overlayState = direction
             //Overlay is fully visible over swipePercentageMargin
-            let overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
-            overlayView.alpha = overlayStrength
+            overlayView.overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
         }
     }
     
