@@ -9,7 +9,7 @@
 import Foundation
 
 
-public enum SwipeResultDirection:String {
+public enum SwipeResultDirection: String {
     case None
     case Left
     case Right
@@ -23,8 +23,8 @@ public enum SwipeResultDirection:String {
 
 extension SwipeResultDirection {
     
-    private var swipeDirection:Direction {
-        switch self{
+    private var swipeDirection: Direction {
+        switch self {
         case .Up: return .Up
         case .Down: return .Down
         case .Left: return .Left
@@ -37,15 +37,15 @@ extension SwipeResultDirection {
         }
     }
     
-    var point:CGPoint {
+    var point: CGPoint {
         return self.swipeDirection.point
     }
     
-    var bearing:Double {
+    var bearing: Double {
         return self.swipeDirection.bearing
     }
     
-    static var boundsRect:CGRect {
+    static var boundsRect: CGRect {
         let w = HorizontalPosition.Right.rawValue - HorizontalPosition.Left.rawValue
         let h = VerticalPosition.Bottom.rawValue - VerticalPosition.Top.rawValue
         return CGRect(x: HorizontalPosition.Left.rawValue, y: VerticalPosition.Top.rawValue, width: w, height: h)
@@ -53,13 +53,13 @@ extension SwipeResultDirection {
 }
 
 
-private enum VerticalPosition:CGFloat {
+private enum VerticalPosition: CGFloat {
     case Top = -1
     case Middle = 0
     case Bottom = 1
 }
 
-private enum HorizontalPosition:CGFloat {
+private enum HorizontalPosition: CGFloat {
     case Left = -1
     case Middle = 0
     case Right = 1
@@ -70,11 +70,11 @@ private struct Direction {
     let horizontalPosition:HorizontalPosition
     let verticalPosition:VerticalPosition
     
-    var point:CGPoint {
+    var point: CGPoint {
         return CGPoint(x:horizontalPosition.rawValue, y: verticalPosition.rawValue)
     }
     
-    var bearing:Double {
+    var bearing: Double {
         return self.point.bearingTo(Direction.None.point)
     }
     
@@ -94,28 +94,28 @@ private struct Direction {
 //MARK: Geometry
 
 extension CGPoint {
-    func distanceTo(point:CGPoint) -> CGFloat {
+    func distanceTo(point: CGPoint) -> CGFloat {
         return sqrt(pow(point.x - self.x, 2) + pow(point.y - self.y, 2))
     }
     
-    func bearingTo(point:CGPoint) -> Double {
+    func bearingTo(point: CGPoint) -> Double {
         return atan2(Double(point.y - self.y), Double(point.x - self.x))
     }
     
-    func scalarProjectionWith(point:CGPoint) -> CGFloat {
-        return dotProductWith(point)/point.modulo
+    func scalarProjectionWith(point: CGPoint) -> CGFloat {
+        return dotProductWith(point) / point.modulo
     }
     
-    func scalarProjectionPointWith(point:CGPoint) -> CGPoint {
+    func scalarProjectionPointWith(point: CGPoint) -> CGPoint {
         let r = scalarProjectionWith(point) / point.modulo
         return CGPoint(x: point.x * r, y: point.y * r)
     }
     
-    func dotProductWith(point:CGPoint) -> CGFloat {
+    func dotProductWith(point: CGPoint) -> CGFloat {
         return (self.x * point.x) + (self.y * point.y)
     }
     
-    var modulo:CGFloat {
+    var modulo: CGFloat {
         return sqrt(self.x*self.x + self.y*self.y)
     }
     
@@ -132,7 +132,7 @@ extension CGPoint {
         }
     }
     
-    func normalizedDistanceForSize(size:CGSize) -> CGPoint {
+    func normalizedDistanceForSize(size: CGSize) -> CGPoint {
         // multiplies by 2 because coordinate system is (-1,1)
         let x = 2 * (self.x / size.width)
         let y = 2 * (self.y / size.height)
@@ -140,8 +140,8 @@ extension CGPoint {
     }
     
     func normalizedPointForSize(size:CGSize) -> CGPoint {
-        let x = self.x/(size.width * 0.5) - 1
-        let y = self.y/(size.height * 0.5) - 1
+        let x = (self.x / (size.width * 0.5)) - 1
+        let y = (self.y / (size.height * 0.5)) - 1
         return CGPoint(x: x, y: y)
     }
     
@@ -151,7 +151,7 @@ extension CGPoint {
         return CGPoint(x: x, y: y)
     }
     
-    static func intersectionBetweenLines(line1:CGLine, line2:CGLine) -> CGPoint? {
+    static func intersectionBetweenLines(line1: CGLine, line2: CGLine) -> CGPoint? {
         let (p1,p2) = line1
         let (p3,p4) = line2
         
@@ -170,23 +170,23 @@ extension CGPoint {
     }
 }
 
-typealias CGLine = (start:CGPoint, end:CGPoint)
+typealias CGLine = (start: CGPoint, end: CGPoint)
 
 extension CGRect {
-    var topLine:CGLine {
+    var topLine: CGLine {
         return (Direction.TopLeft.point, Direction.TopRight.point)
     }
-    var leftLine:CGLine {
+    var leftLine: CGLine {
         return (Direction.TopLeft.point, Direction.BottomLeft.point)
     }
-    var bottomLine:CGLine {
+    var bottomLine: CGLine {
         return (Direction.BottomLeft.point, Direction.BottomRight.point)
     }
-    var rightLine:CGLine {
+    var rightLine: CGLine {
         return (Direction.TopRight.point, Direction.BottomRight.point)
     }
     
-    var perimeterLines:[CGLine] {
+    var perimeterLines: [CGLine] {
         return [topLine, leftLine, bottomLine, rightLine]
     }
 }

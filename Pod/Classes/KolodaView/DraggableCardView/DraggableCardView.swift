@@ -17,7 +17,7 @@ protocol DraggableCardDelegate: class {
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
-    func card(cardAllowedDirections card:DraggableCardView) -> [SwipeResultDirection]
+    func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
 }
 
 //Drag animation constants
@@ -243,7 +243,7 @@ public class DraggableCardView: UIView {
     
     //MARK: Private
     
-    private var directions:[SwipeResultDirection] {
+    private var directions: [SwipeResultDirection] {
         return delegate?.card(cardAllowedDirections: self) ?? [.Left, .Right]
     }
     
@@ -259,7 +259,7 @@ public class DraggableCardView: UIView {
         }.1
     }
     
-    private var dragPercentage:CGFloat {
+    private var dragPercentage: CGFloat {
         
         // normalize dragDistance then convert project closesest direction vector
         let normalizedDragPoint = dragDistance.normalizedDistanceForSize(frame.size)
@@ -288,12 +288,9 @@ public class DraggableCardView: UIView {
     }
     
     
-    private func updateOverlayWithFinishPercent(percent: CGFloat, direction:SwipeResultDirection) {
-        if let overlayView = self.overlayView {
-            overlayView.overlayState = direction
-            //Overlay is fully visible over swipePercentageMargin
-            overlayView.overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
-        }
+    private func updateOverlayWithFinishPercent(percent: CGFloat, direction: SwipeResultDirection) {
+        overlayView?.overlayState = direction
+        overlayView?.overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
     }
     
     private func swipeMadeAction() {
@@ -305,15 +302,15 @@ public class DraggableCardView: UIView {
         }
     }
     
-    private func animationPointForDirection(direction:SwipeResultDirection) -> CGPoint {
+    private func animationPointForDirection(direction: SwipeResultDirection) -> CGPoint {
         let point = direction.point
         let animatePoint = CGPoint(x: point.x * 4, y: point.y * 4) //should be 2
         let retPoint = animatePoint.screenPointForSize(screenSize)
         return retPoint
     }
     
-    private func animationRotationForDirection(direction:SwipeResultDirection) -> CGFloat {
-        return CGFloat(direction.bearing/2.0 - M_PI_4)
+    private func animationRotationForDirection(direction: SwipeResultDirection) -> CGFloat {
+        return CGFloat(direction.bearing / 2.0 - M_PI_4)
     }
 
     
