@@ -274,16 +274,13 @@ public class DraggableCardView: UIView {
         } else {
             let centerDistance = swipePoint.distanceTo(.zero)
             let targetLine = (swipePoint, CGPoint.zero)
+            
             // check 4 borders for intersection with line between touchpoint and center of card
-            let pct = rect.perimeterLines.reduce(CGFloat.infinity) { minPer, line in
-                // return minimum distance of intersection point to swipePoint
-                if let point = CGPoint.intersectionBetweenLines(targetLine, line2: line) {
-                    return min(minPer, centerDistance / point.distanceTo(.zero))
-                }
-                return minPer
-            }
-            if pct == CGFloat.infinity { return 0 }
-            return pct
+            // return smallest percentage of distance to edge point or 0
+            return rect.perimeterLines
+                        .flatMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
+                        .map { centerDistance / $0.distanceTo(.zero) }
+                        .minElement() ?? 0
         }
     }
     
