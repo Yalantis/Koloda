@@ -222,9 +222,10 @@ public class DraggableCardView: UIView {
             transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             layer.transform = transform
             
-            updateOverlayWithFinishPercent(dragPercentage, direction:dragDirection)
+            let percentage = dragPercentage
+            updateOverlayWithFinishPercent(percentage, direction:dragDirection)
             //100% - for proportion
-            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * dragPercentage), 100), inDirection: dragDirection)
+            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
             
             break
         case .Ended:
@@ -248,7 +249,7 @@ public class DraggableCardView: UIView {
     
     private var dragDirection: SwipeResultDirection {
         //find closest direction
-        let normalizedDragPoint = dragDistance.normalizedPointForSize(bounds.size)
+        let normalizedDragPoint = dragDistance.normalizedDistanceForSize(bounds.size)
         return directions.reduce((CGFloat.infinity, .None)) { min, dir in
             let d = dir.point.distanceTo(normalizedDragPoint)
             if d < min.0 {
@@ -261,7 +262,7 @@ public class DraggableCardView: UIView {
     private var dragPercentage:CGFloat {
         
         // normalize dragDistance then convert project closesest direction vector
-        let normalizedDragPoint = dragDistance.normalizedPointForSize(bounds.size)
+        let normalizedDragPoint = dragDistance.normalizedDistanceForSize(frame.size)
         let swipePoint = normalizedDragPoint.scalarProjectionPointWith(dragDirection.point)
         
         // rect to represent bounds of card in normalized coordinate system
@@ -274,14 +275,15 @@ public class DraggableCardView: UIView {
             let centerDistance = swipePoint.distanceTo(.zero)
             let targetLine = (swipePoint, CGPoint.zero)
             // check 4 borders for intersection with line between touchpoint and center of card
-            return rect.perimeterLines.reduce(CGFloat.infinity) { minPer, line in
+            let pct = rect.perimeterLines.reduce(CGFloat.infinity) { minPer, line in
                 // return minimum distance of intersection point to swipePoint
                 if let point = CGPoint.intersectionBetweenLines(targetLine, line2: line) {
                     return min(minPer, centerDistance / point.distanceTo(.zero))
                 }
                 return minPer
             }
-            
+            if pct == CGFloat.infinity { return 0 }
+            return pct
         }
     }
     

@@ -108,7 +108,7 @@ extension CGPoint {
     
     func scalarProjectionPointWith(point:CGPoint) -> CGPoint {
         let r = scalarProjectionWith(point) / point.modulo
-        return CGPoint(x: point.x * r, y: point.y * y)
+        return CGPoint(x: point.x * r, y: point.y * r)
     }
     
     func dotProductWith(point:CGPoint) -> CGFloat {
@@ -132,14 +132,23 @@ extension CGPoint {
         }
     }
     
-    func normalizedPointForSize(screenSize:CGSize) -> CGPoint {
-        let x = 2 * (self.x / screenSize.width)
-        let y = 2 * (self.y / screenSize.height)
+    func normalizedDistanceForSize(size:CGSize) -> CGPoint {
+        // multiplies by 2 because coordinate system is (-1,1)
+        let x = 2 * (self.x / size.width)
+        let y = 2 * (self.y / size.height)
         return CGPoint(x: x, y: y)
     }
     
-    func screenPointForSize(screenSize:CGSize) -> CGPoint {
-        return CGPoint(x: 0.5 * (1 + self.x) * screenSize.width, y: 0.5 * ( 1 + self.y) * screenSize.height)
+    func normalizedPointForSize(size:CGSize) -> CGPoint {
+        let x = self.x/(size.width * 0.5) - 1
+        let y = self.y/(size.height * 0.5) - 1
+        return CGPoint(x: x, y: y)
+    }
+    
+    func screenPointForSize(screenSize: CGSize) -> CGPoint {
+        let x = 0.5 * (1 + self.x) * screenSize.width
+        let y = 0.5 * (1 + self.y) * screenSize.height
+        return CGPoint(x: x, y: y)
     }
     
     static func intersectionBetweenLines(line1:CGLine, line2:CGLine) -> CGPoint? {
