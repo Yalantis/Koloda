@@ -178,7 +178,12 @@ This method is fired after resetting the card.
 func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
 ```
 This method is called after a card has been shown, after animation is complete
-
+```swift
+func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
+```
+This method is called when the card is beginning to be dragged. If you return YES from the method or
+don't implement it, the card will move in the direction of the drag. If you return NO the card will
+not move.
 
 Release Notes
 ----------------
