@@ -53,6 +53,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaDidResetCard(koloda: KolodaView)
     func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat?
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
+    func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
 }
 
 public extension KolodaViewDelegate {
@@ -67,7 +68,7 @@ public extension KolodaViewDelegate {
     func kolodaDidResetCard(koloda: KolodaView) {}
     func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt) {}
-    
+    func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool { return true }
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -287,6 +288,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     func card(cardSwipeThresholdMargin card: DraggableCardView) -> CGFloat? {
         return delegate?.kolodaSwipeThresholdMargin(self)
+    }
+    
+    func card(cardShouldDrag card: DraggableCardView) -> Bool {
+        let index = currentCardIndex + visibleCards.indexOf(card)!
+        
+        return delegate?.koloda(self, shouldDragCardAtIndex: UInt(index)) ?? true
     }
     
     //MARK: Private
