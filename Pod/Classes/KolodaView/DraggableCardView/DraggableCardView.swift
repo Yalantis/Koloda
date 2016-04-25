@@ -222,10 +222,12 @@ public class DraggableCardView: UIView {
             transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             layer.transform = transform
             
-            let percentage = dragPercentage
-            updateOverlayWithFinishPercent(percentage, direction:dragDirection)
-            //100% - for proportion
-            delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
+            if let dragDirection = dragDirection {
+                let percentage = dragPercentage
+                updateOverlayWithFinishPercent(percentage, direction:dragDirection)
+                //100% - for proportion
+                delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
+            }
             
             break
         case .Ended:
@@ -247,10 +249,10 @@ public class DraggableCardView: UIView {
         return delegate?.card(cardAllowedDirections: self) ?? [.Left, .Right]
     }
     
-    private var dragDirection: SwipeResultDirection {
+    private var dragDirection: SwipeResultDirection? {
         //find closest direction
         let normalizedDragPoint = dragDistance.normalizedDistanceForSize(bounds.size)
-        return directions.reduce((distance:CGFloat.infinity, direction:.None)) { closest, direction in
+        return directions.reduce((distance:CGFloat.infinity, direction:nil)) { closest, direction in
             let distance = direction.point.distanceTo(normalizedDragPoint)
             if distance < closest.distance {
                 return (distance, direction)
@@ -260,7 +262,7 @@ public class DraggableCardView: UIView {
     }
     
     private var dragPercentage: CGFloat {
-        
+        guard let dragDirection = dragDirection else { return 0 }
         // normalize dragDistance then convert project closesest direction vector
         let normalizedDragPoint = dragDistance.normalizedDistanceForSize(frame.size)
         let swipePoint = normalizedDragPoint.scalarProjectionPointWith(dragDirection.point)
@@ -291,8 +293,10 @@ public class DraggableCardView: UIView {
     }
     
     private func swipeMadeAction() {
-        let shouldSwipe = delegate?.card(self, shouldSwipeInDirection: dragDirection) ?? true
-        if shouldSwipe && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
+        var shouldSwipe = { direction in
+            return self.delegate?.card(self, shouldSwipeInDirection: direction) ?? true
+        }
+        if let dragDirection = dragDirection where shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()

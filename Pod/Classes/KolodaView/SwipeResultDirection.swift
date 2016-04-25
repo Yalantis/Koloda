@@ -10,7 +10,6 @@ import Foundation
 
 
 public enum SwipeResultDirection: String {
-    case None
     case Left
     case Right
     case Up
@@ -33,7 +32,6 @@ extension SwipeResultDirection {
         case .TopRight: return .TopRight
         case .BottomLeft: return .BottomLeft
         case .BottomRight: return .BottomRight
-        case .None: return .None
         }
     }
     
