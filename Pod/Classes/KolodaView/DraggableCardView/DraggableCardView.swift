@@ -66,8 +66,8 @@ public class DraggableCardView: UIView {
     
     override public var frame: CGRect {
         didSet {
-            if let r = delegate?.card(cardSwipeThresholdRatioMargin: self) where r != 0 {
-                swipePercentageMargin = r
+            if let ratio = delegate?.card(cardSwipeThresholdRatioMargin: self) where ratio != 0 {
+                swipePercentageMargin = ratio
             } else {
                 swipePercentageMargin = 1.0
             }
@@ -250,13 +250,13 @@ public class DraggableCardView: UIView {
     private var dragDirection: SwipeResultDirection {
         //find closest direction
         let normalizedDragPoint = dragDistance.normalizedDistanceForSize(bounds.size)
-        return directions.reduce((CGFloat.infinity, .None)) { min, dir in
-            let d = dir.point.distanceTo(normalizedDragPoint)
-            if d < min.0 {
-                return (d,dir)
+        return directions.reduce((distance:CGFloat.infinity, direction:.None)) { closest, direction in
+            let distance = direction.point.distanceTo(normalizedDragPoint)
+            if distance < closest.distance {
+                return (distance, direction)
             }
-            return min
-        }.1
+            return closest
+        }.direction
     }
     
     private var dragPercentage: CGFloat {

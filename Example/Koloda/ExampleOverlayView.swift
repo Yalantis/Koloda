@@ -11,8 +11,6 @@ import Koloda
 
 private let overlayRightImageName = "yesOverlayImage"
 private let overlayLeftImageName = "noOverlayImage"
-private let overlayUpImageName = "ic_like"
-private let overlayDownImageName = "ic_skip"
 
 class ExampleOverlayView: OverlayView {
     @IBOutlet lazy var overlayImageView: UIImageView! = {
@@ -31,10 +29,6 @@ class ExampleOverlayView: OverlayView {
                 overlayImageView.image = UIImage(named: overlayLeftImageName)
             case .Right :
                 overlayImageView.image = UIImage(named: overlayRightImageName)
-            case .Up :
-                overlayImageView.image = UIImage(named: overlayUpImageName)
-            case .Down :
-                overlayImageView.image = UIImage(named: overlayDownImageName)
             default:
                 overlayImageView.image = nil
             }

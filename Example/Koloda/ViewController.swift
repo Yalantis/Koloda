@@ -37,23 +37,15 @@ class ViewController: UIViewController {
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView.swipe(.Left)
+        kolodaView?.swipe(SwipeResultDirection.Left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView.swipe(.Right)
-    }
-    
-    @IBAction func upButtonTapped(sender: AnyObject) {
-        kolodaView.swipe(.Up)
-    }
-    
-    @IBAction func downButtonTapped(sender: AnyObject){
-        kolodaView.swipe(.Down)
+        kolodaView?.swipe(SwipeResultDirection.Right)
     }
     
     @IBAction func undoButtonTapped() {
-        kolodaView.revertAction()
+        kolodaView?.revertAction()
     }
 }
 
@@ -68,10 +60,6 @@ extension ViewController: KolodaViewDelegate {
     
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
-    }
-    
-    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection] {
-        return [.Left, .Right, .Up, .Down]
     }
 }
 
