@@ -11,8 +11,8 @@ import pop
 
 //Default values
 private let defaultCountOfVisibleCards = 3
-private let backgroundCardsTopMargin: CGFloat = 4.0
-private let backgroundCardsScalePercent: CGFloat = 0.95
+private let backgroundCardsTopMargin: CGFloat = 0
+private let backgroundCardsScalePercent: CGFloat = 1
 private let backgroundCardsLeftMargin: CGFloat = 8.0
 private let backgroundCardFrameAnimationDuration: NSTimeInterval = 0.2
 
