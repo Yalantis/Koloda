@@ -138,6 +138,15 @@ Return a view to be displayed at the specified index in the KolodaView.
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
+    ```swift
+    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
+```
+Return the allowed directions for a given card, defaults to `[.Left, .Right]`
+```swift    
+    func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
+```    
+This method is called before the KolodaView swipes card. Return `true` or `false` to allow or deny the swipe.
+
 ```swift    
     func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
 ```    
@@ -167,9 +176,9 @@ func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFl
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
 ```swift
-func kolodaSwipeThresholdMargin(koloda: KolodaView) -> CGFloat?
+    func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
 ```
-Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
+Return the percentage of the distance between the center of the card and the edge at the drag direction that needs to be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the distance
 ```swift
 func kolodaDidResetCard(koloda: KolodaView)
 ```
@@ -182,6 +191,10 @@ This method is called after a card has been shown, after animation is complete
 
 Release Notes
 ----------------
+
+Version X.X
+
+- Multiple Direction Support
 
 Version 3.0
 
