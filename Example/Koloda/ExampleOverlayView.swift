@@ -22,12 +22,12 @@ class ExampleOverlayView: OverlayView {
         return imageView
         }()
 
-    override var overlayState:OverlayMode  {
+    override var overlayState: SwipeResultDirection? {
         didSet {
             switch overlayState {
-            case .Left :
+            case .Left? :
                 overlayImageView.image = UIImage(named: overlayLeftImageName)
-            case .Right :
+            case .Right? :
                 overlayImageView.image = UIImage(named: overlayRightImageName)
             default:
                 overlayImageView.image = nil

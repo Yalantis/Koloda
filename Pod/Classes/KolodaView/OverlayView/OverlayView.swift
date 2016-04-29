@@ -8,15 +8,12 @@
 
 import UIKit
 
-public enum OverlayMode{
-    case None
-    case Left
-    case Right
-}
-
-
 public class OverlayView: UIView {
-    
-    public var overlayState:OverlayMode = OverlayMode.None
+    public var overlayState: SwipeResultDirection?
+    public var overlayStrength: CGFloat = 0.0 {
+        didSet {
+            self.alpha = overlayStrength
+        }
+    }
 
 }
