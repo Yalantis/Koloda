@@ -299,8 +299,9 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func card(cardShouldDrag card: DraggableCardView) -> Bool {
-        let index = currentCardIndex + visibleCards.indexOf(card)!
+        guard let visibleIndex = visibleCards.indexOf(card) else { return true}
         
+        let index = currentCardIndex + visibleIndex
         return delegate?.koloda(self, shouldDragCardAtIndex: UInt(index)) ?? true
     }
     
