@@ -18,6 +18,7 @@ protocol DraggableCardDelegate: class {
     func card(cardWasTapped card: DraggableCardView)
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
+    func card(cardShouldDrag card: DraggableCardView) -> Bool
 }
 
 //Drag animation constants
@@ -34,7 +35,7 @@ private let cardResetAnimationSpringSpeed: CGFloat = 20.0
 private let cardResetAnimationKey = "resetPositionAnimation"
 private let cardResetAnimationDuration: NSTimeInterval = 0.2
 
-public class DraggableCardView: UIView {
+public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     weak var delegate: DraggableCardDelegate?
     
@@ -82,6 +83,7 @@ public class DraggableCardView: UIView {
     private func setup() {
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(DraggableCardView.panGestureRecognized(_:)))
         addGestureRecognizer(panGestureRecognizer)
+        panGestureRecognizer.delegate = self
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DraggableCardView.tapRecognized(_:)))
         addGestureRecognizer(tapGestureRecognizer)
     }
@@ -237,6 +239,10 @@ public class DraggableCardView: UIView {
         default :
             break
         }
+    }
+    
+    public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        return delegate?.card(cardShouldDrag: self) ?? true
     }
     
     func tapRecognized(recogznier: UITapGestureRecognizer) {
