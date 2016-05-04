@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 3.0.0'
+pod 'Koloda', '~> 3.1.1'
 ```
 
 Thread Safety
@@ -197,15 +197,16 @@ not move.
 Release Notes
 ----------------
 
-Version X.X
+Version 3.1
 
 - Multiple Direction Support
+- Delegate methods for swipe disabling
 
 Version 3.0
 
 - Ability to dynamically insert/delete/reload specific cards
 - External animator
-- Major refactoring
+- Major refactoring. [More information](https://github.com/Yalantis/Koloda/releases/tag/3.0.0)
 - Swift 2.2 support
 
 Version 2.0
