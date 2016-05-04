@@ -299,7 +299,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     private func swipeMadeAction() {
-        var shouldSwipe = { direction in
+        let shouldSwipe = { direction in
             return self.delegate?.card(self, shouldSwipeInDirection: direction) ?? true
         }
         if let dragDirection = dragDirection where shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
@@ -383,9 +383,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     func swipe(direction: SwipeResultDirection) {
         if !dragBegin {
             delegate?.card(self, wasSwipedInDirection: direction)
-            
-            let screenWidth = CGRectGetWidth(UIScreen.mainScreen().bounds)
-            let finalPosition = direction == .Left ? -screenWidth : 2 * screenWidth
             
             let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
             swipePositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
