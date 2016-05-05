@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		442337AD1CDBCB10007B868C /* SwipeResultDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */; };
 		733C4A3D1CA43F50009A467E /* DraggableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A391CA43F50009A467E /* DraggableCardView.swift */; };
 		733C4A3E1CA43F50009A467E /* KolodaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A3A1CA43F50009A467E /* KolodaView.swift */; };
 		733C4A3F1CA43F50009A467E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A3C1CA43F50009A467E /* OverlayView.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeResultDirection.swift; sourceTree = "<group>"; };
 		733C4A2C1CA43E7C009A467E /* Koloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		733C4A311CA43E7C009A467E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		733C4A391CA43F50009A467E /* DraggableCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableCardView.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 		733C4A371CA43F50009A467E /* KolodaView */ = {
 			isa = PBXGroup;
 			children = (
+				442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */,
 				734475961CB279D8006E6726 /* KolodaCardStorage.swift */,
 				734475971CB279D8006E6726 /* KolodaViewAnimatior.swift */,
 				733C4A381CA43F50009A467E /* DraggableCardView */,
@@ -173,6 +176,7 @@
 				733C4A3F1CA43F50009A467E /* OverlayView.swift in Sources */,
 				733C4A3E1CA43F50009A467E /* KolodaView.swift in Sources */,
 				733C4A3D1CA43F50009A467E /* DraggableCardView.swift in Sources */,
+				442337AD1CDBCB10007B868C /* SwipeResultDirection.swift in Sources */,
 				734475991CB279D8006E6726 /* KolodaViewAnimatior.swift in Sources */,
 				734475981CB279D8006E6726 /* KolodaCardStorage.swift in Sources */,
 			);
