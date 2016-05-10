@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CoreGraphics
 
 public enum SwipeResultDirection: String {
     case Left
