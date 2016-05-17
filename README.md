@@ -1,4 +1,4 @@
-KolodaView
+KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 2.2.x](https://img.shields.io/badge/Swift-2.2.x-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7)
+* Supported build target - iOS 9.0 (Xcode 7.3)
 
 
 ARC Compatibility
@@ -29,7 +29,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 2.0.10'
+pod 'Koloda', '~> 3.1.1'
 ```
 
 Thread Safety
@@ -53,7 +53,7 @@ end
 ```
 To install via Carthage add this lines to your Cartfile
 ```ruby
-github "Yalantis/Koloda" "carthage"
+github "Yalantis/Koloda"
 ```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
@@ -72,7 +72,7 @@ An object that supports the KolodaViewDataSource protocol and can provide views 
 ```
 An object that supports the KolodaViewDelegate protocol and can respond to KolodaView events.
 ```swift
-    public var currentCardNumber
+    public var currentCardIndex
 ```
 The index of front card in the KolodaView (read only).
 ```swift
@@ -138,12 +138,21 @@ Return a view to be displayed at the specified index in the KolodaView.
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
+    ```swift
+    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
+```
+Return the allowed directions for a given card, defaults to `[.Left, .Right]`
 ```swift    
-    func koloda(koloda: KolodaView, didSwipedCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
+    func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
+```    
+This method is called before the KolodaView swipes card. Return `true` or `false` to allow or deny the swipe.
+
+```swift    
+    func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
 ```    
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func koloda(kolodaDidRunOutOfCards koloda: KolodaView)
+    func kolodaDidRunOutOfCards(koloda: KolodaView)
 ```    
 This method is called when the KolodaView has no cards to display.
 ```swift
@@ -151,41 +160,54 @@ This method is called when the KolodaView has no cards to display.
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
 This method is fired on reload, when any cards are displayed. If you return YES from the method or don't implement it, the koloda will apply appear animation.
 ```swift
-    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on start of front card swipping. If you return YES from the method or don't implement it, the koloda will move background card with dragging of front card.
 ```swift
-    func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on koloda's layout and after swiping. If you return YES from the method or don't implement it, the koloda will transparentize next card below front card.
 ```swift
-    func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation?
-```
-Return a pop frame animation to be applied to backround cards after swipe. This method is fired on swipping, when any cards are displayed. If you don't return frame animation, or return nil(don't implement this method), the koloda will apply default animation.
-```swift
-func koloda(koloda: KolodaView, draggedCardWithFinishPercent finishPercent: CGFloat, inDirection direction: SwipeResultDirection)
+func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection)
 ```
 This method is called whenever the KolodaView recognizes card dragging event. 
 ```swift
-func koloda(kolodaSwipeThresholdMargin koloda: KolodaView) -> CGFloat?
+    func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
 ```
-Return the distance that a card may be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the card's width
+Return the percentage of the distance between the center of the card and the edge at the drag direction that needs to be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the distance
 ```swift
-func koloda(kolodaDidResetCard koloda: KolodaView)
+func kolodaDidResetCard(koloda: KolodaView)
 ```
 This method is fired after resetting the card.
 ```swift
 func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
 ```
 This method is called after a card has been shown, after animation is complete
-
+```swift
+func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
+```
+This method is called when the card is beginning to be dragged. If you return YES from the method or
+don't implement it, the card will move in the direction of the drag. If you return NO the card will
+not move.
 
 Release Notes
 ----------------
+
+Version 3.1
+
+- Multiple Direction Support
+- Delegate methods for swipe disabling
+
+Version 3.0
+
+- Ability to dynamically insert/delete/reload specific cards
+- External animator
+- Major refactoring. [More information](https://github.com/Yalantis/Koloda/releases/tag/3.0.0)
+- Swift 2.2 support
 
 Version 2.0
 

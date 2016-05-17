@@ -11,10 +11,10 @@ import Koloda
 import pop
 
 private let numberOfCards: UInt = 5
-private let frameAnimationSpringBounciness:CGFloat = 9
-private let frameAnimationSpringSpeed:CGFloat = 16
+private let frameAnimationSpringBounciness: CGFloat = 9
+private let frameAnimationSpringSpeed: CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
-private let kolodaAlphaValueSemiTransparent:CGFloat = 0.1
+private let kolodaAlphaValueSemiTransparent: CGFloat = 0.1
 
 class BackgroundAnimationViewController: UIViewController {
 
@@ -27,6 +27,8 @@ class BackgroundAnimationViewController: UIViewController {
         kolodaView.countOfVisibleCards = kolodaCountOfVisibleCards
         kolodaView.delegate = self
         kolodaView.dataSource = self
+        kolodaView.animator = BackgroundKolodaAnimator(koloda: kolodaView)
+        
         self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
     }
     
@@ -47,24 +49,24 @@ class BackgroundAnimationViewController: UIViewController {
 
 //MARK: KolodaViewDelegate
 extension BackgroundAnimationViewController: KolodaViewDelegate {
-    func koloda(kolodaDidRunOutOfCards koloda: KolodaView) {
-        //Example: reloading
-        kolodaView.resetCurrentCardNumber()
+    
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {
+        kolodaView.resetCurrentCardIndex()
     }
     
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
     
-    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool {
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
         return true
     }
     
-    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool {
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
         return false
     }
     
-    func koloda(kolodaShouldTransparentizeNextCard koloda: KolodaView) -> Bool {
+    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
         return true
     }
     
@@ -79,7 +81,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
-    func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt {
+    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
         return numberOfCards
     }
     
