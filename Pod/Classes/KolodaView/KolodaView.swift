@@ -50,6 +50,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
     func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
+    func koloda(koloda: KolodaView, overlayStrengthMultiplierForCardAtIndex index: UInt) -> CGFloat
 }
 
 public extension KolodaViewDelegate {
@@ -67,6 +68,7 @@ public extension KolodaViewDelegate {
     func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt) {}
     func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool { return true }
+    func koloda(koloda: KolodaView, overlayStrengthMultiplierForCardAtIndex index: UInt) -> CGFloat { return CGFloat(1) }
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {
@@ -303,6 +305,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         let index = currentCardIndex + visibleIndex
         return delegate?.koloda(self, shouldDragCardAtIndex: UInt(index)) ?? true
+    }
+    
+    func card(cardOverlayStrengthMultiplier card: DraggableCardView) -> CGFloat {
+        guard let visibleIndex = visibleCards.indexOf(card) else { return CGFloat(1) }
+        
+        let index = currentCardIndex + visibleIndex
+        return delegate?.koloda(self, overlayStrengthMultiplierForCardAtIndex:  UInt(index)) ?? CGFloat(1)
     }
     
     //MARK: Private

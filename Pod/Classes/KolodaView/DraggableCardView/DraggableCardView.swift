@@ -19,6 +19,7 @@ protocol DraggableCardDelegate: class {
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
     func card(cardShouldDrag card: DraggableCardView) -> Bool
+    func card(cardOverlayStrengthMultiplier card: DraggableCardView) -> CGFloat
 }
 
 //Drag animation constants
@@ -224,7 +225,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             layer.transform = transform
             
-            let percentage = dragPercentage
+            let multiplier = delegate?.card(cardOverlayStrengthMultiplier: self) ?? CGFloat(1)
+            let percentage = multiplier * dragPercentage
             updateOverlayWithFinishPercent(percentage, direction:dragDirection)
             if let dragDirection = dragDirection {
                 //100% - for proportion
