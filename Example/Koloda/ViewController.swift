@@ -61,6 +61,10 @@ extension ViewController: KolodaViewDelegate {
     func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
     }
+    
+    func koloda(koloda: KolodaView, overlayStrengthMultiplierForCardAtIndex index: UInt) -> CGFloat {
+        return CGFloat(2)
+    }
 }
 
 //MARK: KolodaViewDataSource
