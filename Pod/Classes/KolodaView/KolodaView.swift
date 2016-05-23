@@ -298,6 +298,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Private
+    
     private func clear() {
         currentCardIndex = 0
         
@@ -525,11 +526,39 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func viewForCardAtIndex(index: Int) -> UIView? {
-        if visibleCards.count + currentCardIndex > index && index >= currentCardIndex {
+        if isCardAtIndexVisible(index) {
             return visibleCards[index - currentCardIndex].contentView
         } else {
             return nil
         }
+    }
+    
+    // MARK: Cards managin - Common
+    
+    private func removeCards(cards: [DraggableCardView]) {
+        cards.forEach { card in
+            card.delegate = nil
+            card.removeFromSuperview()
+        }
+    }
+    
+    private func removeCards(cards: [DraggableCardView], animated: Bool) {
+        cards.flatMap { visibleCards.indexOf($0) }.forEach { visibleCards.removeAtIndex($0) }
+        
+        if animated {
+            animator.applyRemovalAnimation(
+                cards,
+                completion: { _ in
+                    self.removeCards(cards)
+                }
+            )
+        } else {
+            self.removeCards(cards)
+        }
+    }
+    
+    private func isCardAtIndexVisible(index: Int) -> Bool {
+        return index >= currentCardIndex && index < currentCardIndex + countOfVisibleCards
     }
     
     // MARK: Cards managing - Insertion
@@ -556,35 +585,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
         return insertedCards
     }
     
-    private func removeCards(cards: [DraggableCardView]) {
-        cards.forEach { card in
-            card.delegate = nil
-            card.removeFromSuperview()
-        }
-    }
-    
-    private func removeCards(cards: [DraggableCardView], animated: Bool) {
-        cards.flatMap { visibleCards.indexOf($0) }.forEach { visibleCards.removeAtIndex($0) }
-        
-        if animated {
-            animator.applyRemovalAnimation(
-                cards,
-                completion: { _ in
-                    self.removeCards(cards)
-                }
-            )
-        } else {
-            self.removeCards(cards)
-        }
-    }
-    
     public func insertCardAtIndexRange(indexRange: Range<Int>, animated: Bool = true) {
         guard let dataSource = dataSource else {
             return
         }
         
         let currentItemsCount = countOfCards
-        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        let visibleIndexes = [Int](indexRange).filter(isCardAtIndexVisible)
         let insertedCards = insertVisibleCardsWithIndexes(visibleIndexes.sort())
         let cardsToRemove = visibleCards.dropFirst(countOfVisibleCards).map { $0 }
         removeCards(cardsToRemove, animated: animated)
@@ -626,7 +633,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         
         animating = true
         let currentItemsCount = countOfCards
-        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        let visibleIndexes = [Int](indexRange).filter(isCardAtIndexVisible)
         if !visibleIndexes.isEmpty {
             proceedDeletionInRange(visibleIndexes[0]..<visibleIndexes[visibleIndexes.count])
         }
@@ -652,7 +659,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             return
         }
         
-        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        let visibleIndexes = [Int](indexRange).filter(isCardAtIndexVisible)
         visibleIndexes.forEach { index in
             let visibleCardIndex = index - currentCardIndex
             if visibleCards.count > visibleCardIndex {
