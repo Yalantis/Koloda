@@ -471,7 +471,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func missingCardsCount() -> Int {
-       return min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardIndex + 1))
+       return min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardIndex + visibleCards.count))
     }
     
     // MARK: Public
