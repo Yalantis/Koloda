@@ -295,7 +295,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     private func updateOverlayWithFinishPercent(percent: CGFloat, direction: SwipeResultDirection?) {
         overlayView?.overlayState = direction
-        overlayView?.overlayStrength = max(min(percent/swipePercentageMargin, 1.0), 0)
+        let progress = max(min(percent/swipePercentageMargin, 1.0), 0)
+        overlayView?.updateWithProgress(progress)
     }
     
     private func swipeMadeAction() {
