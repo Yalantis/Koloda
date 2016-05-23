@@ -15,13 +15,13 @@ public class OverlayView: UIView {
     @available(*, deprecated=3.1.2)
     public var overlayStrength: CGFloat = 0.0 {
         didSet {
-            self.alpha = overlayStrength
+            updateWithProgress(overlayStrength)
         }
     }
     
     @available(*, introduced=3.1.2)
     public func updateWithProgress(percentage: CGFloat) {
-        overlayStrength = percentage
+        alpha = percentage
     }
 
 }
