@@ -689,25 +689,34 @@ public class KolodaView: UIView, DraggableCardDelegate {
         let cardsIsVisible = isCardAtIndexVisible(index)
         if cardsIsVisible {
             let visibleIndex = index - currentCardIndex
-            let cardsToSwipeCount = visibleCards.count - visibleIndex
+            let cardsToSwipeCount = visibleCards.count - (visibleIndex + 1)
             
             let cardsToSwipe: [DraggableCardView] = visibleCards.dropLast(visibleCards.count - cardsToSwipeCount).map { $0 }
-            removeCards(cardsToSwipe)
+            removeCards(cardsToSwipe, animated: animated)
             currentCardIndex = index
             loadMissingCards(missingCardsCount())
         } else {
-            removeCards(visibleCards)
+            removeCards(visibleCards, animated: animated)
             visibleCards.removeAll()
             currentCardIndex = index
             setupDeck()
         }
         
-        layoutDeck()
         updateCardsParameters()
+        delegate?.koloda(self, didShowCardAtIndex: UInt(currentCardIndex))
         
         if !cardsIsVisible && animated {
+            layoutDeck()
             applyAppearAnimationIfNeeded()
+        } else if cardsIsVisible && animated {
+            UIView.animateWithDuration(
+                backgroundCardFrameAnimationDuration,
+                animations: {
+                    self.layoutDeck()
+                }
+            )
         } else {
+            layoutDeck()
             animating = false
         }
     }
