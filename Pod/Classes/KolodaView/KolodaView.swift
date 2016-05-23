@@ -564,7 +564,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func removeCards(cards: [DraggableCardView], animated: Bool) {
-        visibleCards.removeLast(cards.count)
+        cards.flatMap { visibleCards.indexOf($0) }.forEach { visibleCards.removeAtIndex($0) }
+        
         if animated {
             animator.applyRemovalAnimation(
                 cards,
