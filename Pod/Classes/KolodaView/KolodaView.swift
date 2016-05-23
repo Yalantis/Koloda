@@ -26,6 +26,7 @@ public protocol KolodaViewDataSource:class {
     func kolodaNumberOfCards(koloda: KolodaView) -> UInt
     func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
+    
 }
 
 public extension KolodaViewDataSource {
@@ -33,6 +34,7 @@ public extension KolodaViewDataSource {
     func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
         return nil
     }
+    
 }
 
 public protocol KolodaViewDelegate:class {
@@ -50,6 +52,7 @@ public protocol KolodaViewDelegate:class {
     func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
     func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
+    
 }
 
 public extension KolodaViewDelegate {
@@ -67,6 +70,7 @@ public extension KolodaViewDelegate {
     func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt) {}
     func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool { return true }
+    
 }
 
 public class KolodaView: UIView, DraggableCardDelegate {

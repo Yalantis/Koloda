@@ -27,7 +27,6 @@ extension KolodaView {
     
     func configureCard(card: DraggableCardView, atIndex index: UInt) {
         let contentView = dataSource!.koloda(self, viewForCardAtIndex: index)
-        
         card.configure(contentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAtIndex: index))
     }
     

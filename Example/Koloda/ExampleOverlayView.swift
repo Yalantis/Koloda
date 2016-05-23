@@ -13,6 +13,7 @@ private let overlayRightImageName = "yesOverlayImage"
 private let overlayLeftImageName = "noOverlayImage"
 
 class ExampleOverlayView: OverlayView {
+    
     @IBOutlet lazy var overlayImageView: UIImageView! = {
         [unowned self] in
         
@@ -32,7 +33,6 @@ class ExampleOverlayView: OverlayView {
             default:
                 overlayImageView.image = nil
             }
-            
         }
     }
 
