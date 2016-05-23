@@ -126,7 +126,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     visibleCards.append(nextCardView)
                     isTop ? addSubview(nextCardView) : insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 }
-                self.delegate?.koloda(self, didShowCardAtIndex: UInt(currentCardIndex))
+                delegate?.koloda(self, didShowCardAtIndex: UInt(currentCardIndex))
             }
         }
     }
@@ -691,7 +691,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let visibleIndex = index - currentCardIndex
             let cardsToSwipeCount = visibleCards.count - visibleIndex
             
-            var cardsToSwipe: [DraggableCardView] = visibleCards.dropLast(visibleCards.count - cardsToSwipeCount).map { $0 }
+            let cardsToSwipe: [DraggableCardView] = visibleCards.dropLast(visibleCards.count - cardsToSwipeCount).map { $0 }
             removeCards(cardsToSwipe)
             currentCardIndex = index
             loadMissingCards(missingCardsCount())
