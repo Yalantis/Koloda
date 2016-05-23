@@ -533,7 +533,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    // MARK: Cards managin - Common
+    // MARK: Cards managing - Common
     
     private func removeCards(cards: [DraggableCardView]) {
         cards.forEach { card in
@@ -559,6 +559,13 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     private func isCardAtIndexVisible(index: Int) -> Bool {
         return index >= currentCardIndex && index < currentCardIndex + countOfVisibleCards
+    }
+    
+    private func updateCardsParameters() {
+        for (index, card) in visibleCards.enumerate() {
+            card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
+            card.userInteractionEnabled = index == 0
+        }
     }
     
     // MARK: Cards managing - Insertion
@@ -639,10 +646,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
         loadMissingCards(missingCardsCount())
         layoutDeck()
-        for (index, card) in visibleCards.enumerate() {
-            card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
-            card.userInteractionEnabled = index == 0
-        }
+        updateCardsParameters()
+        
         animating = false
         
         countOfCards = Int(dataSource.kolodaNumberOfCards(self))
@@ -666,6 +671,44 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 let card = visibleCards[visibleCardIndex]
                 configureCard(card, atIndex: UInt(index))
             }
+        }
+    }
+    
+    // MARK: Cards magain - Changing current card index
+    
+    public func moveToCardAtIndex(index: Int, animated: Bool = false) {
+        assert(
+            (0..<countOfCards).contains(index),
+            "Index \(index) is out of bounds 0..<\(countOfCards)"
+        )
+        guard currentCardIndex != index else {
+            return
+        }
+        
+        animating = true
+        let cardsIsVisible = isCardAtIndexVisible(index)
+        if cardsIsVisible {
+            let visibleIndex = index - currentCardIndex
+            let cardsToSwipeCount = visibleCards.count - visibleIndex
+            
+            var cardsToSwipe: [DraggableCardView] = visibleCards.dropLast(visibleCards.count - cardsToSwipeCount).map { $0 }
+            removeCards(cardsToSwipe)
+            currentCardIndex = index
+            loadMissingCards(missingCardsCount())
+        } else {
+            removeCards(visibleCards)
+            visibleCards.removeAll()
+            currentCardIndex = index
+            setupDeck()
+        }
+        
+        layoutDeck()
+        updateCardsParameters()
+        
+        if !cardsIsVisible && animated {
+            applyAppearAnimationIfNeeded()
+        } else {
+            animating = false
         }
     }
     
