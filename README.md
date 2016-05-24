@@ -3,7 +3,7 @@ KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compati
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
-Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/). 
+Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/).
 And another one [article on our blog](https://yalantis.com/blog/koloda-tinder-like-animation-version-2-prototyping-in-pixate-and-development-in-swift/)
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v2_example_animation.gif)
@@ -17,13 +17,13 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7.3)
+* Supported build target - iOS 8.0 (Xcode 7.3)
 
 
 ARC Compatibility
 ------------------
 
-KolodaView requires ARC. 
+KolodaView requires ARC.
 
 Сocoapods version
 ------------------
@@ -64,32 +64,32 @@ Properties
 
 The KolodaView has the following properties:
 ```swift
-	weak var dataSource: KolodaViewDataSource!
+weak var dataSource: KolodaViewDataSource!
 ```
 An object that supports the KolodaViewDataSource protocol and can provide views to populate the KolodaView.
 ```swift
-	weak var delegate: KolodaViewDelegate?
+weak var delegate: KolodaViewDelegate?
 ```
 An object that supports the KolodaViewDelegate protocol and can respond to KolodaView events.
 ```swift
-    public var currentCardIndex
+public var currentCardIndex
 ```
 The index of front card in the KolodaView (read only).
 ```swift
-    public var countOfCards
+public var countOfCards
 ```    
-The count of cards in the KolodaView (read only). To set this, implement the `kolodaNumberOfCards:` dataSource method. 
+The count of cards in the KolodaView (read only). To set this, implement the `kolodaNumberOfCards:` dataSource method.
 ```swift
-    var countOfVisibleCards
+var countOfVisibleCards
 ```
 The count of displayed cards in the KolodaView.
-	
+
 Methods
 --------------
 
 The KolodaView class has the following methods:
 ```swift
-	func reloadData()
+func reloadData()
 ```
 
 This method reloads all KolodaView item views from the dataSource and refreshes the display.
@@ -100,14 +100,14 @@ func resetCurrentCardNumber()
 This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
 ```swift
 	func revertAction()
-```	
+```
 Applies undo animation and decrement currentCardNumber.
 ```swift
 	func applyAppearAnimation()
 ```
 Applies appear animation.
 ```swift
-	func swipeLeft() 
+	func swipeLeft()
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
@@ -116,7 +116,7 @@ Applies swipe left animation and action, increment currentCardNumber.
 Applies swipe right animation and action, increment currentCardNumber.
 
 ```swift
-    public func frameForCardAtIndex(index: UInt) -> CGRect 
+    public func frameForCardAtIndex(index: UInt) -> CGRect
 ```
 Calculates frames for cards. Useful for overriding. See example to learn more about it.
 
@@ -125,20 +125,22 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-	func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
-	func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
+func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
 ```
-Return a view to be displayed at the specified index in the KolodaView. 
+Return a view to be displayed at the specified index in the KolodaView.
+
 ```swift
-   func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
+func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
 ```   
+
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
-    ```swift
+```swift
     func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
 ```
 Return the allowed directions for a given card, defaults to `[.Left, .Right]`
@@ -174,7 +176,7 @@ This method is fired on koloda's layout and after swiping. If you return YES fro
 ```swift
 func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection)
 ```
-This method is called whenever the KolodaView recognizes card dragging event. 
+This method is called whenever the KolodaView recognizes card dragging event.
 ```swift
     func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
 ```
@@ -225,7 +227,7 @@ Version 1.0
 
 #### Let us know!
 
-We’d be really happy if you sent us links to your projects where you use our component. Just send an email to github@yalantis.com And do let us know if you have any questions or suggestion regarding the animation. 
+We’d be really happy if you sent us links to your projects where you use our component. Just send an email to github@yalantis.com And do let us know if you have any questions or suggestion regarding the animation.
 
 P.S. We’re going to publish more awesomeness wrapped in code and a tutorial on how to make UI for iOS (Android) better than better. Stay tuned!
 
@@ -246,4 +248,3 @@ License
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
-
