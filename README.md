@@ -3,7 +3,7 @@ KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compati
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
-Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/). 
+Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/).
 And another one [article on our blog](https://yalantis.com/blog/koloda-tinder-like-animation-version-2-prototyping-in-pixate-and-development-in-swift/)
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v2_example_animation.gif)
@@ -19,11 +19,10 @@ Supported OS & SDK Versions
 
 * Supported build target - iOS 9.0 (Xcode 7.3)
 
-
 ARC Compatibility
 ------------------
 
-KolodaView requires ARC. 
+KolodaView requires ARC.
 
 Сocoapods version
 ------------------
@@ -48,7 +47,7 @@ Note: Due to [CocoaPods/CocoaPods#4420 issue](https://github.com/CocoaPods/Cocoa
 Add next lines to the end of your Podfile
 ```ruby
 post_install do |installer|
-    `find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
+`find Pods -regex 'Pods/pop.*\\.h' -print0 | xargs -0 sed -i '' 's/\\(<\\)pop\\/\\(.*\\)\\(>\\)/\\"\\2\\"/'`
 end
 ```
 To install via Carthage add this lines to your Cartfile
@@ -60,89 +59,84 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
 
 ##Usage
 
-1. Import `Koloda` module to your MyKolodaViewController class
+1. Import `Koloda` module to your `MyKolodaViewController` class
+    ```swift
+        import Koloda
+    ```
+2. Add `KolodaView` to `MyKolodaViewController`, then set dataSource and delegate for it
+    ```swift
+    class ViewController: UIViewController {
+        @IBOutlet weak var kolodaView: KolodaView!
 
-```swift
-import Koloda
-```
-2. Conform your MyKolodaViewController to `KolodaViewDelegate` protocol and override some methods if you need, e.g.
+        override func viewDidLoad() {
+            super.viewDidLoad()
 
-```swift
-extension MyKolodaViewController: KolodaViewDelegate {
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
-        dataSource.reset()
+            kolodaView.dataSource = self
+            kolodaView.delegate = self
+        }
+    ```
+3. Conform your `MyKolodaViewController` to `KolodaViewDelegate` protocol and override some methods if you need, e.g.
+    ```swift
+    extension MyKolodaViewController: KolodaViewDelegate {
+        func kolodaDidRunOutOfCards(koloda: KolodaView) {
+            dataSource.reset()
+        }
+
+        func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+            UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+        }
     }
+    ```
+4. Conform `MyKolodaViewController` to `KolodaViewDataSource` protocol and implement all the methods , e.g.
+    ```swift
+    extension MyKolodaViewController: KolodaViewDataSource {
 
-    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+        func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
+            return images.count
+        }
+
+        func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+            return UIImageView(image: images[Int(index)])
+        }
+
+        func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+            return NSBundle.mainBundle().loadNibNamed("OverlayView",
+                owner: self, options: nil)[0] as? OverlayView
+        }
     }
-}
-```
-3. Conform MyKolodaViewController to `KolodaViewDataSource` protocol and implement all the methods , e.g.
-
-```swift
-extension MyKolodaViewController: KolodaViewDataSource {
-
-    func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
-        return images.count
-    }
-
-    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
-        return UIImageView(image: images[Int(index)])
-    }
-
-    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("OverlayView",
-            owner: self, options: nil)[0] as? OverlayView
-    }
-}
-```
-4. Add KolodaView to MyKolodaViewController, then set dataSource and delegate for it
-
-```swift
-class ViewController: UIViewController {
-    @IBOutlet weak var kolodaView: KolodaView!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        kolodaView.dataSource = self
-        kolodaView.delegate = self
-}
-```
-5. KolodaView works with default implementation. Override it to customize its behavior
+    ```
+5. `KolodaView` works with default implementation. Override it to customize its behavior
 
 Properties
 --------------
 
 The KolodaView has the following properties:
 ```swift
-	weak var dataSource: KolodaViewDataSource!
+weak var dataSource: KolodaViewDataSource!
 ```
 An object that supports the KolodaViewDataSource protocol and can provide views to populate the KolodaView.
 ```swift
-	weak var delegate: KolodaViewDelegate?
+weak var delegate: KolodaViewDelegate?
 ```
 An object that supports the KolodaViewDelegate protocol and can respond to KolodaView events.
 ```swift
-    public var currentCardIndex
+public var currentCardIndex
 ```
 The index of front card in the KolodaView (read only).
 ```swift
-    public var countOfCards
-```    
-The count of cards in the KolodaView (read only). To set this, implement the `kolodaNumberOfCards:` dataSource method. 
+public var countOfCards
+```
+The count of cards in the KolodaView (read only). To set this, implement the `kolodaNumberOfCards:` dataSource method.
 ```swift
-    var countOfVisibleCards
+var countOfVisibleCards
 ```
 The count of displayed cards in the KolodaView.
-	
 Methods
 --------------
 
 The KolodaView class has the following methods:
 ```swift
-	func reloadData()
+func reloadData()
 ```
 
 This method reloads all KolodaView item views from the dataSource and refreshes the display.
@@ -152,24 +146,24 @@ func resetCurrentCardNumber()
 
 This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
 ```swift
-	func revertAction()
-```	
+func revertAction()
+```
 Applies undo animation and decrement currentCardNumber.
 ```swift
-	func applyAppearAnimation()
+func applyAppearAnimation()
 ```
 Applies appear animation.
 ```swift
-	func swipeLeft() 
+func swipeLeft()
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
-	func swipeRight()
+func swipeRight()
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
 ```swift
-    public func frameForCardAtIndex(index: UInt) -> CGRect 
+public func frameForCardAtIndex(index: UInt) -> CGRect
 ```
 Calculates frames for cards. Useful for overriding. See example to learn more about it.
 
@@ -178,58 +172,58 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-	func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
-	func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
+func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
 ```
-Return a view to be displayed at the specified index in the KolodaView. 
+Return a view to be displayed at the specified index in the KolodaView.
 ```swift
-   func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
-```   
+func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
+```
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
-    ```swift
-    func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
+```swift
+func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
 ```
 Return the allowed directions for a given card, defaults to `[.Left, .Right]`
-```swift    
-    func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
-```    
+```swift
+func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
+```
 This method is called before the KolodaView swipes card. Return `true` or `false` to allow or deny the swipe.
 
-```swift    
-    func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
-```    
+```swift
+func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
+```
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
-    func kolodaDidRunOutOfCards(koloda: KolodaView)
-```    
+func kolodaDidRunOutOfCards(koloda: KolodaView)
+```
 This method is called when the KolodaView has no cards to display.
 ```swift
-	func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
+func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
+func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
 This method is fired on reload, when any cards are displayed. If you return YES from the method or don't implement it, the koloda will apply appear animation.
 ```swift
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
+func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on start of front card swipping. If you return YES from the method or don't implement it, the koloda will move background card with dragging of front card.
 ```swift
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
+func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on koloda's layout and after swiping. If you return YES from the method or don't implement it, the koloda will transparentize next card below front card.
 ```swift
 func koloda(koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, inDirection direction: SwipeResultDirection)
 ```
-This method is called whenever the KolodaView recognizes card dragging event. 
+This method is called whenever the KolodaView recognizes card dragging event.
 ```swift
-    func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
+func kolodaSwipeThresholdRatioMargin(koloda: KolodaView) -> CGFloat?
 ```
 Return the percentage of the distance between the center of the card and the edge at the drag direction that needs to be dragged in order to trigger a swipe. The default behavior (or returning NIL) will set this threshold to half of the distance
 ```swift
@@ -277,33 +271,30 @@ Version 1.0
 
 #### Apps using KolodaView
 
-- BroApp
+- [BroApp](https://itunes.apple.com/ua/app/bro-social-networking-bromance/id1049979758?mt=8).
 
-http://broapp.net/
-![Preview](https://github.com/Yalantis/Koloda/Example/UsageExamples/bro.gif)
-
+![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
 
 #### Let us know!
 
-We’d be really happy if you sent us links to your projects where you use our component. Just send an email to github@yalantis.com And do let us know if you have any questions or suggestion regarding the animation. 
+We’d be really happy if you sent us links to your projects where you use our component. Just send an email to github@yalantis.com And do let us know if you have any questions or suggestion regarding the animation.
 
 P.S. We’re going to publish more awesomeness wrapped in code and a tutorial on how to make UI for iOS (Android) better than better. Stay tuned!
 
 License
 ----------------
 
-    The MIT License (MIT)
+The MIT License (MIT)
 
-    Copyright © 2015 Yalantis
+Copyright © 2015 Yalantis
 
-    Permission is hereby granted free of charge to any person obtaining a copy of this software and associated documentation files (the "Software") to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted free of charge to any person obtaining a copy of this software and associated documentation files (the "Software") to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
