@@ -58,6 +58,59 @@ github "Yalantis/Koloda"
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
 
+##Usage
+
+1. Import `Koloda` module to your MyKolodaViewController class
+
+```swift
+import Koloda
+```
+2. Conform your MyKolodaViewController to `KolodaViewDelegate` protocol and override some methods if you need, e.g.
+
+```swift
+extension MyKolodaViewController: KolodaViewDelegate {
+    func kolodaDidRunOutOfCards(koloda: KolodaView) {
+        dataSource.reset()
+    }
+
+    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+        UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+    }
+}
+```
+3. Conform MyKolodaViewController to `KolodaViewDataSource` protocol and implement all the methods , e.g.
+
+```swift
+extension MyKolodaViewController: KolodaViewDataSource {
+
+    func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
+        return images.count
+    }
+
+    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+        return UIImageView(image: images[Int(index)])
+    }
+
+    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        return NSBundle.mainBundle().loadNibNamed("OverlayView",
+            owner: self, options: nil)[0] as? OverlayView
+    }
+}
+```
+4. Add KolodaView to MyKolodaViewController, then set dataSource and delegate for it
+
+```swift
+class ViewController: UIViewController {
+    @IBOutlet weak var kolodaView: KolodaView!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        kolodaView.dataSource = self
+        kolodaView.delegate = self
+}
+```
+5. KolodaView works with default implementation. Override it to customize its behavior
 
 Properties
 --------------
