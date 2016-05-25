@@ -275,6 +275,13 @@ Version 1.0
 
 - Release version.
 
+#### Apps using KolodaView
+
+- BroApp
+
+http://broapp.net/
+![Preview](https://github.com/Yalantis/Koloda/Example/UsageExamples/bro.gif)
+
 
 #### Let us know!
 
