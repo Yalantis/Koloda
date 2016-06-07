@@ -272,10 +272,10 @@ Version 1.0
 #### Apps using KolodaView
 
 - [BroApp](https://itunes.apple.com/ua/app/bro-social-networking-bromance/id1049979758?mt=8).
-- [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
-
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
+- [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
+
 
 #### Let us know!
 
@@ -288,7 +288,7 @@ License
 
 The MIT License (MIT)
 
-Copyright © 2015 Yalantis
+Copyright © 2016 Yalantis
 
 Permission is hereby granted free of charge to any person obtaining a copy of this software and associated documentation files (the "Software") to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
