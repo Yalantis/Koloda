@@ -107,11 +107,11 @@ Applies undo animation and decrement currentCardNumber.
 ```
 Applies appear animation.
 ```swift
-	func swipeLeft() 
+	func swipe(.Left)
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
-	func swipeRight()
+	func swipe(.Right)
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
@@ -125,7 +125,7 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-	func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+    func kolodaNumberOfCards(koloda: KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
@@ -151,11 +151,11 @@ This method is called when the KolodaView has no cards to display.
 ```
 This method is called when one of cards is tapped.
 ```swift
-    func koloda(kolodaShouldApplyAppearAnimation koloda: KolodaView) -> Bool
+    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool
 ```
 This method is fired on reload, when any cards are displayed. If you return YES from the method or don't implement it, the koloda will apply appear animation.
 ```swift
-    func koloda(kolodaShouldMoveBackgroundCard koloda: KolodaView) -> Bool
+    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool
 ```
 This method is fired on start of front card swipping. If you return YES from the method or don't implement it, the koloda will move background card with dragging of front card.
 ```swift
