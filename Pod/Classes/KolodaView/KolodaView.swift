@@ -94,13 +94,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueTransparent: CGFloat = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
-    private var shouldTransparentize: Bool {
-        if let delegate = delegate {
-            return delegate.koloda(kolodaShouldTransparentizeNextCard: self)
-        }
-        return true
-    }
-    
     public var shouldPassthroughTapsWhenNoVisibleCards = false
     
     //MARK: Lifecycle
@@ -108,6 +101,10 @@ public class KolodaView: UIView, DraggableCardDelegate {
         super.init(coder: aDecoder)
         configure()
     }
+
+    public lazy var animator: KolodaViewAnimator = {
+       return KolodaViewAnimator(koloda: self)
+    }()
     
     internal var shouldTransparentizeNextCard: Bool {
         return delegate?.kolodaShouldTransparentizeNextCard(self) ?? true
@@ -561,5 +558,134 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
         
         return visibleCards.count > 0
+    }
+
+    // MARK: Cards managing - Insertion
+
+    private func insertVisibleCardsWithIndexes(visibleIndexes: [Int]) -> [DraggableCardView] {
+        var insertedCards: [DraggableCardView] = []
+        visibleIndexes.forEach { insertionIndex in
+            let card = createCardAtIndex(UInt(insertionIndex))
+            let visibleCardIndex = insertionIndex - currentCardIndex
+            visibleCards.insert(card, atIndex: visibleCardIndex)
+            if visibleCardIndex == 0 {
+                card.userInteractionEnabled = true
+                card.alpha = alphaValueOpaque
+                insertSubview(card, atIndex: visibleCards.count - 1)
+            } else {
+                card.userInteractionEnabled = false
+                card.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
+                insertSubview(card, belowSubview: visibleCards[visibleCardIndex - 1])
+            }
+            layoutCard(card, atIndex: UInt(visibleCardIndex))
+            insertedCards.append(card)
+        }
+        
+        return insertedCards
+    }
+    
+    private func removeCards(cards: [DraggableCardView]) {
+        cards.forEach { card in
+            card.delegate = nil
+            card.removeFromSuperview()
+        }
+    }
+    
+    private func removeCards(cards: [DraggableCardView], animated: Bool) {
+        visibleCards.removeLast(cards.count)
+        if animated {
+            animator.applyRemovalAnimation(
+                cards,
+                completion: { _ in
+                    self.removeCards(cards)
+                }
+            )
+        } else {
+            self.removeCards(cards)
+        }
+    }
+    
+    public func insertCardAtIndexRange(indexRange: Range<Int>, animated: Bool = true) {
+        guard let dataSource = dataSource else {
+            return
+        }
+        
+        let currentItemsCount = countOfCards
+        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        let insertedCards = insertVisibleCardsWithIndexes(visibleIndexes.sort())
+        let cardsToRemove = visibleCards.dropFirst(countOfVisibleCards).map { $0 }
+        removeCards(cardsToRemove, animated: animated)
+        animator.resetBackgroundCardsWithCompletion()
+        if animated {
+            animating = true
+            animator.applyInsertionAnimation(
+                insertedCards,
+                completion: { _ in
+                    self.animating = false
+                }
+            )
+        }
+        
+        countOfCards = Int(dataSource.kolodaNumberOfCards(self))
+        assert(
+            currentItemsCount + indexRange.count == countOfCards,
+            "Cards count after update is not equal to data source count"
+        )
+    }
+    
+    // MARK: Cards managing - Deletion
+    
+    private func proceedDeletionInRange(range: Range<Int>) {
+        let deletionIndexes = [Int](range)
+        deletionIndexes.sort { $0 > $1 }.forEach { deletionIndex in
+            let visibleCardIndex = deletionIndex - currentCardIndex
+            let card = visibleCards[visibleCardIndex]
+            card.delegate = nil
+            card.swipe(.Right)
+            visibleCards.removeAtIndex(visibleCardIndex)
+        }
+    }
+    
+    public func removeCardInIndexRange(indexRange: Range<Int>, animated: Bool) {
+        guard let dataSource = dataSource else {
+            return
+        }
+        
+        animating = true
+        let currentItemsCount = countOfCards
+        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        if !visibleIndexes.isEmpty {
+            proceedDeletionInRange(visibleIndexes[0]..<visibleIndexes[visibleIndexes.count - 1])
+        }
+        loadMissingCards(missingCardsCount())
+        layoutDeck()
+        for (index, card) in visibleCards.enumerate() {
+            card.alpha = shouldTransparentizeNextCard && index != 0 ? alphaValueSemiTransparent : alphaValueOpaque
+            card.userInteractionEnabled = index == 0
+        }
+        animating = false
+        
+        countOfCards = Int(dataSource.kolodaNumberOfCards(self))
+        assert(
+            currentItemsCount - indexRange.count == countOfCards,
+            "Cards count after update is not equal to data source count"
+        )
+    }
+    
+    // MARK: Cards managing - Reloading
+    
+    public func reloadCardsInIndexRange(indexRange: Range<Int>) {
+        guard dataSource != nil else {
+            return
+        }
+        
+        let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
+        visibleIndexes.forEach { index in
+            let visibleCardIndex = index - currentCardIndex
+            if visibleCards.count > visibleCardIndex {
+                let card = visibleCards[visibleCardIndex]
+                configureCard(card, atIndex: UInt(index))
+            }
+        }
     }
 }
