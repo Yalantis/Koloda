@@ -11,10 +11,10 @@ import pop
 
 //Default values
 private let defaultCountOfVisibleCards = 3
-private let backgroundCardsTopMargin: CGFloat = 0
-private let backgroundCardsScalePercent: CGFloat = 1
-private let backgroundCardsLeftMargin: CGFloat = 8.0
-private let backgroundCardFrameAnimationDuration: NSTimeInterval = 0.2
+private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
+private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
+private let defaultBackgroundCardsLeftMargin: CGFloat = 8.0
+private let defaultBackgroundCardFrameAnimationDuration: NSTimeInterval = 0.2
 
 //Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
@@ -75,6 +75,18 @@ public extension KolodaViewDelegate {
 
 public class KolodaView: UIView, DraggableCardDelegate {
     
+    public var countOfVisibleCards = defaultCountOfVisibleCards
+    public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
+    public var backgroundCardsLeftMargin = defaultBackgroundCardsLeftMargin
+    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
+    public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
+    
+    //Opacity values
+    public var alphaValueOpaque = defaultAlphaValueOpaque
+    public var alphaValueTransparent = defaultAlphaValueTransparent
+    public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
+    public var shouldPassthroughTapsWhenNoVisibleCards = false
+    
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
             setupDeck()
@@ -83,26 +95,19 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     public weak var delegate: KolodaViewDelegate?
     
-    private(set) public var currentCardIndex = 0
-    private(set) public var countOfCards = 0
-    
-    public var countOfVisibleCards = defaultCountOfVisibleCards
-    private var visibleCards = [DraggableCardView]()
-    internal var animating = false
-    
-    public var alphaValueOpaque: CGFloat = defaultAlphaValueOpaque
-    public var alphaValueTransparent: CGFloat = defaultAlphaValueTransparent
-    public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
-    
-    public var shouldPassthroughTapsWhenNoVisibleCards = false
-
     public lazy var animator: KolodaViewAnimator = {
-       return KolodaViewAnimator(koloda: self)
+        return KolodaViewAnimator(koloda: self)
     }()
+    
+    internal var animating = false
     
     internal var shouldTransparentizeNextCard: Bool {
         return delegate?.kolodaShouldTransparentizeNextCard(self) ?? true
     }
+    
+    private(set) public var currentCardIndex = 0
+    private(set) public var countOfCards = 0
+    private var visibleCards = [DraggableCardView]()
     
     override public func layoutSubviews() {
         super.layoutSubviews()
