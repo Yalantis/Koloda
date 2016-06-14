@@ -95,12 +95,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueSemiTransparent: CGFloat = defaultAlphaValueSemiTransparent
     
     public var shouldPassthroughTapsWhenNoVisibleCards = false
-    
-    //MARK: Lifecycle
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        configure()
-    }
 
     public lazy var animator: KolodaViewAnimator = {
        return KolodaViewAnimator(koloda: self)
@@ -118,7 +112,21 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
+    //MARK: Lifecycle
+    
+    deinit {
+        unsubsribeFromNotifications()
+    }
+    
     //MARK: Configurations
+    
+    public func subscribeForNotifications(selector: Selector) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: UIDeviceOrientationDidChangeNotification, object: nil)
+    }
+    
+    public func unsubsribeFromNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
     
     private func setupDeck() {
         if let dataSource = dataSource {
@@ -611,6 +619,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
         
         let currentItemsCount = countOfCards
+        countOfCards = Int(dataSource.kolodaNumberOfCards(self))
+
         let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
         let insertedCards = insertVisibleCardsWithIndexes(visibleIndexes.sort())
         let cardsToRemove = visibleCards.dropFirst(countOfVisibleCards).map { $0 }
@@ -626,7 +636,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
             )
         }
         
-        countOfCards = Int(dataSource.kolodaNumberOfCards(self))
         assert(
             currentItemsCount + indexRange.count == countOfCards,
             "Cards count after update is not equal to data source count"
