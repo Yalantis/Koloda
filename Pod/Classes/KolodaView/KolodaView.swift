@@ -120,16 +120,16 @@ public class KolodaView: UIView, DraggableCardDelegate {
     //MARK: Lifecycle
     
     deinit {
-        unsubsribeFromNotifications()
+        unsubscribeFromNotifications()
     }
     
     //MARK: Configurations
     
-    public func subscribeForNotifications(selector: Selector) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: selector, name: UIDeviceOrientationDidChangeNotification, object: nil)
+    public func subscribeForNotifications(notificationCenter: NSNotificationCenter, selector: Selector, notification: NSObject) {
+        notificationCenter.addObserver(self, selector: selector, name: notification, object: nil)
     }
     
-    public func unsubsribeFromNotifications() {
+    public func unsubscribeFromNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
