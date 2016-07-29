@@ -657,6 +657,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
         let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
         if !visibleIndexes.isEmpty {
             proceedDeletionInRange(visibleIndexes[0]..<visibleIndexes[visibleIndexes.count - 1])
+            
+            // Update current card index if the first visible card has been removed
+            if visibleIndexes[0] == currentCardIndex {
+                currentCardIndex += visibleRange.count
+            }
         }
         loadMissingCards(missingCardsCount())
         layoutDeck()
