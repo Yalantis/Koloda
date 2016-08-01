@@ -660,7 +660,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             
             // Update current card index if the first visible card has been removed
             if visibleIndexes[0] == currentCardIndex {
-                currentCardIndex += visibleRange.count
+                currentCardIndex += visibleIndexes.count
             }
         }
         loadMissingCards(missingCardsCount())
