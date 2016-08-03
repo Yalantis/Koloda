@@ -29,7 +29,7 @@ class BackgroundAnimationViewController: UIViewController {
         kolodaView.dataSource = self
         kolodaView.animator = BackgroundKolodaAnimator(koloda: kolodaView)
         
-        self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
+        self.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
     }
     
     
@@ -50,23 +50,23 @@ class BackgroundAnimationViewController: UIViewController {
 //MARK: KolodaViewDelegate
 extension BackgroundAnimationViewController: KolodaViewDelegate {
     
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
+    func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
         kolodaView.resetCurrentCardIndex()
     }
     
-    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+        UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
     }
     
-    func kolodaShouldApplyAppearAnimation(koloda: KolodaView) -> Bool {
+    func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool {
         return true
     }
     
-    func kolodaShouldMoveBackgroundCard(koloda: KolodaView) -> Bool {
+    func kolodaShouldMoveBackgroundCard(_ koloda: KolodaView) -> Bool {
         return false
     }
     
-    func kolodaShouldTransparentizeNextCard(koloda: KolodaView) -> Bool {
+    func kolodaShouldTransparentizeNextCard(_ koloda: KolodaView) -> Bool {
         return true
     }
     
@@ -81,15 +81,15 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
-    func kolodaNumberOfCards(koloda: KolodaView) -> UInt {
+    func kolodaNumberOfCards(_ koloda: KolodaView) -> UInt {
         return numberOfCards
     }
     
-    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
         return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
     }
     
-    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
         return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
             owner: self, options: nil)[0] as? OverlayView
     }
