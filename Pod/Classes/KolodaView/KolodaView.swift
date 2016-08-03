@@ -240,7 +240,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func applyAppearAnimationIfNeeded() {
-        if let shouldApply = delegate?.kolodaShouldApplyAppearAnimation(self) where shouldApply == true {
+        if let shouldApply = delegate?.kolodaShouldApplyAppearAnimation(self) , shouldApply == true {
             applyAppearAnimation()
         }
     }
@@ -250,7 +250,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection) {
         animating = true
         
-        if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self) where shouldMove {
+        if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self) , shouldMove {
             self.moveOtherCardsWithPercentage(percentage)
         }
         delegate?.koloda(self, draggedCardWithPercentage: percentage, inDirection: direction)
@@ -490,7 +490,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     // MARK: Public
     
     public func reloadData() {
-        guard let numberOfCards = dataSource?.kolodaNumberOfCards(self) where numberOfCards > 0 else {
+        guard let numberOfCards = dataSource?.kolodaNumberOfCards(self) , numberOfCards > 0 else {
             clear()
             return
         }
@@ -599,7 +599,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func insertCardAtIndexRange(_ indexRange: Range<Int>, animated: Bool = true) {
+    public func insertCardAtIndexRange(_ indexRange: CountableRange<Int>, animated: Bool = true) {
         guard let dataSource = dataSource else {
             return
         }
@@ -630,7 +630,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Cards managing - Deletion
     
-    private func proceedDeletionInRange(_ range: Range<Int>) {
+    private func proceedDeletionInRange(_ range: CountableRange<Int>) {
         let deletionIndexes = [Int](range)
         deletionIndexes.sorted { $0 > $1 }.forEach { deletionIndex in
             let visibleCardIndex = deletionIndex - currentCardIndex
@@ -641,7 +641,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func removeCardInIndexRange(_ indexRange: Range<Int>, animated: Bool) {
+    public func removeCardInIndexRange(_ indexRange: CountableRange<Int>, animated: Bool) {
         guard let dataSource = dataSource else {
             return
         }
@@ -670,7 +670,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Cards managing - Reloading
     
-    public func reloadCardsInIndexRange(_ indexRange: Range<Int>) {
+    public func reloadCardsInIndexRange(_ indexRange: CountableRange<Int>) {
         guard dataSource != nil else {
             return
         }

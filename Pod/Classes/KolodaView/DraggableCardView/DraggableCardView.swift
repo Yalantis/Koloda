@@ -67,7 +67,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     override public var frame: CGRect {
         didSet {
-            if let ratio = delegate?.card(cardSwipeThresholdRatioMargin: self) where ratio != 0 {
+            if let ratio = delegate?.card(cardSwipeThresholdRatioMargin: self) , ratio != 0 {
                 swipePercentageMargin = ratio
             } else {
                 swipePercentageMargin = 1.0
@@ -304,7 +304,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         let shouldSwipe = { direction in
             return self.delegate?.card(self, shouldSwipeInDirection: direction) ?? true
         }
-        if let dragDirection = dragDirection where shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
+        if let dragDirection = dragDirection , shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()
