@@ -60,8 +60,9 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
 ##Usage
 
 1. Import `Koloda` module to your `MyKolodaViewController` class
+
     ```swift
-        import Koloda
+    import Koloda
     ```
 2. Add `KolodaView` to `MyKolodaViewController`, then set dataSource and delegate for it
     ```swift
@@ -74,6 +75,7 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
             kolodaView.dataSource = self
             kolodaView.delegate = self
         }
+    }
     ```
 3. Conform your `MyKolodaViewController` to `KolodaViewDelegate` protocol and override some methods if you need, e.g.
     ```swift
