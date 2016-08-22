@@ -158,11 +158,11 @@ func applyAppearAnimation()
 ```
 Applies appear animation.
 ```swift
-func swipeLeft()
+func swipe(.Left)
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
-func swipeRight()
+func swipe(.Right)
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
@@ -176,7 +176,7 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
