@@ -469,7 +469,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 visibleCards.append(nextCardView)
                 configureCard(nextCardView, atIndex: UInt(currentCardIndex + index))
-                insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                if index > 0 {
+                    insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                } else {
+                    insertSubview(nextCardView, atIndex: 0)
+                }
             }
         }
     }
