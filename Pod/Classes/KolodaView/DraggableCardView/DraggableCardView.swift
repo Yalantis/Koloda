@@ -12,6 +12,7 @@ import pop
 protocol DraggableCardDelegate: class {
     
     func card(card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
+    func card(card: DraggableCardView, willBeSwipedInDirection direction: SwipeResultDirection)
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
     func card(card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool
     func card(cardWasReset card: DraggableCardView)
@@ -384,14 +385,14 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     func swipe(direction: SwipeResultDirection) {
         if !dragBegin {
-            delegate?.card(self, wasSwipedInDirection: direction)
+             self.delegate?.card(self, willBeSwipedInDirection: direction)
             
             let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
             swipePositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
             swipePositionAnimation.toValue = NSValue(CGPoint:animationPointForDirection(direction))
             swipePositionAnimation.duration = cardSwipeActionAnimationDuration
-            swipePositionAnimation.completionBlock = {
-                (_, _) in
+            swipePositionAnimation.completionBlock = { _, _ in
+                self.delegate?.card(self, wasSwipedInDirection: direction)
                 self.removeFromSuperview()
             }
             
