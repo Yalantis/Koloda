@@ -50,6 +50,7 @@ public class KolodaViewAnimator {
         firstCardAppearAnimation.duration = 1.0
         firstCardAppearAnimation.completionBlock = { _, finished in
             completion?(finished)
+            card.alpha = 1.0
         }
         
         card.pop_addAnimation(firstCardAppearAnimation, forKey: "reverseCardAlphaAnimation")
