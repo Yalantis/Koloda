@@ -12,7 +12,7 @@ import pop
 
 class BackgroundKolodaAnimator: KolodaViewAnimator {
     
-    override func applyScaleAnimation(card: DraggableCardView, scale: CGSize, frame: CGRect, duration: NSTimeInterval, completion: AnimationCompletionBlock) {
+    override func applyScaleAnimation(_ card: DraggableCardView, scale: CGSize, frame: CGRect, duration: TimeInterval, completion: AnimationCompletionBlock) {
         
         let scaleAnimation = POPSpringAnimation(propertyNamed: kPOPLayerScaleXY)
         scaleAnimation.springBounciness = 9

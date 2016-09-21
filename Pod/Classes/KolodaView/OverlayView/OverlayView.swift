@@ -12,11 +12,11 @@ public class OverlayView: UIView {
     
     public var overlayState: SwipeResultDirection?
     
-    @available(*, unavailable, message="Use updateWithProgress(percentage:) instead")
+    @available(*, unavailable, message: "Use updateWithProgress(percentage:) instead")
     public var overlayStrength: CGFloat = 0.0
     
-    @available(*, introduced=3.1.2)
-    public func updateWithProgress(percentage: CGFloat) {
+    @available(*, introduced: 3.1.2)
+    public func updateWithProgress(_ percentage: CGFloat) {
         alpha = percentage
     }
 
