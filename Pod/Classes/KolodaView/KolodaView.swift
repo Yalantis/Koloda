@@ -472,7 +472,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 if index > 0 {
                     insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
                 } else {
-                    insertSubview(nextCardView, atIndex: 0)
+                    insertSubview(nextCardView, at: 0)
                 }
             }
         }
@@ -634,7 +634,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Cards managing - Deletion
     
-    private func proceedDeletionInRange(_ range: CountableRange<Int>) {
+    private func proceedDeletionInRange(_ range: CountableClosedRange<Int>) {
         let deletionIndexes = [Int](range)
         deletionIndexes.sorted { $0 > $1 }.forEach { deletionIndex in
             let visibleCardIndex = deletionIndex - currentCardIndex
