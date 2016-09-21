@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
 s.name             = "Koloda"
-s.version          = "3.1.1"
+s.version          = "3.1.2"
 s.summary          = "KolodaView is a class designed to simplify the implementation of Tinder like cards on iOS. "
 
 s.homepage         = "https://github.com/Yalantis/Koloda"
