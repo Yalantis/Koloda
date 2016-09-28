@@ -9,7 +9,7 @@
 import UIKit
 import Koloda
 
-private var numberOfCards: UInt = 5
+private var numberOfCards: Int = 5
 
 class ViewController: UIViewController {
     
@@ -58,7 +58,7 @@ extension ViewController: KolodaViewDelegate {
         kolodaView.insertCardAtIndexRange(position..<position, animated: true)
     }
     
-    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: Int) {
         UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
     }
 }
@@ -66,15 +66,15 @@ extension ViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension ViewController: KolodaViewDataSource {
     
-    func kolodaNumberOfCards(_ koloda:KolodaView) -> UInt {
-        return UInt(dataSource.count)
+    func kolodaNumberOfCards(_ koloda:KolodaView) -> Int {
+        return dataSource.count
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView {
         return UIImageView(image: dataSource[Int(index)])
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView? {
         return Bundle.main.loadNibNamed("OverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }

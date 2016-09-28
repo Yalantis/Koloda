@@ -10,7 +10,7 @@ import UIKit
 import Koloda
 import pop
 
-private let numberOfCards: UInt = 5
+private let numberOfCards: Int = 5
 private let frameAnimationSpringBounciness: CGFloat = 9
 private let frameAnimationSpringSpeed: CGFloat = 16
 private let kolodaCountOfVisibleCards = 2
@@ -54,7 +54,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
         kolodaView.resetCurrentCardIndex()
     }
     
-    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: Int) {
         UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
     }
     
@@ -81,15 +81,15 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
 //MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
-    func kolodaNumberOfCards(_ koloda: KolodaView) -> UInt {
+    func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
         return numberOfCards
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView {
         return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView? {
         return Bundle.main.loadNibNamed("CustomOverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }
