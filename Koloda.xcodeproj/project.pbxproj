@@ -138,6 +138,7 @@
 				TargetAttributes = {
 					733C4A2B1CA43E7C009A467E = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -294,6 +295,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.wayd.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -315,6 +317,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.wayd.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
