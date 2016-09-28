@@ -58,7 +58,7 @@ extension ViewController: KolodaViewDelegate {
         kolodaView.insertCardAtIndexRange(position..<position, animated: true)
     }
     
-    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: Int) {
+    func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
         UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
     }
 }
@@ -70,11 +70,11 @@ extension ViewController: KolodaViewDataSource {
         return dataSource.count
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         return UIImageView(image: dataSource[Int(index)])
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView? {
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
         return Bundle.main.loadNibNamed("OverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }

@@ -54,7 +54,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
         kolodaView.resetCurrentCardIndex()
     }
     
-    func koloda(_ koloda: KolodaView, didSelectCardAtIndex index: Int) {
+    func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
         UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
     }
     
@@ -85,11 +85,11 @@ extension BackgroundAnimationViewController: KolodaViewDataSource {
         return numberOfCards
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         return UIImageView(image: UIImage(named: "cards_\(index + 1)"))
     }
     
-    func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView? {
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
         return Bundle.main.loadNibNamed("CustomOverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }
