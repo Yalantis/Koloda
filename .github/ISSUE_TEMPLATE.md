@@ -6,7 +6,7 @@
 
 ## A feature request
 
-###  What do you do?
+###  What do you want to add?
 
 > Please describe what you want to add to the component. 
 
@@ -32,8 +32,9 @@
 
 - [ ] Version of the component: _insert here_
 - [ ] Swift version: _insert here_
+- [ ] iOS version: _insert here_
+- [ ] Device: _insert here_
 - [ ] Xcode version: _insert here_
-- [ ] macOS version: _insert here_
 - [ ] If you use Cocoapods: _run `pod env | pbcopy` and insert here_ 
 - [ ] If you use Carthage: _run `carthage version | pbcopy` and insert here_
 
