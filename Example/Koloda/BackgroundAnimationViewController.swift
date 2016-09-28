@@ -72,8 +72,8 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     
     func koloda(kolodaBackgroundCardAnimation koloda: KolodaView) -> POPPropertyAnimation? {
         let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
-        animation.springBounciness = frameAnimationSpringBounciness
-        animation.springSpeed = frameAnimationSpringSpeed
+        animation?.springBounciness = frameAnimationSpringBounciness
+        animation?.springSpeed = frameAnimationSpringSpeed
         return animation
     }
 }
@@ -90,7 +90,6 @@ extension BackgroundAnimationViewController: KolodaViewDataSource {
     }
     
     func koloda(_ koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("CustomOverlayView",
-            owner: self, options: nil)[0] as? OverlayView
+        return Bundle.main.loadNibNamed("CustomOverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }
