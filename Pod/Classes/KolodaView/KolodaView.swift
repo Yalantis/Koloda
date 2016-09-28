@@ -257,7 +257,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         delegate?.koloda(self, draggedCardWithPercentage: percentage, in: direction)
     }
     
-    func card(_ card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool {
+    func card(_ card: DraggableCardView, shouldSwipeIn direction: SwipeResultDirection) -> Bool {
         return delegate?.koloda(self, shouldSwipeCardAt: self.currentCardIndex, in: direction) ?? true
     }
     
@@ -266,7 +266,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         return delegate?.koloda(self, allowedDirectionsForIndex: index) ?? [.Left, .Right]
     }
     
-    func card(_ card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection) {
+    func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection) {
         swipedAction(direction)
     }
     

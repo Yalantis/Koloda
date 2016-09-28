@@ -12,8 +12,8 @@ import pop
 protocol DraggableCardDelegate: class {
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
-    func card(_ card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
-    func card(_ card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool
+    func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection)
+    func card(_ card: DraggableCardView, shouldSwipeIn direction: SwipeResultDirection) -> Bool
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
@@ -302,7 +302,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     private func swipeMadeAction() {
         let shouldSwipe = { direction in
-            return self.delegate?.card(self, shouldSwipeInDirection: direction) ?? true
+            return self.delegate?.card(self, shouldSwipeIn: direction) ?? true
         }
         if let dragDirection = dragDirection , shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
@@ -326,7 +326,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private func swipeAction(_ direction: SwipeResultDirection) {
         overlayView?.overlayState = direction
         overlayView?.alpha = 1.0
-        delegate?.card(self, wasSwipedInDirection: direction)
+        delegate?.card(self, wasSwipedIn: direction)
         let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
         translationAnimation?.duration = cardSwipeActionAnimationDuration
         translationAnimation?.fromValue = NSValue(cgPoint: POPLayerGetTranslationXY(layer))
@@ -384,7 +384,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     func swipe(_ direction: SwipeResultDirection) {
         if !dragBegin {
-            delegate?.card(self, wasSwipedInDirection: direction)
+            delegate?.card(self, wasSwipedIn: direction)
             
             let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
             swipePositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
