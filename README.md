@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 3.1.1'
+pod 'Koloda', '~> 3.1.2'
 ```
 
 Thread Safety
@@ -60,8 +60,9 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
 ##Usage
 
 1. Import `Koloda` module to your `MyKolodaViewController` class
+
     ```swift
-        import Koloda
+    import Koloda
     ```
 2. Add `KolodaView` to `MyKolodaViewController`, then set dataSource and delegate for it
     ```swift
@@ -74,6 +75,7 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
             kolodaView.dataSource = self
             kolodaView.delegate = self
         }
+    }
     ```
 3. Conform your `MyKolodaViewController` to `KolodaViewDelegate` protocol and override some methods if you need, e.g.
     ```swift
@@ -106,6 +108,8 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
     }
     ```
 5. `KolodaView` works with default implementation. Override it to customize its behavior
+
+Also check out [an example project with carthage](https://github.com/serejahh/Koloda-Carthage-usage).
 
 Properties
 --------------
@@ -154,11 +158,11 @@ func applyAppearAnimation()
 ```
 Applies appear animation.
 ```swift
-func swipeLeft()
+func swipe(.Left)
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
-func swipeRight()
+func swipe(.Right)
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
@@ -172,7 +176,7 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-func koloda(kolodaNumberOfCards koloda:KolodaView) -> UInt
+func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
@@ -275,6 +279,7 @@ Version 1.0
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
 - [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
+- [Color Dating](https://itunes.apple.com/us/app/color-dating-free-app-for/id1100827439?mt=8).
 
 
 #### Let us know!

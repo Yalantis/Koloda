@@ -73,8 +73,8 @@ public extension KolodaViewDelegate {
     
 }
 
-public class KolodaView: UIView, DraggableCardDelegate {
-    
+open class KolodaView: UIView, DraggableCardDelegate {
+
     //Opacity values
     public var alphaValueOpaque = defaultAlphaValueOpaque
     public var alphaValueTransparent = defaultAlphaValueTransparent
@@ -103,8 +103,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
     private(set) public var countOfCards = 0
     public var countOfVisibleCards = defaultCountOfVisibleCards
     private var visibleCards = [DraggableCardView]()
-    
-    override public func layoutSubviews() {
+
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
         if !animating {
@@ -157,7 +157,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: Frames
-    public func frameForCardAtIndex(_ index: UInt) -> CGRect {
+    open func frameForCardAtIndex(_ index: UInt) -> CGRect {
         let bottomOffset:CGFloat = 0
         let topOffset = defaultBackgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
         let scalePercent = defaultBackgroundCardsScalePercent
@@ -469,7 +469,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 
                 visibleCards.append(nextCardView)
                 configureCard(nextCardView, atIndex: UInt(currentCardIndex + index))
-                insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                if index > 0 {
+                    insertSubview(nextCardView, belowSubview: visibleCards[index - 1])
+                } else {
+                    insertSubview(nextCardView, at: 0)
+                }
             }
         }
     }
@@ -484,7 +488,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     }
     
     private func missingCardsCount() -> Int {
-        return min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardIndex + 1))
+        return min(countOfVisibleCards - visibleCards.count, countOfCards - (currentCardIndex + visibleCards.count))
     }
     
     // MARK: Public
@@ -545,8 +549,8 @@ public class KolodaView: UIView, DraggableCardDelegate {
             return nil
         }
     }
-    
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+
+    override open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         if !shouldPassthroughTapsWhenNoVisibleCards {
             return super.point(inside: point, with: event)
         }
@@ -630,7 +634,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Cards managing - Deletion
     
-    private func proceedDeletionInRange(_ range: CountableRange<Int>) {
+    private func proceedDeletionInRange(_ range: CountableClosedRange<Int>) {
         let deletionIndexes = [Int](range)
         deletionIndexes.sorted { $0 > $1 }.forEach { deletionIndex in
             let visibleCardIndex = deletionIndex - currentCardIndex
@@ -649,11 +653,11 @@ public class KolodaView: UIView, DraggableCardDelegate {
         animating = true
         let currentItemsCount = countOfCards
         countOfCards = Int(dataSource.kolodaNumberOfCards(self))
-        
         let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
         if !visibleIndexes.isEmpty {
-            proceedDeletionInRange(visibleIndexes[0]..<visibleIndexes[visibleIndexes.count - 1])
+            proceedDeletionInRange(visibleIndexes[0]...visibleIndexes[visibleIndexes.count - 1])
         }
+        currentCardIndex -= Array(indexRange).filter { $0 < currentCardIndex }.count
         loadMissingCards(missingCardsCount())
         layoutDeck()
         for (index, card) in visibleCards.enumerated() {
