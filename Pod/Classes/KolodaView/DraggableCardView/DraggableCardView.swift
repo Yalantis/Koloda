@@ -253,7 +253,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     //MARK: Private
     
     private var directions: [SwipeResultDirection] {
-        return delegate?.card(cardAllowedDirections: self) ?? [.Left, .Right]
+        return delegate?.card(cardAllowedDirections: self) ?? [.left, .right]
     }
     
     private var dragDirection: SwipeResultDirection? {

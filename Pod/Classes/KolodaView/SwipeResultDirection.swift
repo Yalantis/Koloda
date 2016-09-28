@@ -10,28 +10,29 @@ import Foundation
 import CoreGraphics
 
 public enum SwipeResultDirection: String {
-    case Left
-    case Right
-    case Up
-    case Down
-    case TopLeft
-    case TopRight
-    case BottomLeft
-    case BottomRight
+    
+    case left
+    case right
+    case up
+    case down
+    case topLeft
+    case topRight
+    case bottomLeft
+    case bottomRight
 }
 
 extension SwipeResultDirection {
     
     private var swipeDirection: Direction {
         switch self {
-        case .Up: return .Up
-        case .Down: return .Down
-        case .Left: return .Left
-        case .Right: return  .Right
-        case .TopLeft: return .TopLeft
-        case .TopRight: return .TopRight
-        case .BottomLeft: return .BottomLeft
-        case .BottomRight: return .BottomRight
+        case .up: return .up
+        case .down: return .down
+        case .left: return .left
+        case .right: return  .right
+        case .topLeft: return .topLeft
+        case .topRight: return .topRight
+        case .bottomLeft: return .bottomLeft
+        case .bottomRight: return .bottomRight
         }
     }
     
@@ -52,12 +53,14 @@ extension SwipeResultDirection {
 
 
 private enum VerticalPosition: CGFloat {
+    
     case top = -1
     case middle = 0
     case bottom = 1
 }
 
 private enum HorizontalPosition: CGFloat {
+    
     case left = -1
     case middle = 0
     case right = 1
@@ -65,6 +68,7 @@ private enum HorizontalPosition: CGFloat {
 
 
 private struct Direction {
+    
     let horizontalPosition:HorizontalPosition
     let verticalPosition:VerticalPosition
     
@@ -73,19 +77,19 @@ private struct Direction {
     }
     
     var bearing: Double {
-        return self.point.bearingTo(Direction.None.point)
+        return self.point.bearingTo(Direction.none.point)
     }
     
-    static let None = Direction(horizontalPosition: .middle, verticalPosition: .middle)
-    static let Up = Direction(horizontalPosition: .middle, verticalPosition: .top)
-    static let Down = Direction(horizontalPosition: .middle, verticalPosition: .bottom)
-    static let Left = Direction(horizontalPosition: .left, verticalPosition: .middle)
-    static let Right = Direction(horizontalPosition: .right, verticalPosition: .middle)
+    static let none = Direction(horizontalPosition: .middle, verticalPosition: .middle)
+    static let up = Direction(horizontalPosition: .middle, verticalPosition: .top)
+    static let down = Direction(horizontalPosition: .middle, verticalPosition: .bottom)
+    static let left = Direction(horizontalPosition: .left, verticalPosition: .middle)
+    static let right = Direction(horizontalPosition: .right, verticalPosition: .middle)
     
-    static let TopLeft = Direction(horizontalPosition: .left, verticalPosition: .top)
-    static let TopRight = Direction(horizontalPosition: .right, verticalPosition: .top)
-    static let BottomLeft = Direction(horizontalPosition: .left, verticalPosition: .bottom)
-    static let BottomRight = Direction(horizontalPosition: .right, verticalPosition: .bottom)
+    static let topLeft = Direction(horizontalPosition: .left, verticalPosition: .top)
+    static let topRight = Direction(horizontalPosition: .right, verticalPosition: .top)
+    static let bottomLeft = Direction(horizontalPosition: .left, verticalPosition: .bottom)
+    static let bottomRight = Direction(horizontalPosition: .right, verticalPosition: .bottom)
 }
 
 
@@ -164,24 +168,24 @@ extension CGPoint {
             return CGPoint(x: p1.x + ua / d * (p2.x - p1.x), y: p1.y + ua / d * (p2.y - p1.y))
         }
         return nil
-        
     }
 }
 
 typealias CGLine = (start: CGPoint, end: CGPoint)
 
 extension CGRect {
+    
     var topLine: CGLine {
-        return (Direction.TopLeft.point, Direction.TopRight.point)
+        return (Direction.topLeft.point, Direction.topRight.point)
     }
     var leftLine: CGLine {
-        return (Direction.TopLeft.point, Direction.BottomLeft.point)
+        return (Direction.topLeft.point, Direction.bottomLeft.point)
     }
     var bottomLine: CGLine {
-        return (Direction.BottomLeft.point, Direction.BottomRight.point)
+        return (Direction.bottomLeft.point, Direction.bottomRight.point)
     }
     var rightLine: CGLine {
-        return (Direction.TopRight.point, Direction.BottomRight.point)
+        return (Direction.topRight.point, Direction.bottomRight.point)
     }
     
     var perimeterLines: [CGLine] {

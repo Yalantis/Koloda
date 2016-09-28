@@ -37,11 +37,11 @@ class ViewController: UIViewController {
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipe(.Left)
+        kolodaView?.swipe(.left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipe(.Right)
+        kolodaView?.swipe(.right)
     }
     
     @IBAction func undoButtonTapped() {

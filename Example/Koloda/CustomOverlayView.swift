@@ -26,9 +26,9 @@ class CustomOverlayView: OverlayView {
     override var overlayState: SwipeResultDirection?  {
         didSet {
             switch overlayState {
-            case .Left? :
+            case .left? :
                 overlayImageView.image = UIImage(named: overlayLeftImageName)
-            case .Right? :
+            case .right? :
                 overlayImageView.image = UIImage(named: overlayRightImageName)
             default:
                 overlayImageView.image = nil
