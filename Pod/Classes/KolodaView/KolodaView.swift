@@ -518,7 +518,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func swipe(direction: SwipeResultDirection) {
+    public func swipe(direction: SwipeResultDirection,force: Bool = true) {
+        
+        let shouldSwipe = delegate?.koloda(self, shouldSwipeCardAtIndex: UInt(self.currentCardIndex), inDirection: direction) ?? true
+        guard force || shouldSwipe else {
+            return
+        }
         
         let validDirection = delegate?.koloda(self, allowedDirectionsForIndex: UInt(currentCardIndex)).contains(direction) ?? true
         guard validDirection else { return }
