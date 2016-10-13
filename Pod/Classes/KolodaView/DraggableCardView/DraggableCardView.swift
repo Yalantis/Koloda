@@ -25,7 +25,7 @@ protocol DraggableCardDelegate: class {
 private let rotationMax: CGFloat = 1.0
 private let defaultRotationAngle = CGFloat(M_PI) / 10.0
 private let scaleMin: CGFloat = 0.8
-public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
+public var cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
 
 private let screenSize = UIScreen.mainScreen().bounds.size
 
