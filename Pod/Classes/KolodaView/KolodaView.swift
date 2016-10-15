@@ -560,7 +560,12 @@ public class KolodaView: UIView, DraggableCardDelegate {
             return super.pointInside(point, withEvent: event)
         }
         
-        return visibleCards.count > 0
+        if super.pointInside(point, withEvent: event) {
+            return visibleCards.count > 0
+        }
+        else {
+            return false
+        }
     }
     
     // MARK: Cards managing - Insertion
