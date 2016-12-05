@@ -109,7 +109,7 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
     ```
 5. `KolodaView` works with default implementation. Override it to customize its behavior
 
-Also check out [an example project with carthage](https://github.com/serejahh/Koloda-Carthage-usage).
+Also check out [an example project with carthage](https://github.com/serejahh/Koloda-Carthage-usage) or a [**Swift 3** version](https://github.com/jaimeagudo/koloda-swift-3-pod) 
 
 Properties
 --------------
