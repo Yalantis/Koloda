@@ -265,8 +265,16 @@ public class KolodaView: UIView, DraggableCardDelegate {
         return delegate?.koloda(self, allowedDirectionsForIndex: UInt(index)) ?? [.Left, .Right]
     }
     
+    func card(card: DraggableCardView, willBeSwipedInDirection direction: SwipeResultDirection) {
+         swipedAction(direction)
+    }
+    
     func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection) {
-        swipedAction(direction)
+        if visibleCards.isEmpty {
+            animating = false
+            delegate?.koloda(self, didSwipeCardAtIndex: UInt(self.currentCardIndex - 1), inDirection: direction)
+            delegate?.kolodaDidRunOutOfCards(self)
+        }
     }
     
     func card(cardWasReset card: DraggableCardView) {
@@ -344,10 +352,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                 _self.delegate?.koloda(_self, didSwipeCardAtIndex: UInt(_self.currentCardIndex - 1), inDirection: direction)
                 _self.delegate?.koloda(_self, didShowCardAtIndex: UInt(_self.currentCardIndex))
             }
-        } else {
-            animating = false
-            delegate?.koloda(self, didSwipeCardAtIndex: UInt(self.currentCardIndex - 1), inDirection: direction)
-            delegate?.kolodaDidRunOutOfCards(self)
         }
     }
     
@@ -537,7 +541,6 @@ public class KolodaView: UIView, DraggableCardDelegate {
                     nextCard.alpha = shouldTransparentizeNextCard ? alphaValueSemiTransparent : alphaValueOpaque
                 }
                 frontCard.swipe(direction)
-                frontCard.delegate = nil
             }
         }
     }
