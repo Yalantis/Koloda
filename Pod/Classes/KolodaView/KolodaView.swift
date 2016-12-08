@@ -48,6 +48,7 @@ public protocol KolodaViewDelegate: class {
     func kolodaCardsScalePercent(_ koloda: KolodaView) -> CGFloat
     func kolodaCardsCardsLeftMargin(_ koloda: KolodaView) -> CGFloat
     func kolodaCardFrameAnimationDuration(_ koloda: KolodaView) -> TimeInterval
+    func kolodaSwipeAnimationDuration(_ koloda: KolodaView) -> TimeInterval
 }
 
 public extension KolodaViewDelegate {
@@ -70,6 +71,7 @@ public extension KolodaViewDelegate {
     func kolodaCardsScalePercent(_ koloda: KolodaView) -> CGFloat { return 0.95 }
     func kolodaCardsCardsLeftMargin(_ koloda: KolodaView) -> CGFloat { return 8.0 }
     func kolodaCardFrameAnimationDuration(_ koloda: KolodaView) -> TimeInterval { return 0.2 }
+    func kolodaSwipeAnimationDuration(_ koloda: KolodaView) -> TimeInterval { return 0.4 }
 }
 
 open class KolodaView: UIView, DraggableCardDelegate {
@@ -261,6 +263,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     //MARK: DraggableCardDelegate
+    
+    func cardSwipeAnimationDuration(_ card: DraggableCardView) -> TimeInterval {
+        return delegate?.kolodaSwipeAnimationDuration(self) ?? 0.0
+    }
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection) {
         animating = true
