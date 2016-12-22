@@ -24,7 +24,8 @@ class ViewController: UIViewController {
         return array
     }()
     
-    //MARK: Lifecycle
+    // MARK: Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,7 +36,8 @@ class ViewController: UIViewController {
     }
     
     
-    //MARK: IBActions
+    // MARK: IBActions
+
     @IBAction func leftButtonTapped() {
         kolodaView?.swipe(.left)
     }
@@ -49,24 +51,29 @@ class ViewController: UIViewController {
     }
 }
 
-//MARK: KolodaViewDelegate
+// MARK: KolodaViewDelegate
+
 extension ViewController: KolodaViewDelegate {
     
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-        dataSource.insert(UIImage(named: "Card_like_6")!, at: kolodaView.currentCardIndex - 1)
         let position = kolodaView.currentCardIndex
-        kolodaView.insertCardAtIndexRange(position..<position, animated: true)
+        for i in 1...4 {
+          dataSource.append(UIImage(named: "Card_like_\(i)")!)
+        }
+        kolodaView.insertCardAtIndexRange(position..<position + 4, animated: true)
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
-        UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
+        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
     }
+
 }
 
-//MARK: KolodaViewDataSource
+// MARK: KolodaViewDataSource
+
 extension ViewController: KolodaViewDataSource {
     
-    func kolodaNumberOfCards(_ koloda:KolodaView) -> Int {
+    func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
         return dataSource.count
     }
     
