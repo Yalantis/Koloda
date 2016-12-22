@@ -55,7 +55,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
-        UIApplication.shared.openURL(URL(string: "http://yalantis.com/")!)
+        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
     }
     
     func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool {
@@ -78,7 +78,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     }
 }
 
-//MARK: KolodaViewDataSource
+// MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
