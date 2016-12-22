@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7.3)
+* Supported build target - iOS 9.0 (Xcode 8)
 
 ARC Compatibility
 ------------------
@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 3.1.2'
+pod 'Koloda', '~> 4.0'
 ```
 
 Thread Safety
