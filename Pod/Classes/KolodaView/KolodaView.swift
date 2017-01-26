@@ -24,9 +24,9 @@ private let defaultAlphaValueSemiTransparent: CGFloat = 0.7
 public protocol KolodaViewDataSource: class {
     
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int
+    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView
     func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView?
-    
 }
 
 public extension KolodaViewDataSource {
@@ -118,7 +118,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private func setupDeck() {
         if let dataSource = dataSource {
             countOfCards = dataSource.kolodaNumberOfCards(self)
-            
+
             if countOfCards - currentCardIndex > 0 {
                 let countOfNeededCards = min(countOfVisibleCards, countOfCards - currentCardIndex)
                 
@@ -311,6 +311,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         let index = currentCardIndex + visibleIndex
         return delegate?.koloda(self, shouldDragCardAt: index) ?? true
+    }
+
+    func card(cardSwipeSpeed card: DraggableCardView) -> DragSpeed {
+        return dataSource?.kolodaSpeedThatCardShouldDrag(self) ?? DragSpeed.default
     }
     
     // MARK: Private

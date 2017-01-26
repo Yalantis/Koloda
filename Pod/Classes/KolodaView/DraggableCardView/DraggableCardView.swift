@@ -9,6 +9,13 @@
 import UIKit
 import pop
 
+public enum DragSpeed: TimeInterval {
+    case slow = 2.0
+    case moderate = 1.5
+    case `default` = 0.8
+    case fast = 0.4
+}
+
 protocol DraggableCardDelegate: class {
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
@@ -19,13 +26,13 @@ protocol DraggableCardDelegate: class {
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
     func card(cardShouldDrag card: DraggableCardView) -> Bool
+    func card(cardSwipeSpeed card: DraggableCardView) -> DragSpeed
 }
 
 //Drag animation constants
 private let rotationMax: CGFloat = 1.0
 private let defaultRotationAngle = CGFloat(M_PI) / 10.0
 private let scaleMin: CGFloat = 0.8
-public let cardSwipeActionAnimationDuration: TimeInterval  = 0.4
 
 private let screenSize = UIScreen.main.bounds.size
 
@@ -48,6 +55,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var dragBegin = false
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
+    private var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.rawValue
+
     
     //MARK: Lifecycle
     init() {
@@ -87,6 +96,10 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DraggableCardView.tapRecognized(_:)))
         tapGestureRecognizer.cancelsTouchesInView = false
         addGestureRecognizer(tapGestureRecognizer)
+
+        if let delegate = delegate {
+            cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
+        }
     }
     
     //MARK: Configurations
