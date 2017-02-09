@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84F820B61E4D31BC0088562A /* KolodaAnimationSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F820B51E4D31BC0088562A /* KolodaAnimationSemaphore.swift */; };
 		C517E4B61D9CF9470002D88F /* Koloda.h in Headers */ = {isa = PBXBuildFile; fileRef = C517E4AE1D9CF9010002D88F /* Koloda.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C517E4EF1D9D00520002D88F /* DraggableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E51D9D00520002D88F /* DraggableCardView.swift */; };
 		C517E4F01D9D00520002D88F /* KolodaCardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E61D9D00520002D88F /* KolodaCardStorage.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		84F820B51E4D31BC0088562A /* KolodaAnimationSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaAnimationSemaphore.swift; sourceTree = "<group>"; };
 		C517E4AB1D9CF9010002D88F /* Koloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C517E4AE1D9CF9010002D88F /* Koloda.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Koloda.h; sourceTree = "<group>"; };
 		C517E4AF1D9CF9010002D88F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				C517E4E81D9D00520002D88F /* KolodaViewAnimatior.swift */,
 				C517E4E91D9D00520002D88F /* OverlayView */,
 				C517E4EB1D9D00520002D88F /* SwipeResultDirection.swift */,
+				84F820B51E4D31BC0088562A /* KolodaAnimationSemaphore.swift */,
 			);
 			path = KolodaView;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				C517E4F01D9D00520002D88F /* KolodaCardStorage.swift in Sources */,
 				C517E4F41D9D00520002D88F /* SwipeResultDirection.swift in Sources */,
 				C517E4F11D9D00520002D88F /* KolodaView.swift in Sources */,
+				84F820B61E4D31BC0088562A /* KolodaAnimationSemaphore.swift in Sources */,
 				C517E4F31D9D00520002D88F /* OverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
