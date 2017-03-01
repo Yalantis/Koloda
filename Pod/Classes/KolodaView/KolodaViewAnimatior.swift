@@ -107,6 +107,12 @@ public class KolodaViewAnimator {
         )
     }
     
+    public func removeCardAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
+        card.swipe(.Right)
+        completion?(true)
+    }
+
+    
     internal func resetBackgroundCardsWithCompletion(completion: AnimationCompletionBlock = nil) {
         UIView.animateWithDuration(
             0.2,

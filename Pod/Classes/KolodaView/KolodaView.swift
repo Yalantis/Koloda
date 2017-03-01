@@ -653,7 +653,7 @@ public class KolodaView: UIView, DraggableCardDelegate {
             let card = visibleCards[visibleCardIndex]
             card.delegate = nil
             if animated {
-                card.swipe(.Right)
+                animator.removeCardAnimation(card)
             } else {
                 card.removeFromSuperview()
             }
