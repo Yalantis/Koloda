@@ -215,17 +215,17 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         case .changed:
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
             let rotationAngle = animationDirectionY * defaultRotationAngle * rotationStrength
-            let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
-            let scale = max(scaleStrength, scaleMin)
-    
+            //            let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
+            //            let scale = max(scaleStrength, scaleMin)
+            
             var transform = CATransform3DIdentity
-            transform = CATransform3DScale(transform, scale, scale, 1)
+            //            transform = CATransform3DScale(transform, scale, scale, 1)
             transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)
             transform = CATransform3DTranslate(transform, dragDistance.x, dragDistance.y, 0)
             layer.transform = transform
             
             let percentage = dragPercentage
-            updateOverlayWithFinishPercent(percentage, direction:dragDirection)
+            //            updateOverlayWithFinishPercent(percentage, direction:dragDirection)
             if let dragDirection = dragDirection {
                 //100% - for proportion
                 delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
@@ -265,7 +265,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
                 return (distance, direction)
             }
             return closest
-        }.direction
+            }.direction
     }
     
     private var dragPercentage: CGFloat {
@@ -287,18 +287,18 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             // check 4 borders for intersection with line between touchpoint and center of card
             // return smallest percentage of distance to edge point or 0
             return rect.perimeterLines
-                        .flatMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
-                        .map { centerDistance / $0.distanceTo(.zero) }
-                        .min() ?? 0
+                .flatMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
+                .map { centerDistance / $0.distanceTo(.zero) }
+                .min() ?? 0
         }
     }
     
     
-    private func updateOverlayWithFinishPercent(_ percent: CGFloat, direction: SwipeResultDirection?) {
-        overlayView?.overlayState = direction
-        let progress = max(min(percent/swipePercentageMargin, 1.0), 0)
-        overlayView?.update(progress: progress)
-    }
+    //    private func updateOverlayWithFinishPercent(_ percent: CGFloat, direction: SwipeResultDirection?) {
+    //        overlayView?.overlayState = direction
+    //        let progress = max(min(percent/swipePercentageMargin, 1.0), 0)
+    //        overlayView?.update(progress: progress)
+    //    }
     
     private func swipeMadeAction() {
         let shouldSwipe = { direction in
@@ -321,7 +321,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private func animationRotationForDirection(_ direction: SwipeResultDirection) -> CGFloat {
         return CGFloat(direction.bearing / 2.0 - M_PI_4)
     }
-
+    
     
     private func swipeAction(_ direction: SwipeResultDirection) {
         overlayView?.overlayState = direction

@@ -257,7 +257,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         animating = true
         
         if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self), shouldMove {
-            self.moveOtherCardsWithPercentage(percentage)
+            //            self.moveOtherCardsWithPercentage(percentage)
         }
         delegate?.koloda(self, draggedCardWithPercentage: percentage, in: direction)
     }
@@ -345,7 +345,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                     return
                 }
                 
-                _self.visibleCards.last?.isHidden = false
+                //                _self.visibleCards.last?.isHidden = false
                 _self.animating = false
                 _self.delegate?.koloda(_self, didSwipeCardAt: _self.currentCardIndex - 1, in: direction)
                 _self.delegate?.koloda(_self, didShowCardAt: _self.currentCardIndex)
@@ -367,7 +367,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
-        lastCard.isHidden = true
+        //        lastCard.isHidden = true
         lastCard.isUserInteractionEnabled = true
         
         if let card = visibleCards.last {

@@ -89,10 +89,10 @@ open class KolodaViewAnimator {
             withDuration: 0.2,
             animations: {
                 cards.forEach { $0.alpha = 1.0 }
-            },
+        },
             completion: { finished in
                 completion?(finished)
-            }
+        }
         )
     }
     
@@ -101,10 +101,10 @@ open class KolodaViewAnimator {
             withDuration: 0.05,
             animations: {
                 cards.forEach { $0.alpha = 0.0 }
-            },
+        },
             completion: { finished in
                 completion?(finished)
-            }
+        }
         )
     }
     
@@ -114,8 +114,8 @@ open class KolodaViewAnimator {
             delay: 0.0,
             options: .curveLinear,
             animations: {
-                self.koloda?.moveOtherCardsWithPercentage(0)
-            },
+                //                self.koloda?.moveOtherCardsWithPercentage(0)
+        },
             completion: { finished in
                 completion?(finished)
         })
