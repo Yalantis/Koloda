@@ -100,6 +100,11 @@ open class KolodaView: UIView, DraggableCardDelegate {
         return delegate?.kolodaShouldTransparentizeNextCard(self) ?? true
     }
     
+    public var isRunOutOfCards: Bool {
+        
+        return visibleCards.isEmpty
+    }
+    
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
     public var countOfVisibleCards = defaultCountOfVisibleCards
