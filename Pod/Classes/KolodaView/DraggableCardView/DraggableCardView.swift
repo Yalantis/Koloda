@@ -23,7 +23,7 @@ protocol DraggableCardDelegate: class {
 
 //Drag animation constants
 private let rotationMax: CGFloat = 1.0
-private let defaultRotationAngle = Float.pi / 10.0
+private let defaultRotationAngle: CGFloat = Float.pi / 10.0
 private let scaleMin: CGFloat = 0.8
 public let cardSwipeActionAnimationDuration: TimeInterval  = 0.4
 
@@ -319,7 +319,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     private func animationRotationForDirection(_ direction: SwipeResultDirection) -> CGFloat {
-        return CGFloat(direction.bearing / 2.0 - Float.pi)
+        return CGFloat(direction.bearing / 2.0 - CGFloat(Float.pi))
     }
     
     
