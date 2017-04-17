@@ -579,7 +579,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             return super.point(inside: point, with: event)
         }
         
-        if super.pointInside(point, withEvent: event) {
+        if super.point(inside: point, with: event) {
             return visibleCards.count > 0
         }
         else {
