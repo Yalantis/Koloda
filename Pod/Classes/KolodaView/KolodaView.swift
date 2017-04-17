@@ -90,7 +90,16 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     public weak var delegate: KolodaViewDelegate?
     
-    public lazy var animator: KolodaViewAnimator = {
+    public var animator: KolodaViewAnimator {
+        set {
+            self._animator = newValue
+        }
+        get {
+            return self._animator
+        }
+    }
+    
+    private lazy var _animator: KolodaViewAnimator = {
         return KolodaViewAnimator(koloda: self)
     }()
     
