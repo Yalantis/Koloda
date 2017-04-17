@@ -9,13 +9,6 @@
 import UIKit
 import pop
 
-//Default values
-private let defaultCountOfVisibleCards = 3
-private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
-private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
-private let defaultBackgroundCardsLeftMargin: CGFloat = 8.0
-private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
-
 //Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
 private let defaultAlphaValueTransparent: CGFloat = 0.0
@@ -26,7 +19,6 @@ public protocol KolodaViewDataSource: class {
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView
     func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView?
-    
 }
 
 public extension KolodaViewDataSource {
@@ -34,7 +26,6 @@ public extension KolodaViewDataSource {
     func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
         return nil
     }
-    
 }
 
 public protocol KolodaViewDelegate: class {
@@ -52,13 +43,17 @@ public protocol KolodaViewDelegate: class {
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat?
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool
-    
+    func kolodaNumberOfVisibleCards(_ koloda: KolodaView) -> Int
+    func kolodaCardsTopMargin(_ koloda: KolodaView) -> CGFloat
+    func kolodaCardsScalePercent(_ koloda: KolodaView) -> CGFloat
+    func kolodaCardsCardsLeftMargin(_ koloda: KolodaView) -> CGFloat
+    func kolodaCardFrameAnimationDuration(_ koloda: KolodaView) -> TimeInterval
+    func kolodaSwipeAnimationDuration(_ koloda: KolodaView) -> TimeInterval
 }
 
 public extension KolodaViewDelegate {
     
     func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool { return true }
-    
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection] { return [.left, .right] }
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {}
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {}
@@ -71,7 +66,12 @@ public extension KolodaViewDelegate {
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {}
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool { return true }
-    
+    func kolodaNumberOfVisibleCards(_ koloda: KolodaView) -> Int { return 3 }
+    func kolodaCardsTopMargin(_ koloda: KolodaView) -> CGFloat { return 4.0 }
+    func kolodaCardsScalePercent(_ koloda: KolodaView) -> CGFloat { return 0.95 }
+    func kolodaCardsCardsLeftMargin(_ koloda: KolodaView) -> CGFloat { return 8.0 }
+    func kolodaCardFrameAnimationDuration(_ koloda: KolodaView) -> TimeInterval { return 0.2 }
+    func kolodaSwipeAnimationDuration(_ koloda: KolodaView) -> TimeInterval { return 0.4 }
 }
 
 open class KolodaView: UIView, DraggableCardDelegate {
@@ -111,8 +111,24 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
-    public var countOfVisibleCards = defaultCountOfVisibleCards
+    
     private var visibleCards = [DraggableCardView]()
+    
+    public var countOfVisibleCards: Int {
+        return delegate?.kolodaNumberOfVisibleCards(self) ?? 0
+    }
+    
+    public var defaultBackgroundCardsTopMargin: CGFloat {
+        return delegate?.kolodaCardsTopMargin(self) ?? CGFloat.leastNormalMagnitude
+    }
+    
+    public var defaultBackgroundCardsScalePercent: CGFloat {
+        return delegate?.kolodaCardsScalePercent(self) ?? CGFloat.leastNormalMagnitude
+    }
+    
+    public var defaultBackgroundCardFrameAnimationDuration: TimeInterval {
+        return delegate?.kolodaCardFrameAnimationDuration(self) ?? 0.0
+    }
 
     override open func layoutSubviews() {
         super.layoutSubviews()
@@ -257,6 +273,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     // MARK: DraggableCardDelegate
+    
+    func cardSwipeAnimationDuration(_ card: DraggableCardView) -> TimeInterval {
+        return delegate?.kolodaSwipeAnimationDuration(self) ?? 0.0
+    }
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection) {
         animating = true
