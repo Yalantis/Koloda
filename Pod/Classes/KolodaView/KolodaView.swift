@@ -519,7 +519,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         for i in 0..<countOfCards {
             
-            layoutCard(cards[i], at: i)
+            layoutCard(cards[i] as! DraggableCardView, at: i)
         }
         
         insertCardAtIndexRange(position ..< position + countOfCards, animated: true)

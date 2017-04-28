@@ -15,19 +15,20 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
-    fileprivate var dataSource: [UIImage] = {
-        var array: [UIImage] = []
-        for index in 0..<numberOfCards {
-            array.append(UIImage(named: "Card_like_\(index + 1)")!)
-        }
-        
-        return array
-    }()
+    var dataSource: [UIImage] = []
     
     // MARK: Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        var array: [UIImage] = []
+        
+        for index in 0..<numberOfCards {
+            array.append(UIImage(named: "Card_like_\(index + 1)")!)
+        }
+        
+        dataSource = array
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
@@ -56,14 +57,23 @@ class ViewController: UIViewController {
 extension ViewController: KolodaViewDelegate {
     
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-        let position = kolodaView.currentCardIndex
-        for i in 1...4 {
-          dataSource.append(UIImage(named: "Card_like_\(i)")!)
+        
+        print("ran out of cards")
+        
+        var allViews: [UIView] = []
+        
+        for each in dataSource {
+            
+            allViews.append(UIImageView(image: each) as UIView)
         }
-        kolodaView.insertCardAtIndexRange(position..<position + 4, animated: true)
+        
+        kolodaView.reset(cards: allViews)
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
+        
+        print("selected card")
+        
         UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
     }
 
