@@ -144,7 +144,7 @@ func resetCurrentCardNumber()
 
 This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
 ```swift
-func revertAction()
+func revertCard()
 ```
 Applies undo animation and decrement currentCardNumber.
 ```swift
@@ -152,11 +152,11 @@ func applyAppearAnimation()
 ```
 Applies appear animation.
 ```swift
-func swipe(.left)
+func swipeCard(.left)
 ```
 Applies swipe left animation and action, increment currentCardNumber.
 ```swift
-func swipe(.right)
+func swipeCard(.right)
 ```
 Applies swipe right animation and action, increment currentCardNumber.
 
@@ -232,6 +232,10 @@ This method is fired after resetting the card.
 func koloda(koloda: KolodaView, didShowCardAt index: Int)
 ```
 This method is called after a card has been shown, after animation is complete
+```swift
+func koloda(koloda: KolodaView, didRevertCardAt index: Int)
+```
+This method is called after a card has been reverted, after animation is complete
 ```swift
 func koloda(koloda: KolodaView, shouldDragCardAt index: Int) -> Bool
 ```

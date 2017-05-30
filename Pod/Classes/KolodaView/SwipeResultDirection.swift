@@ -125,8 +125,8 @@ extension CGPoint {
         if rect.contains(self) {
             return distanceTo(CGPoint(x: rect.midX, y: rect.midY))
         }
-        let dx = max(rect.minX - self.x, self.x - rect.maxX, 0)
-        let dy = max(rect.minY - self.y, self.y - rect.maxY, 0)
+        let dx = max(rect.minX - x, x - rect.maxX, 0)
+        let dy = max(rect.minY - y, y - rect.maxY, 0)
         if dx * dy == 0 {
             return max(dx, dy)
         } else {

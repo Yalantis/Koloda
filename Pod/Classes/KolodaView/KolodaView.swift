@@ -619,21 +619,16 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private func removeCards(_ cards: [DraggableCardView], animated: Bool) {
         visibleCards.removeLast(cards.count)
         if animated {
-            animator.applyRemovalAnimation(
-                cards,
-                completion: { _ in
-                    self.removeCards(cards)
-                }
-            )
+            animator.applyRemovalAnimation(cards) { _ in
+                self.removeCards(cards)
+            }
         } else {
-            self.removeCards(cards)
+            removeCards(cards)
         }
     }
     
     public func insertCardAtIndexRange(_ indexRange: CountableRange<Int>, animated: Bool = true) {
-        guard let dataSource = dataSource else {
-            return
-        }
+        guard let dataSource = dataSource else { return }
         
         let currentItemsCount = countOfCards
         countOfCards = dataSource.kolodaNumberOfCards(self)
@@ -645,12 +640,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
         animator.resetBackgroundCardsWithCompletion()
         if animated {
             animating = true
-            animator.applyInsertionAnimation(
-                insertedCards,
-                completion: { _ in
-                    self.animating = false
-                }
-            )
+            animator.applyInsertionAnimation(insertedCards) { _ in
+                self.animating = false
+            }
         }
         
         assert(
@@ -673,9 +665,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     public func removeCardInIndexRange(_ indexRange: CountableRange<Int>, animated: Bool) {
-        guard let dataSource = dataSource else {
-            return
-        }
+        guard let dataSource = dataSource else { return }
         
         animating = true
         let currentItemsCount = countOfCards
