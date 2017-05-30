@@ -29,25 +29,24 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        kolodaView.dataSource = self
         kolodaView.delegate = self
-        
-        self.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
+        kolodaView.dataSource = self
+        modalTransitionStyle = .flipHorizontal
     }
     
     
     // MARK: IBActions
 
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipe(.left)
+        kolodaView?.swipeCard(.left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipe(.right)
+        kolodaView?.swipeCard(.right)
     }
     
     @IBAction func undoButtonTapped() {
-        kolodaView?.revertAction()
+        kolodaView?.revertCard()
     }
 }
 

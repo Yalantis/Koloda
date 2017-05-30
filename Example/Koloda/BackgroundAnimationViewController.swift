@@ -35,15 +35,15 @@ class BackgroundAnimationViewController: UIViewController {
     
     //MARK: IBActions
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipe(.left)
+        kolodaView?.swipeCard(.left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipe(.right)
+        kolodaView?.swipeCard(.right)
     }
     
     @IBAction func undoButtonTapped() {
-        kolodaView?.revertAction()
+        kolodaView?.revertCard()
     }
 }
 

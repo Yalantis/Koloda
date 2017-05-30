@@ -51,6 +51,7 @@ public protocol KolodaViewDelegate: class {
     func kolodaDidResetCard(_ koloda: KolodaView)
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat?
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
+    func koloda(_ koloda: KolodaView, didRevertCardAt index: Int)
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool
     
 }
@@ -70,6 +71,7 @@ public extension KolodaViewDelegate {
     func kolodaDidResetCard(_ koloda: KolodaView) {}
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {}
+    func koloda(_ koloda: KolodaView, didRevertCardAt index: Int) {}
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool { return true }
     
 }
@@ -425,7 +427,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func revertAction() {
+    public func revertCard() {
         guard currentCardIndex > 0 && !animating else {
           return
         }
@@ -449,14 +451,12 @@ open class KolodaView: UIView, DraggableCardDelegate {
             visibleCards.insert(firstCardView, at: 0)
             
             animating = true
-            animator.applyReverseAnimation(firstCardView, completion: { [weak self] _ in
-                guard let _self = self else {
-                    return
-                }
-                
+            animator.applyReverseAnimation(firstCardView) { [weak self] _ in
+                guard let _self = self else { return }
                 _self.animating = false
                 _self.delegate?.koloda(_self, didShowCardAt: _self.currentCardIndex)
-                })
+                _self.delegate?.koloda(_self, didRevertCardAt: _self.currentCardIndex)
+            }
         }
         
         for (index, card) in visibleCards.dropFirst().enumerated() {
@@ -538,11 +538,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
 
-    public func swipe(_ direction: SwipeResultDirection, force: Bool = false) {
+    public func swipeCard(_ direction: SwipeResultDirection, force: Bool = false) {
         let shouldSwipe = delegate?.koloda(self, shouldSwipeCardAt: currentCardIndex, in: direction) ?? true
-        guard force || shouldSwipe else {
-            return
-        }
+        guard force || shouldSwipe else { return }
         
         let validDirection = delegate?.koloda(self, allowedDirectionsForIndex: currentCardIndex).contains(direction) ?? true
         guard validDirection else { return }
