@@ -45,7 +45,13 @@ internal var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.
 
 public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
-    weak var delegate: DraggableCardDelegate?
+    weak var delegate: DraggableCardDelegate? {
+        didSet {
+            if let delegate = delegate {
+                cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
+            }
+        }
+    }
     
     private var overlayView: OverlayView?
     private(set) var contentView: UIView?
