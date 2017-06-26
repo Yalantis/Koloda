@@ -76,9 +76,6 @@ public extension KolodaViewDelegate {
 
 open class KolodaView: UIView, DraggableCardDelegate {
 
-    //Background scale percentage
-    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
-    
     //Margins
     public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
     public var backgroundCardsLeftMargin = defaultBackgroundCardsLeftMargin
@@ -182,7 +179,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     open func frameForCard(at index: Int) -> CGRect {
         let bottomOffset: CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
-        let scalePercent = backgroundCardsScalePercent
+        let scalePercent = defaultBackgroundCardsScalePercent
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
