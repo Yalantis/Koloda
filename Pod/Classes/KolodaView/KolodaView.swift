@@ -76,6 +76,9 @@ public extension KolodaViewDelegate {
 
 open class KolodaView: UIView, DraggableCardDelegate {
 
+    //Background scale percentage
+    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
+
     //Opacity values
     public var alphaValueOpaque = defaultAlphaValueOpaque
     public var alphaValueTransparent = defaultAlphaValueTransparent
@@ -175,7 +178,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     open func frameForCard(at index: Int) -> CGRect {
         let bottomOffset: CGFloat = 0
         let topOffset = defaultBackgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
-        let scalePercent = defaultBackgroundCardsScalePercent
+        let scalePercent = backgroundCardsScalePercent
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
