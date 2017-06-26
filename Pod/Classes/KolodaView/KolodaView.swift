@@ -180,7 +180,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         let backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
         let bottomOffset: CGFloat = 0
         let topOffset = backgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
-        let scalePercent = defaultDackgroundCardsScalePercent
+        let scalePercent = defaultBackgroundCardsScalePercent
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
