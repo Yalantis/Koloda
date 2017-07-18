@@ -267,6 +267,12 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection] {
+        let visibleCardIndex = visibleCards.index(of: card)
+        
+        if visibleCardIndex == nil {
+            return [.left, .right]
+        }
+        
         let index = currentCardIndex + visibleCards.index(of: card)!
         return delegate?.koloda(self, allowedDirectionsForIndex: index) ?? [.left, .right]
     }
