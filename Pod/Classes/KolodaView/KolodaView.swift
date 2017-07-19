@@ -392,7 +392,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         visibleCards.append(lastCard)
     }
     
-    private func animateCardsAfterLoadingWithCompletion(_ completion: ((Void) -> Void)? = nil) {
+    private func animateCardsAfterLoadingWithCompletion(_ completion: (() -> Void)? = nil) {
         for (index, currentCard) in visibleCards.enumerated() {
             currentCard.removeAnimations()
             
