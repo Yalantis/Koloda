@@ -52,7 +52,7 @@ public protocol KolodaViewDelegate: class {
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat?
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool
-    
+    func koloda(cardIsAllowedToSwipeInDirection: SwipeResultDirection) -> Bool
 }
 
 public extension KolodaViewDelegate {
@@ -321,6 +321,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         let index = currentCardIndex + visibleIndex
         return delegate?.koloda(self, shouldDragCardAt: index) ?? true
+    }
+    
+    func card(cardIsAllowedToSwipeInDirection: SwipeResultDirection) -> Bool {
+        return self.delegate?.koloda(cardIsAllowedToSwipeInDirection: cardIsAllowedToSwipeInDirection) ?? true
     }
     
     // MARK: Private

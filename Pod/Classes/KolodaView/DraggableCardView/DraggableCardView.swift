@@ -19,6 +19,7 @@ protocol DraggableCardDelegate: class {
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
     func card(cardShouldDrag card: DraggableCardView) -> Bool
+    func card(cardIsAllowedToSwipeInDirection: SwipeResultDirection) -> Bool
 }
 
 //Drag animation constants
@@ -304,7 +305,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         let shouldSwipe = { direction in
             return self.delegate?.card(self, shouldSwipeIn: direction) ?? true
         }
-        if let dragDirection = dragDirection , shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
+        if let dragDirection = dragDirection , shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) && (delegate?.card(cardIsAllowedToSwipeInDirection: dragDirection)) == true {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()
