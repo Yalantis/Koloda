@@ -76,6 +76,10 @@ public extension KolodaViewDelegate {
 
 open class KolodaView: UIView, DraggableCardDelegate {
 
+    //Margins
+    public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
+    public var backgroundCardsLeftMargin = defaultBackgroundCardsLeftMargin
+
     //Opacity values
     public var alphaValueOpaque = defaultAlphaValueOpaque
     public var alphaValueTransparent = defaultAlphaValueTransparent
@@ -173,15 +177,16 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Frames
     open func frameForCard(at index: Int) -> CGRect {
+        let topMargin = backgroundCardsTopMargin
         let bottomOffset: CGFloat = 0
-        let topOffset = defaultBackgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
+        let topOffset = topMargin * CGFloat(countOfVisibleCards - 1)
         let scalePercent = defaultBackgroundCardsScalePercent
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
         let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
         let prevCardFrame = index > 0 ? frameForCard(at: max(index - 1, 0)) : .zero
-        let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
+        let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + topMargin) * multiplier
         let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
         
         return frame
