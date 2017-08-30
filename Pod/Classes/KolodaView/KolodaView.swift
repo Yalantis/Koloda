@@ -252,10 +252,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         isUserInteractionEnabled = false
         animating = true
 
-        animator.animateAppearance(appearanceAnimationDuration, completion: { [weak self] _ in
+        animator.animateAppearance(appearanceAnimationDuration) { [weak self] _ in
             self?.isUserInteractionEnabled = true
             self?.animating = false
-        })
+        }
     }
     
     public func applyAppearAnimationIfNeeded() {
