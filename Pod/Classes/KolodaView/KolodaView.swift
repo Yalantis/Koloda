@@ -516,6 +516,18 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Public
     
+    public func reset(cards: [UIView]) {
+        
+        let position = currentCardIndex
+        
+        for i in 0..<countOfCards {
+            
+            layoutCard(cards[i] as! DraggableCardView, at: i)
+        }
+        
+        insertCardAtIndexRange(position ..< position + countOfCards, animated: true)
+    }
+    
     public func reloadData() {
         guard let numberOfCards = dataSource?.kolodaNumberOfCards(self), numberOfCards > 0 else {
             clear()
