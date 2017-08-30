@@ -20,7 +20,8 @@ open class KolodaViewAnimator {
         self.koloda = koloda
     }
     
-    open func animateAppearance(duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
+    open func animateAppearance(_ duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
+
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
         kolodaAppearScaleAnimation?.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
