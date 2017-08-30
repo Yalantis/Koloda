@@ -9,31 +9,39 @@
 import UIKit
 import pop
 
+public enum DragSpeed: TimeInterval {
+    case slow = 2.0
+    case moderate = 1.5
+    case `default` = 0.8
+    case fast = 0.4
+}
+
 protocol DraggableCardDelegate: class {
     
-    func card(card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
-    func card(card: DraggableCardView, wasSwipedInDirection direction: SwipeResultDirection)
-    func card(card: DraggableCardView, shouldSwipeInDirection direction: SwipeResultDirection) -> Bool
+    func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
+    func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection)
+    func card(_ card: DraggableCardView, shouldSwipeIn direction: SwipeResultDirection) -> Bool
     func card(cardWasReset card: DraggableCardView)
     func card(cardWasTapped card: DraggableCardView)
     func card(cardSwipeThresholdRatioMargin card: DraggableCardView) -> CGFloat?
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
     func card(cardShouldDrag card: DraggableCardView) -> Bool
+    func card(cardSwipeSpeed card: DraggableCardView) -> DragSpeed
 }
 
 //Drag animation constants
 private let rotationMax: CGFloat = 1.0
-private let defaultRotationAngle = CGFloat(M_PI) / 10.0
+private let defaultRotationAngle = CGFloat(Double.pi) / 10.0
 private let scaleMin: CGFloat = 0.8
-public let cardSwipeActionAnimationDuration: NSTimeInterval  = 0.4
 
-private let screenSize = UIScreen.mainScreen().bounds.size
+private let screenSize = UIScreen.main.bounds.size
 
 //Reset animation constants
 private let cardResetAnimationSpringBounciness: CGFloat = 10.0
 private let cardResetAnimationSpringSpeed: CGFloat = 20.0
 private let cardResetAnimationKey = "resetPositionAnimation"
-private let cardResetAnimationDuration: NSTimeInterval = 0.2
+private let cardResetAnimationDuration: TimeInterval = 0.2
+internal var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.rawValue
 
 public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
@@ -46,12 +54,13 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var animationDirectionY: CGFloat = 1.0
     private var dragBegin = false
-    private var dragDistance = CGPointZero
+    private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
+
     
     //MARK: Lifecycle
     init() {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         setup()
     }
     
@@ -67,7 +76,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     override public var frame: CGRect {
         didSet {
-            if let ratio = delegate?.card(cardSwipeThresholdRatioMargin: self) where ratio != 0 {
+            if let ratio = delegate?.card(cardSwipeThresholdRatioMargin: self) , ratio != 0 {
                 swipePercentageMargin = ratio
             } else {
                 swipePercentageMargin = 1.0
@@ -87,10 +96,14 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DraggableCardView.tapRecognized(_:)))
         tapGestureRecognizer.cancelsTouchesInView = false
         addGestureRecognizer(tapGestureRecognizer)
+
+        if let delegate = delegate {
+            cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
+        }
     }
     
     //MARK: Configurations
-    func configure(view: UIView, overlayView: OverlayView?) {
+    func configure(_ view: UIView, overlayView: OverlayView?) {
         self.overlayView?.removeFromSuperview()
         self.contentView?.removeFromSuperview()
         
@@ -114,34 +127,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.Width,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.width,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Width,
+                attribute: NSLayoutAttribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.Height,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.height,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Height,
+                attribute: NSLayoutAttribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.Top,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.top,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Top,
+                attribute: NSLayoutAttribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.Leading,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.leading,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Leading,
+                attribute: NSLayoutAttribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             addConstraints([width,height,top,leading])
@@ -154,34 +167,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.Width,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.width,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Width,
+                attribute: NSLayoutAttribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.Height,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.height,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Height,
+                attribute: NSLayoutAttribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.Top,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.top,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Top,
+                attribute: NSLayoutAttribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.Leading,
-                relatedBy: NSLayoutRelation.Equal,
+                attribute: NSLayoutAttribute.leading,
+                relatedBy: NSLayoutRelation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.Leading,
+                attribute: NSLayoutAttribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             
@@ -190,16 +203,16 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     //MARK: GestureRecognizers
-    func panGestureRecognized(gestureRecognizer: UIPanGestureRecognizer) {
-        dragDistance = gestureRecognizer.translationInView(self)
+    func panGestureRecognized(_ gestureRecognizer: UIPanGestureRecognizer) {
+        dragDistance = gestureRecognizer.translation(in: self)
         
-        let touchLocation = gestureRecognizer.locationInView(self)
+        let touchLocation = gestureRecognizer.location(in: self)
         
         switch gestureRecognizer.state {
-        case .Began:
+        case .began:
             
-            let firstTouchPoint = gestureRecognizer.locationInView(self)
-            let newAnchorPoint = CGPointMake(firstTouchPoint.x / bounds.width, firstTouchPoint.y / bounds.height)
+            let firstTouchPoint = gestureRecognizer.location(in: self)
+            let newAnchorPoint = CGPoint(x: firstTouchPoint.x / bounds.width, y: firstTouchPoint.y / bounds.height)
             let oldPosition = CGPoint(x: bounds.size.width * layer.anchorPoint.x, y: bounds.size.height * layer.anchorPoint.y)
             let newPosition = CGPoint(x: bounds.size.width * newAnchorPoint.x, y: bounds.size.height * newAnchorPoint.y)
             layer.anchorPoint = newAnchorPoint
@@ -209,11 +222,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             dragBegin = true
             
             animationDirectionY = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
-            layer.rasterizationScale = UIScreen.mainScreen().scale
+            layer.rasterizationScale = UIScreen.main.scale
             layer.shouldRasterize = true
             
-        case .Changed:
-            let rotationStrength = min(dragDistance.x / CGRectGetWidth(frame), rotationMax)
+        case .changed:
+            let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
             let rotationAngle = animationDirectionY * defaultRotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
@@ -231,7 +244,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
                 delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
             }
             
-        case .Ended:
+        case .ended:
             swipeMadeAction()
             
             layer.shouldRasterize = false
@@ -242,18 +255,18 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
-    public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         return delegate?.card(cardShouldDrag: self) ?? true
     }
     
-    func tapRecognized(recogznier: UITapGestureRecognizer) {
+    func tapRecognized(_ recogznier: UITapGestureRecognizer) {
         delegate?.card(cardWasTapped: self)
     }
     
     //MARK: Private
     
     private var directions: [SwipeResultDirection] {
-        return delegate?.card(cardAllowedDirections: self) ?? [.Left, .Right]
+        return delegate?.card(cardAllowedDirections: self) ?? [.left, .right]
     }
     
     private var dragDirection: SwipeResultDirection? {
@@ -289,52 +302,52 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             return rect.perimeterLines
                         .flatMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
                         .map { centerDistance / $0.distanceTo(.zero) }
-                        .minElement() ?? 0
+                        .min() ?? 0
         }
     }
     
     
-    private func updateOverlayWithFinishPercent(percent: CGFloat, direction: SwipeResultDirection?) {
+    private func updateOverlayWithFinishPercent(_ percent: CGFloat, direction: SwipeResultDirection?) {
         overlayView?.overlayState = direction
         let progress = max(min(percent/swipePercentageMargin, 1.0), 0)
-        overlayView?.updateWithProgress(progress)
+        overlayView?.update(progress: progress)
     }
     
     private func swipeMadeAction() {
         let shouldSwipe = { direction in
-            return self.delegate?.card(self, shouldSwipeInDirection: direction) ?? true
+            return self.delegate?.card(self, shouldSwipeIn: direction) ?? true
         }
-        if let dragDirection = dragDirection where shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
+        if let dragDirection = dragDirection , shouldSwipe(dragDirection) && dragPercentage >= swipePercentageMargin && directions.contains(dragDirection) {
             swipeAction(dragDirection)
         } else {
             resetViewPositionAndTransformations()
         }
     }
     
-    private func animationPointForDirection(direction: SwipeResultDirection) -> CGPoint {
+    private func animationPointForDirection(_ direction: SwipeResultDirection) -> CGPoint {
         let point = direction.point
         let animatePoint = CGPoint(x: point.x * 4, y: point.y * 4) //should be 2
         let retPoint = animatePoint.screenPointForSize(screenSize)
         return retPoint
     }
     
-    private func animationRotationForDirection(direction: SwipeResultDirection) -> CGFloat {
-        return CGFloat(direction.bearing / 2.0 - M_PI_4)
+    private func animationRotationForDirection(_ direction: SwipeResultDirection) -> CGFloat {
+        return CGFloat(direction.bearing / 2.0 - Double.pi / 4)
     }
 
     
-    private func swipeAction(direction: SwipeResultDirection) {
+    private func swipeAction(_ direction: SwipeResultDirection) {
         overlayView?.overlayState = direction
         overlayView?.alpha = 1.0
-        delegate?.card(self, wasSwipedInDirection: direction)
+        delegate?.card(self, wasSwipedIn: direction)
         let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
-        translationAnimation.duration = cardSwipeActionAnimationDuration
-        translationAnimation.fromValue = NSValue(CGPoint: POPLayerGetTranslationXY(layer))
-        translationAnimation.toValue = NSValue(CGPoint: animationPointForDirection(direction))
-        translationAnimation.completionBlock = { _, _ in
+        translationAnimation?.duration = cardSwipeActionAnimationDuration
+        translationAnimation?.fromValue = NSValue(cgPoint: POPLayerGetTranslationXY(layer))
+        translationAnimation?.toValue = NSValue(cgPoint: animationPointForDirection(direction))
+        translationAnimation?.completionBlock = { _, _ in
             self.removeFromSuperview()
         }
-        layer.pop_addAnimation(translationAnimation, forKey: "swipeTranslationAnimation")
+        layer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
     }
     
     private func resetViewPositionAndTransformations() {
@@ -343,37 +356,37 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         removeAnimations()
         
         let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
-        resetPositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
-        resetPositionAnimation.toValue = NSValue(CGPoint: CGPointZero)
-        resetPositionAnimation.springBounciness = cardResetAnimationSpringBounciness
-        resetPositionAnimation.springSpeed = cardResetAnimationSpringSpeed
-        resetPositionAnimation.completionBlock = {
+        resetPositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
+        resetPositionAnimation?.toValue = NSValue(cgPoint: CGPoint.zero)
+        resetPositionAnimation?.springBounciness = cardResetAnimationSpringBounciness
+        resetPositionAnimation?.springSpeed = cardResetAnimationSpringSpeed
+        resetPositionAnimation?.completionBlock = {
             (_, _) in
             self.layer.transform = CATransform3DIdentity
             self.dragBegin = false
         }
         
-        layer.pop_addAnimation(resetPositionAnimation, forKey: "resetPositionAnimation")
+        layer.pop_add(resetPositionAnimation, forKey: "resetPositionAnimation")
         
         let resetRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
-        resetRotationAnimation.fromValue = POPLayerGetRotationZ(layer)
-        resetRotationAnimation.toValue = CGFloat(0.0)
-        resetRotationAnimation.duration = cardResetAnimationDuration
+        resetRotationAnimation?.fromValue = POPLayerGetRotationZ(layer)
+        resetRotationAnimation?.toValue = CGFloat(0.0)
+        resetRotationAnimation?.duration = cardResetAnimationDuration
         
-        layer.pop_addAnimation(resetRotationAnimation, forKey: "resetRotationAnimation")
+        layer.pop_add(resetRotationAnimation, forKey: "resetRotationAnimation")
         
         let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-        overlayAlphaAnimation.toValue = 0.0
-        overlayAlphaAnimation.duration = cardResetAnimationDuration
-        overlayAlphaAnimation.completionBlock = { _, _ in
+        overlayAlphaAnimation?.toValue = 0.0
+        overlayAlphaAnimation?.duration = cardResetAnimationDuration
+        overlayAlphaAnimation?.completionBlock = { _, _ in
             self.overlayView?.alpha = 0
         }
-        overlayView?.pop_addAnimation(overlayAlphaAnimation, forKey: "resetOverlayAnimation")
+        overlayView?.pop_add(overlayAlphaAnimation, forKey: "resetOverlayAnimation")
         
         let resetScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
-        resetScaleAnimation.toValue = NSValue(CGPoint: CGPoint(x: 1.0, y: 1.0))
-        resetScaleAnimation.duration = cardResetAnimationDuration
-        layer.pop_addAnimation(resetScaleAnimation, forKey: "resetScaleAnimation")
+        resetScaleAnimation?.toValue = NSValue(cgPoint: CGPoint(x: 1.0, y: 1.0))
+        resetScaleAnimation?.duration = cardResetAnimationDuration
+        layer.pop_add(resetScaleAnimation, forKey: "resetScaleAnimation")
     }
     
     //MARK: Public
@@ -382,33 +395,33 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         layer.pop_removeAllAnimations()
     }
     
-    func swipe(direction: SwipeResultDirection) {
+    func swipe(_ direction: SwipeResultDirection) {
         if !dragBegin {
-            delegate?.card(self, wasSwipedInDirection: direction)
+            delegate?.card(self, wasSwipedIn: direction)
             
             let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
-            swipePositionAnimation.fromValue = NSValue(CGPoint:POPLayerGetTranslationXY(layer))
-            swipePositionAnimation.toValue = NSValue(CGPoint:animationPointForDirection(direction))
-            swipePositionAnimation.duration = cardSwipeActionAnimationDuration
-            swipePositionAnimation.completionBlock = {
+            swipePositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
+            swipePositionAnimation?.toValue = NSValue(cgPoint:animationPointForDirection(direction))
+            swipePositionAnimation?.duration = cardSwipeActionAnimationDuration
+            swipePositionAnimation?.completionBlock = {
                 (_, _) in
                 self.removeFromSuperview()
             }
             
-            layer.pop_addAnimation(swipePositionAnimation, forKey: "swipePositionAnimation")
+            layer.pop_add(swipePositionAnimation, forKey: "swipePositionAnimation")
             
             let swipeRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
-            swipeRotationAnimation.fromValue = POPLayerGetRotationZ(layer)
-            swipeRotationAnimation.toValue = CGFloat(animationRotationForDirection(direction))
-            swipeRotationAnimation.duration = cardSwipeActionAnimationDuration
+            swipeRotationAnimation?.fromValue = POPLayerGetRotationZ(layer)
+            swipeRotationAnimation?.toValue = CGFloat(animationRotationForDirection(direction))
+            swipeRotationAnimation?.duration = cardSwipeActionAnimationDuration
             
-            layer.pop_addAnimation(swipeRotationAnimation, forKey: "swipeRotationAnimation")
+            layer.pop_add(swipeRotationAnimation, forKey: "swipeRotationAnimation")
             
             overlayView?.overlayState = direction
             let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-            overlayAlphaAnimation.toValue = 1.0
-            overlayAlphaAnimation.duration = cardSwipeActionAnimationDuration
-            overlayView?.pop_addAnimation(overlayAlphaAnimation, forKey: "swipeOverlayAnimation")
+            overlayAlphaAnimation?.toValue = 1.0
+            overlayAlphaAnimation?.duration = cardSwipeActionAnimationDuration
+            overlayView?.pop_add(overlayAlphaAnimation, forKey: "swipeOverlayAnimation")
         }
     }
 }

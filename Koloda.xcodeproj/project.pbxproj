@@ -7,159 +7,185 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		442337AD1CDBCB10007B868C /* SwipeResultDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */; };
-		733C4A3D1CA43F50009A467E /* DraggableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A391CA43F50009A467E /* DraggableCardView.swift */; };
-		733C4A3E1CA43F50009A467E /* KolodaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A3A1CA43F50009A467E /* KolodaView.swift */; };
-		733C4A3F1CA43F50009A467E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733C4A3C1CA43F50009A467E /* OverlayView.swift */; };
-		734475981CB279D8006E6726 /* KolodaCardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734475961CB279D8006E6726 /* KolodaCardStorage.swift */; };
-		734475991CB279D8006E6726 /* KolodaViewAnimatior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734475971CB279D8006E6726 /* KolodaViewAnimatior.swift */; };
-		73CC28AE1CA44035009CE177 /* pop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73CC28AD1CA44035009CE177 /* pop.framework */; };
+		C517E4B61D9CF9470002D88F /* Koloda.h in Headers */ = {isa = PBXBuildFile; fileRef = C517E4AE1D9CF9010002D88F /* Koloda.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C517E4EF1D9D00520002D88F /* DraggableCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E51D9D00520002D88F /* DraggableCardView.swift */; };
+		C517E4F01D9D00520002D88F /* KolodaCardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E61D9D00520002D88F /* KolodaCardStorage.swift */; };
+		C517E4F11D9D00520002D88F /* KolodaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E71D9D00520002D88F /* KolodaView.swift */; };
+		C517E4F21D9D00520002D88F /* KolodaViewAnimatior.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4E81D9D00520002D88F /* KolodaViewAnimatior.swift */; };
+		C517E4F31D9D00520002D88F /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4EA1D9D00520002D88F /* OverlayView.swift */; };
+		C517E4F41D9D00520002D88F /* SwipeResultDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C517E4EB1D9D00520002D88F /* SwipeResultDirection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeResultDirection.swift; sourceTree = "<group>"; };
-		733C4A2C1CA43E7C009A467E /* Koloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		733C4A311CA43E7C009A467E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		733C4A391CA43F50009A467E /* DraggableCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableCardView.swift; sourceTree = "<group>"; };
-		733C4A3A1CA43F50009A467E /* KolodaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaView.swift; sourceTree = "<group>"; };
-		733C4A3C1CA43F50009A467E /* OverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
-		734475961CB279D8006E6726 /* KolodaCardStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaCardStorage.swift; sourceTree = "<group>"; };
-		734475971CB279D8006E6726 /* KolodaViewAnimatior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaViewAnimatior.swift; sourceTree = "<group>"; };
-		73CC28AD1CA44035009CE177 /* pop.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = pop.framework; path = Carthage/Build/iOS/pop.framework; sourceTree = "<group>"; };
+		C517E4AB1D9CF9010002D88F /* Koloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C517E4AE1D9CF9010002D88F /* Koloda.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Koloda.h; sourceTree = "<group>"; };
+		C517E4AF1D9CF9010002D88F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C517E4E51D9D00520002D88F /* DraggableCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableCardView.swift; sourceTree = "<group>"; };
+		C517E4E61D9D00520002D88F /* KolodaCardStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaCardStorage.swift; sourceTree = "<group>"; };
+		C517E4E71D9D00520002D88F /* KolodaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaView.swift; sourceTree = "<group>"; };
+		C517E4E81D9D00520002D88F /* KolodaViewAnimatior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaViewAnimatior.swift; sourceTree = "<group>"; };
+		C517E4EA1D9D00520002D88F /* OverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		C517E4EB1D9D00520002D88F /* SwipeResultDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwipeResultDirection.swift; sourceTree = "<group>"; };
+		C517E4F81D9D01920002D88F /* pop.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = pop.framework; path = Carthage/Build/iOS/pop.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		733C4A281CA43E7C009A467E /* Frameworks */ = {
+		C517E4A71D9CF9010002D88F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73CC28AE1CA44035009CE177 /* pop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		733C4A221CA43E7C009A467E = {
+		C517E4A11D9CF9010002D88F = {
 			isa = PBXGroup;
 			children = (
-				73CC28AD1CA44035009CE177 /* pop.framework */,
-				733C4A2E1CA43E7C009A467E /* Koloda */,
-				733C4A2D1CA43E7C009A467E /* Products */,
+				C517E4AD1D9CF9010002D88F /* Pod */,
+				C517E4AC1D9CF9010002D88F /* Products */,
+				C517E4F71D9D01910002D88F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		733C4A2D1CA43E7C009A467E /* Products */ = {
+		C517E4AC1D9CF9010002D88F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				733C4A2C1CA43E7C009A467E /* Koloda.framework */,
+				C517E4AB1D9CF9010002D88F /* Koloda.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		733C4A2E1CA43E7C009A467E /* Koloda */ = {
+		C517E4AD1D9CF9010002D88F /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				733C4A371CA43F50009A467E /* KolodaView */,
-				733C4A311CA43E7C009A467E /* Info.plist */,
+				C517E4E11D9D00520002D88F /* Classes */,
+				C517E4EC1D9D00520002D88F /* Assets */,
+				C517E4AE1D9CF9010002D88F /* Koloda.h */,
+				C517E4AF1D9CF9010002D88F /* Info.plist */,
 			);
-			path = Koloda;
+			path = Pod;
 			sourceTree = "<group>";
 		};
-		733C4A371CA43F50009A467E /* KolodaView */ = {
+		C517E4E11D9D00520002D88F /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				442337AC1CDBCB10007B868C /* SwipeResultDirection.swift */,
-				734475961CB279D8006E6726 /* KolodaCardStorage.swift */,
-				734475971CB279D8006E6726 /* KolodaViewAnimatior.swift */,
-				733C4A381CA43F50009A467E /* DraggableCardView */,
-				733C4A3A1CA43F50009A467E /* KolodaView.swift */,
-				733C4A3B1CA43F50009A467E /* OverlayView */,
+				C517E4E31D9D00520002D88F /* KolodaView */,
 			);
-			name = KolodaView;
-			path = Pod/Classes/KolodaView;
-			sourceTree = SOURCE_ROOT;
+			path = Classes;
+			sourceTree = "<group>";
 		};
-		733C4A381CA43F50009A467E /* DraggableCardView */ = {
+		C517E4E31D9D00520002D88F /* KolodaView */ = {
 			isa = PBXGroup;
 			children = (
-				733C4A391CA43F50009A467E /* DraggableCardView.swift */,
+				C517E4E41D9D00520002D88F /* DraggableCardView */,
+				C517E4E61D9D00520002D88F /* KolodaCardStorage.swift */,
+				C517E4E71D9D00520002D88F /* KolodaView.swift */,
+				C517E4E81D9D00520002D88F /* KolodaViewAnimatior.swift */,
+				C517E4E91D9D00520002D88F /* OverlayView */,
+				C517E4EB1D9D00520002D88F /* SwipeResultDirection.swift */,
+			);
+			path = KolodaView;
+			sourceTree = "<group>";
+		};
+		C517E4E41D9D00520002D88F /* DraggableCardView */ = {
+			isa = PBXGroup;
+			children = (
+				C517E4E51D9D00520002D88F /* DraggableCardView.swift */,
 			);
 			path = DraggableCardView;
 			sourceTree = "<group>";
 		};
-		733C4A3B1CA43F50009A467E /* OverlayView */ = {
+		C517E4E91D9D00520002D88F /* OverlayView */ = {
 			isa = PBXGroup;
 			children = (
-				733C4A3C1CA43F50009A467E /* OverlayView.swift */,
+				C517E4EA1D9D00520002D88F /* OverlayView.swift */,
 			);
 			path = OverlayView;
+			sourceTree = "<group>";
+		};
+		C517E4EC1D9D00520002D88F /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		C517E4F71D9D01910002D88F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C517E4F81D9D01920002D88F /* pop.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		733C4A291CA43E7C009A467E /* Headers */ = {
+		C517E4A81D9CF9010002D88F /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C517E4B61D9CF9470002D88F /* Koloda.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		733C4A2B1CA43E7C009A467E /* Koloda */ = {
+		C517E4AA1D9CF9010002D88F /* Koloda */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 733C4A341CA43E7C009A467E /* Build configuration list for PBXNativeTarget "Koloda" */;
+			buildConfigurationList = C517E4B31D9CF9010002D88F /* Build configuration list for PBXNativeTarget "Koloda" */;
 			buildPhases = (
-				733C4A271CA43E7C009A467E /* Sources */,
-				733C4A281CA43E7C009A467E /* Frameworks */,
-				733C4A291CA43E7C009A467E /* Headers */,
-				733C4A2A1CA43E7C009A467E /* Resources */,
+				C517E4A61D9CF9010002D88F /* Sources */,
+				C517E4A71D9CF9010002D88F /* Frameworks */,
+				C517E4A81D9CF9010002D88F /* Headers */,
+				C517E4A91D9CF9010002D88F /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Koloda;
-			productName = Koloda;
-			productReference = 733C4A2C1CA43E7C009A467E /* Koloda.framework */;
+			productName = Pod;
+			productReference = C517E4AB1D9CF9010002D88F /* Koloda.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		733C4A231CA43E7C009A467E /* Project object */ = {
+		C517E4A21D9CF9010002D88F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
-				ORGANIZATIONNAME = "Толя Ларин";
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = Yalantis;
 				TargetAttributes = {
-					733C4A2B1CA43E7C009A467E = {
-						CreatedOnToolsVersion = 7.3;
+					C517E4AA1D9CF9010002D88F = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 733C4A261CA43E7C009A467E /* Build configuration list for PBXProject "Koloda" */;
+			buildConfigurationList = C517E4A51D9CF9010002D88F /* Build configuration list for PBXProject "Koloda" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 733C4A221CA43E7C009A467E;
-			productRefGroup = 733C4A2D1CA43E7C009A467E /* Products */;
+			mainGroup = C517E4A11D9CF9010002D88F;
+			productRefGroup = C517E4AC1D9CF9010002D88F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				733C4A2B1CA43E7C009A467E /* Koloda */,
+				C517E4AA1D9CF9010002D88F /* Koloda */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		733C4A2A1CA43E7C009A467E /* Resources */ = {
+		C517E4A91D9CF9010002D88F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -169,23 +195,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		733C4A271CA43E7C009A467E /* Sources */ = {
+		C517E4A61D9CF9010002D88F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				733C4A3F1CA43F50009A467E /* OverlayView.swift in Sources */,
-				733C4A3E1CA43F50009A467E /* KolodaView.swift in Sources */,
-				733C4A3D1CA43F50009A467E /* DraggableCardView.swift in Sources */,
-				442337AD1CDBCB10007B868C /* SwipeResultDirection.swift in Sources */,
-				734475991CB279D8006E6726 /* KolodaViewAnimatior.swift in Sources */,
-				734475981CB279D8006E6726 /* KolodaCardStorage.swift in Sources */,
+				C517E4EF1D9D00520002D88F /* DraggableCardView.swift in Sources */,
+				C517E4F21D9D00520002D88F /* KolodaViewAnimatior.swift in Sources */,
+				C517E4F01D9D00520002D88F /* KolodaCardStorage.swift in Sources */,
+				C517E4F41D9D00520002D88F /* SwipeResultDirection.swift in Sources */,
+				C517E4F11D9D00520002D88F /* KolodaView.swift in Sources */,
+				C517E4F31D9D00520002D88F /* OverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		733C4A321CA43E7C009A467E /* Debug */ = {
+		C517E4B11D9CF9010002D88F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -197,10 +223,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -223,10 +252,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -234,7 +264,7 @@
 			};
 			name = Debug;
 		};
-		733C4A331CA43E7C009A467E /* Release */ = {
+		C517E4B21D9CF9010002D88F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -246,10 +276,13 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -266,9 +299,10 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -276,9 +310,10 @@
 			};
 			name = Release;
 		};
-		733C4A351CA43E7C009A467E /* Debug */ = {
+		C517E4B41D9CF9010002D88F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -287,19 +322,20 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Pod/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.wayd.Koloda;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
-		733C4A361CA43E7C009A467E /* Release */ = {
+		C517E4B51D9CF9010002D88F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -308,38 +344,38 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = Pod/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.wayd.Koloda;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		733C4A261CA43E7C009A467E /* Build configuration list for PBXProject "Koloda" */ = {
+		C517E4A51D9CF9010002D88F /* Build configuration list for PBXProject "Koloda" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				733C4A321CA43E7C009A467E /* Debug */,
-				733C4A331CA43E7C009A467E /* Release */,
+				C517E4B11D9CF9010002D88F /* Debug */,
+				C517E4B21D9CF9010002D88F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		733C4A341CA43E7C009A467E /* Build configuration list for PBXNativeTarget "Koloda" */ = {
+		C517E4B31D9CF9010002D88F /* Build configuration list for PBXNativeTarget "Koloda" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				733C4A351CA43E7C009A467E /* Debug */,
-				733C4A361CA43E7C009A467E /* Release */,
+				C517E4B41D9CF9010002D88F /* Debug */,
+				C517E4B51D9CF9010002D88F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 733C4A231CA43E7C009A467E /* Project object */;
+	rootObject = C517E4A21D9CF9010002D88F /* Project object */;
 }

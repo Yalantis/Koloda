@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Koloda.xcodeproj">
+      location = "self:/Users/serhii/Documents/Development/Xcode/KOLODATEST/Pod/Koloda.xcodeproj">
    </FileRef>
 </Workspace>
