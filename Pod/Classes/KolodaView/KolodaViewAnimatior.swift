@@ -20,23 +20,23 @@ open class KolodaViewAnimator {
         self.koloda = koloda
     }
     
-    public func animateAppearance(duration: NSTimeInterval, completion: AnimationCompletionBlock = nil) {
+    public func animateAppearance(_ duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
-        kolodaAppearScaleAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
-        kolodaAppearScaleAnimation.duration = duration
-        kolodaAppearScaleAnimation.fromValue = NSValue(CGPoint: CGPoint(x: 0.1, y: 0.1))
-        kolodaAppearScaleAnimation.toValue = NSValue(CGPoint: CGPoint(x: 1.0, y: 1.0))
-        kolodaAppearScaleAnimation.completionBlock = { (_, finished) in
+        kolodaAppearScaleAnimation?.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
+        kolodaAppearScaleAnimation?.duration = duration
+        kolodaAppearScaleAnimation?.fromValue = NSValue(cgPoint: CGPoint(x: 0.1, y: 0.1))
+        kolodaAppearScaleAnimation?.toValue = NSValue(cgPoint: CGPoint(x: 1.0, y: 1.0))
+        kolodaAppearScaleAnimation?.completionBlock = { (_, finished) in
             completion?(finished)
         }
         
         let kolodaAppearAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         
-        kolodaAppearAlphaAnimation.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
-        kolodaAppearAlphaAnimation.fromValue = NSNumber(float: 0.0)
-        kolodaAppearAlphaAnimation.toValue = NSNumber(float: 1.0)
-        kolodaAppearAlphaAnimation.duration = duration
+        kolodaAppearAlphaAnimation?.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
+        kolodaAppearAlphaAnimation?.fromValue = NSNumber(value: 0.0)
+        kolodaAppearAlphaAnimation?.toValue = NSNumber(value: 1.0)
+        kolodaAppearAlphaAnimation?.duration = duration
         
         koloda?.pop_add(kolodaAppearAlphaAnimation, forKey: "kolodaAppearScaleAnimation")
         koloda?.layer.pop_add(kolodaAppearScaleAnimation, forKey: "kolodaAppearAlphaAnimation")

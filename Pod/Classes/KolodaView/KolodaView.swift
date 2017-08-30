@@ -15,8 +15,8 @@ private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
 private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
 private let defaultBackgroundCardsLeftMargin: CGFloat = 8.0
 
-private let defaultBackgroundCardFrameAnimationDuration: NSTimeInterval = 0.2
-private let defaultAppearanceAnimationDuration: NSTimeInterval = 0.8
+private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
+private let defaultAppearanceAnimationDuration: TimeInterval = 0.8
 
 //Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
@@ -254,7 +254,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         animating = true
         
         animator.animateAppearance(appearanceAnimationDuration, completion: { [weak self] _ in
-            self?.userInteractionEnabled = true
+            self?.isUserInteractionEnabled = true
             self?.animating = false
         })
     }
