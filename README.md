@@ -163,7 +163,9 @@ Calculates frames for cards. Useful for overriding. See example to learn more ab
 Protocols
 ---------------
 
-The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
+The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate.
+
+#### The KolodaViewDataSource protocol has the following methods:
 ```swift
 func koloda(_ kolodaNumberOfCards koloda: KolodaView) -> Int
 ```
@@ -181,7 +183,7 @@ Return a view for card overlay at the specified index. For setting custom overla
 ```
 Allow management of the swipe animation duration
 
-The KolodaViewDelegate protocol has the following methods:
+#### The KolodaViewDelegate protocol has the following methods:
 ```swift
 func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection]
 ```
