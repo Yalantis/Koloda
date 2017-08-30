@@ -109,8 +109,8 @@ open class KolodaViewAnimator {
         )
     }
 
-	open func removeCardAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
-        card.swipe(.right)
+    open func removeCardAnimation(card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
+      	card.swipe(.right)
         completion?(true)
     }
     
