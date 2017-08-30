@@ -51,7 +51,8 @@ github "Yalantis/Koloda"
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
 
-##Usage
+Usage
+--------------
 
 1. Import `Koloda` module to your `MyKolodaViewController` class
 
