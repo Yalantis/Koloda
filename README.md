@@ -129,6 +129,7 @@ The count of cards in the KolodaView (read only). To set this, implement the `ko
 public var countOfVisibleCards
 ```
 The count of displayed cards in the KolodaView.
+
 Methods
 --------------
 
