@@ -15,6 +15,7 @@ private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
 private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
 private let defaultBackgroundCardsLeftMargin: CGFloat = 8.0
 private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
+private let defaultAppearanceAnimationDuration: TimeInterval = 0.8
 
 //Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
@@ -58,7 +59,6 @@ public protocol KolodaViewDelegate: class {
 public extension KolodaViewDelegate {
     
     func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool { return true }
-    
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection] { return [.left, .right] }
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {}
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {}
@@ -86,6 +86,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var rotationMax: CGFloat?
     public var rotationAngle: CGFloat?
     public var scaleMin: CGFloat?
+
+    public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
 
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
@@ -254,7 +256,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         isUserInteractionEnabled = false
         animating = true
 
-        animator.animateAppearanceWithCompletion { [weak self] _ in
+        animator.animateAppearance(appearanceAnimationDuration) { [weak self] _ in
             self?.isUserInteractionEnabled = true
             self?.animating = false
         }
