@@ -30,9 +30,9 @@ protocol DraggableCardDelegate: class {
 }
 
 //Drag animation constants
-private let rotationMax: CGFloat = 1.0
+private let defaultRotationMax: CGFloat = 1.0
 private let defaultRotationAngle = CGFloat(Double.pi) / 10.0
-private let scaleMin: CGFloat = 0.8
+private let defaultScaleMin: CGFloat = 0.8
 
 private let screenSize = UIScreen.main.bounds.size
 
@@ -44,6 +44,11 @@ private let cardResetAnimationDuration: TimeInterval = 0.2
 internal var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.rawValue
 
 public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
+
+    //Drag animation constants
+    public var rotationMax = defaultRotationMax
+    public var rotationAngle = defaultRotationAngle
+    public var scaleMin = defaultScaleMin
     
     weak var delegate: DraggableCardDelegate?
     
@@ -116,11 +121,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         } else {
             self.addSubview(view)
         }
-        
+
         self.contentView = view
         configureContentView()
     }
-    
+
     private func configureOverlayView() {
         if let overlay = self.overlayView {
             overlay.translatesAutoresizingMaskIntoConstraints = false
@@ -227,7 +232,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
         case .changed:
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
-            let rotationAngle = animationDirectionY * defaultRotationAngle * rotationStrength
+            let rotationAngle = animationDirectionY * rotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     

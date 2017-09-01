@@ -81,9 +81,14 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueTransparent = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
     public var shouldPassthroughTapsWhenNoVisibleCards = false
-    
+
+    //Drag animation constants
+    public var rotationMax: CGFloat?
+    public var rotationAngle: CGFloat?
+    public var scaleMin: CGFloat?
+
     public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
-    
+
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
             setupDeck()
