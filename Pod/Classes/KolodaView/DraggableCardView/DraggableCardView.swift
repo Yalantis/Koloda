@@ -108,7 +108,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     //MARK: Configurations
-    func configure(_ view: UIView, overlayView: OverlayView?) {
+    func configure(_ view: UIView, overlayView: OverlayView?, in koloda: KolodaView) {
         self.overlayView?.removeFromSuperview()
         self.contentView?.removeFromSuperview()
         
@@ -121,11 +121,22 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         } else {
             self.addSubview(view)
         }
+
+        //Reconfigure drag animation constants from Koloda instance.
+        if let rotationMax = koloda.rotationMax {
+            self.rotationMax = rotationMax
+        }
+        if let rotationAngle = koloda.rotationAngle {
+            self.rotationAngle = rotationAngle
+        }
+        if let scaleMin = koloda.scaleMin {
+            self.scaleMin = scaleMin
+        }
         
         self.contentView = view
         configureContentView()
     }
-    
+
     private func configureOverlayView() {
         if let overlay = self.overlayView {
             overlay.translatesAutoresizingMaskIntoConstraints = false
