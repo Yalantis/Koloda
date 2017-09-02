@@ -231,10 +231,10 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             layer.shouldRasterize = true
             
         case .changed:
-            let rotationStrength = min(dragDistance.x / frame.width, self.rotationMax)
-            let rotationAngle = animationDirectionY * self.rotationAngle * rotationStrength
-            let scaleStrength = 1 - ((1 - self.scaleMin) * fabs(rotationStrength))
-            let scale = max(scaleStrength, self.scaleMin)
+            let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
+            let rotationAngle = animationDirectionY * rotationAngle * rotationStrength
+            let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
+            let scale = max(scaleStrength, scaleMin)
     
             var transform = CATransform3DIdentity
             transform = CATransform3DScale(transform, scale, scale, 1)
