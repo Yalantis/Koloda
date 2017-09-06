@@ -232,7 +232,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
         case .changed:
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
-            let rotationAngle = animationDirectionY * rotationAngle * rotationStrength
+            let rotationAngle = animationDirectionY * self.rotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     
