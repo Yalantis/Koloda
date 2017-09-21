@@ -1,4 +1,4 @@
-KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 3.0.x](https://img.shields.io/badge/Swift-3.0.x-orange.svg)
+KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.0.x](https://img.shields.io/badge/Swift-4.0.x-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7.3)
+* Supported build target - iOS 11.0 (Xcode 9)
 
 ARC Compatibility
 ------------------
@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 4.0'
+pod 'Koloda', '~> 4.3'
 ```
 
 Thread Safety
@@ -242,6 +242,10 @@ not move.
 
 Release Notes
 ----------------
+
+Version 4.3
+- Swift 4 support
+- iOS 11 frame bugfix
 
 Version 4.0
 - Swift 3 support
