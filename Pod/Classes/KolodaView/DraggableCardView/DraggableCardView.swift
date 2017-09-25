@@ -50,7 +50,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     public var rotationAngle = defaultRotationAngle
     public var scaleMin = defaultScaleMin
     
-    weak var delegate: DraggableCardDelegate?
+    weak var delegate: DraggableCardDelegate? {
+        didSet {
+            configureSwipeSpeed()
+        }
+    }
     
     private var overlayView: OverlayView?
     private(set) var contentView: UIView?
@@ -101,10 +105,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(DraggableCardView.tapRecognized(_:)))
         tapGestureRecognizer.cancelsTouchesInView = false
         addGestureRecognizer(tapGestureRecognizer)
-
-        if let delegate = delegate {
-            cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
-        }
     }
     
     //MARK: Configurations
@@ -204,6 +204,12 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
                 constant: 0)
             
             addConstraints([width,height,top,leading])
+        }
+    }
+    
+    func configureSwipeSpeed() {
+        if let delegate = delegate {
+            cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
         }
     }
     
@@ -339,7 +345,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private func animationRotationForDirection(_ direction: SwipeResultDirection) -> CGFloat {
         return CGFloat(direction.bearing / 2.0 - Double.pi / 4)
     }
-
     
     private func swipeAction(_ direction: SwipeResultDirection) {
         overlayView?.overlayState = direction
