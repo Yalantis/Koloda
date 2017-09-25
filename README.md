@@ -92,6 +92,10 @@ Usage
             return images.count
         }
 
+        func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
+            return .fast
+        }
+
         func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
             return UIImageView(image: images[index])
         }
@@ -180,7 +184,7 @@ func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayVie
 ```
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 ```swift
-    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed
+func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed
 ```
 Allow management of the swipe animation duration
 
