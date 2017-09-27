@@ -103,7 +103,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         return KolodaViewAnimator(koloda: self)
     }()
     
-    internal var animating = false
+    public var animating = false
     
     internal var shouldTransparentizeNextCard: Bool {
         return delegate?.kolodaShouldTransparentizeNextCard(self) ?? true
