@@ -35,7 +35,10 @@ public extension KolodaViewDataSource {
     func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
         return nil
     }
-    
+ 
+    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
+		return .default
+	}
 }
 
 public protocol KolodaViewDelegate: class {
