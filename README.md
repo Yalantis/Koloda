@@ -17,7 +17,7 @@ KolodaView is a class designed to simplify the implementation of Tinder like car
 Supported OS & SDK Versions
 -----------------------------
 
-* Supported build target - iOS 9.0 (Xcode 7.3)
+* Supported build target - iOS 9.0 (Xcode 8)
 
 ARC Compatibility
 ------------------
@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 3.1.2'
+pod 'Koloda', '~> 4.0'
 ```
 
 Thread Safety
@@ -84,7 +84,7 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
             dataSource.reset()
         }
 
-        func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
+        func koloda(koloda: KolodaView, didSelectCardAtIndex index: Int) {
             UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
         }
     }
@@ -93,15 +93,15 @@ To install manually the KolodaView class in an app, just drag the KolodaView, Dr
     ```swift
     extension MyKolodaViewController: KolodaViewDataSource {
 
-        func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
+        func kolodaNumberOfCards(koloda:KolodaView) -> Int {
             return images.count
         }
 
-        func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+        func koloda(koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView {
             return UIImageView(image: images[Int(index)])
         }
 
-        func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
+        func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView? {
             return NSBundle.mainBundle().loadNibNamed("OverlayView",
                 owner: self, options: nil)[0] as? OverlayView
         }
@@ -167,7 +167,7 @@ func swipe(.Right)
 Applies swipe right animation and action, increment currentCardNumber.
 
 ```swift
-public func frameForCardAtIndex(index: UInt) -> CGRect
+public func frameForCardAtIndex(index: Int) -> CGRect
 ```
 Calculates frames for cards. Useful for overriding. See example to learn more about it.
 
@@ -176,30 +176,30 @@ Protocols
 
 The KolodaView follows the Apple convention for data-driven views by providing two protocol interfaces, KolodaViewDataSource and KolodaViewDelegate. The KolodaViewDataSource protocol has the following methods:
 ```swift
-func koloda(kolodaNumberOfCards koloda: KolodaView) -> UInt
+func koloda(kolodaNumberOfCards koloda: KolodaView) -> Int
 ```
 Return the number of items (views) in the KolodaView.
 ```swift
-func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView
+func koloda(koloda: KolodaView, viewForCardAtIndex index: Int) -> UIView
 ```
 Return a view to be displayed at the specified index in the KolodaView.
 ```swift
-func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView?
+func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: Int) -> OverlayView?
 ```
 Return a view for card overlay at the specified index. For setting custom overlay action on swiping(left/right), you should override didSet of overlayState property in OverlayView. (See Example)
 
 The KolodaViewDelegate protocol has the following methods:
 ```swift
-func koloda(koloda: KolodaView, allowedDirectionsForIndex index: UInt) -> [SwipeResultDirection]
+func koloda(koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection]
 ```
 Return the allowed directions for a given card, defaults to `[.Left, .Right]`
 ```swift
-func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection) -> Bool
+func koloda(koloda: KolodaView, shouldSwipeCardAtIndex index: Int, inDirection direction: SwipeResultDirection) -> Bool
 ```
 This method is called before the KolodaView swipes card. Return `true` or `false` to allow or deny the swipe.
 
 ```swift
-func koloda(koloda: KolodaView, didSwipeCardAtIndex index: UInt, inDirection direction: SwipeResultDirection)
+func koloda(koloda: KolodaView, didSwipeCardAtIndex index: Int, inDirection direction: SwipeResultDirection)
 ```
 This method is called whenever the KolodaView swipes card. It is called regardless of whether the card was swiped programatically or through user interaction.
 ```swift
@@ -207,7 +207,7 @@ func kolodaDidRunOutOfCards(koloda: KolodaView)
 ```
 This method is called when the KolodaView has no cards to display.
 ```swift
-func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt)
+func koloda(koloda: KolodaView, didSelectCardAtIndex index: Int)
 ```
 This method is called when one of cards is tapped.
 ```swift
@@ -235,11 +235,11 @@ func kolodaDidResetCard(koloda: KolodaView)
 ```
 This method is fired after resetting the card.
 ```swift
-func koloda(koloda: KolodaView, didShowCardAtIndex index: UInt)
+func koloda(koloda: KolodaView, didShowCardAtIndex index: Int)
 ```
 This method is called after a card has been shown, after animation is complete
 ```swift
-func koloda(koloda: KolodaView, shouldDragCardAtIndex index: UInt ) -> Bool
+func koloda(koloda: KolodaView, shouldDragCardAtIndex index: Int) -> Bool
 ```
 This method is called when the card is beginning to be dragged. If you return YES from the method or
 don't implement it, the card will move in the direction of the drag. If you return NO the card will
@@ -279,6 +279,7 @@ Version 1.0
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
 - [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
+- [Color Dating](https://itunes.apple.com/us/app/color-dating-free-app-for/id1100827439?mt=8).
 
 
 #### Let us know!

@@ -9,14 +9,14 @@
 import UIKit
 import Koloda
 
-private var numberOfCards: UInt = 5
+private var numberOfCards: Int = 5
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var kolodaView: KolodaView!
     
-    private var dataSource: Array<UIImage> = {
-        var array: Array<UIImage> = []
+    fileprivate var dataSource: [UIImage] = {
+        var array: [UIImage] = []
         for index in 0..<numberOfCards {
             array.append(UIImage(named: "Card_like_\(index + 1)")!)
         }
@@ -24,24 +24,26 @@ class ViewController: UIViewController {
         return array
     }()
     
-    //MARK: Lifecycle
+    // MARK: Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         kolodaView.dataSource = self
         kolodaView.delegate = self
         
-        self.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
+        self.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
     }
     
     
-    //MARK: IBActions
+    // MARK: IBActions
+
     @IBAction func leftButtonTapped() {
-        kolodaView?.swipe(SwipeResultDirection.Left)
+        kolodaView?.swipe(.left)
     }
     
     @IBAction func rightButtonTapped() {
-        kolodaView?.swipe(SwipeResultDirection.Right)
+        kolodaView?.swipe(.right)
     }
     
     @IBAction func undoButtonTapped() {
@@ -49,34 +51,38 @@ class ViewController: UIViewController {
     }
 }
 
-//MARK: KolodaViewDelegate
+// MARK: KolodaViewDelegate
+
 extension ViewController: KolodaViewDelegate {
     
-    func kolodaDidRunOutOfCards(koloda: KolodaView) {
-        dataSource.insert(UIImage(named: "Card_like_6")!, atIndex: kolodaView.currentCardIndex - 1)
+    func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
         let position = kolodaView.currentCardIndex
-        kolodaView.insertCardAtIndexRange(position...position, animated: true)
+        for i in 1...4 {
+          dataSource.append(UIImage(named: "Card_like_\(i)")!)
+        }
+        kolodaView.insertCardAtIndexRange(position..<position + 4, animated: true)
     }
     
-    func koloda(koloda: KolodaView, didSelectCardAtIndex index: UInt) {
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://yalantis.com/")!)
+    func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
+        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
     }
+
 }
 
-//MARK: KolodaViewDataSource
+// MARK: KolodaViewDataSource
+
 extension ViewController: KolodaViewDataSource {
     
-    func kolodaNumberOfCards(koloda:KolodaView) -> UInt {
-        return UInt(dataSource.count)
+    func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
+        return dataSource.count
     }
     
-    func koloda(koloda: KolodaView, viewForCardAtIndex index: UInt) -> UIView {
+    func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         return UIImageView(image: dataSource[Int(index)])
     }
     
-    func koloda(koloda: KolodaView, viewForCardOverlayAtIndex index: UInt) -> OverlayView? {
-        return NSBundle.mainBundle().loadNibNamed("OverlayView",
-            owner: self, options: nil)[0] as? OverlayView
+    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
+        return Bundle.main.loadNibNamed("OverlayView", owner: self, options: nil)?[0] as? OverlayView
     }
 }
 
