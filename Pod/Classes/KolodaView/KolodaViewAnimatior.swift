@@ -42,6 +42,34 @@ open class KolodaViewAnimator {
         koloda?.layer.pop_add(kolodaAppearScaleAnimation, forKey: "kolodaAppearAlphaAnimation")
     }
     
+    open func applyReverseAnimation(_ card: DraggableCardView, direction: SwipeResultDirection, completion: AnimationCompletionBlock = nil) {
+        let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
+//        let translationAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
+        
+        translationAnimation?.fromValue = NSValue(cgPoint: card.animationPointForDirection(direction))
+        translationAnimation?.toValue = NSValue(cgPoint: CGPoint.zero)
+        
+//        translationAnimation?.springBounciness = 10.0
+//        translationAnimation?.springSpeed = 20.0
+        
+//        translationAnimation?.duration = cardSwipeActionAnimationDuration
+        translationAnimation?.duration = 0.3
+        
+        translationAnimation?.completionBlock = { _, finished in
+            completion?(finished)
+        }
+        
+        card.layer.pop_add(translationAnimation, forKey: "reverseCardTranslationAnimation")
+        
+        let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
+        rotationAnimation?.fromValue = CGFloat(card.animationRotationForDirection(direction))
+        rotationAnimation?.toValue = CGFloat(0.0)
+//        rotationAnimation?.duration = cardSwipeActionAnimationDuration
+        rotationAnimation?.duration = 0.3
+
+        card.layer.pop_add(rotationAnimation, forKey: "reverseCardRotationAnimation")
+    }
+    
     open func applyReverseAnimation(_ card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
         let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
         

@@ -436,7 +436,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func revertAction() {
+    public func revertAction(direction: SwipeResultDirection) {
         guard currentCardIndex > 0 && !animating else {
           return
         }
@@ -452,7 +452,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             let firstCardView = createCard(at: currentCardIndex, frame: frameForTopCard())
             
             if shouldTransparentizeNextCard {
-                firstCardView.alpha = alphaValueTransparent
+//                firstCardView.alpha = alphaValueTransparent
             }
             firstCardView.delegate = self
             
@@ -460,7 +460,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             visibleCards.insert(firstCardView, at: 0)
             
             animating = true
-            animator.applyReverseAnimation(firstCardView, completion: { [weak self] _ in
+            animator.applyReverseAnimation(firstCardView, direction: direction, completion: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
