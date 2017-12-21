@@ -16,6 +16,7 @@ private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
 private let defaultBackgroundCardsLeftMargin: CGFloat = 8.0
 private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
 private let defaultAppearanceAnimationDuration: TimeInterval = 0.8
+private let defaultReverseAnimationDuration: TimeInterval = 0.3
 
 //Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
@@ -436,7 +437,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func revertAction(direction: SwipeResultDirection) {
+    public func revertAction(direction: SwipeResultDirection? = nil) {
         guard currentCardIndex > 0 && !animating else {
           return
         }
@@ -460,7 +461,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             visibleCards.insert(firstCardView, at: 0)
             
             animating = true
-            animator.applyReverseAnimation(firstCardView, direction: direction, completion: { [weak self] _ in
+            animator.applyReverseAnimation(firstCardView, direction: direction, duration: defaultReverseAnimationDuration, completion: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
