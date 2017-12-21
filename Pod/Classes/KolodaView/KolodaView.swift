@@ -453,7 +453,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             let firstCardView = createCard(at: currentCardIndex, frame: frameForTopCard())
             
             if shouldTransparentizeNextCard {
-//                firstCardView.alpha = alphaValueTransparent
+                firstCardView.alpha = alphaValueTransparent
             }
             firstCardView.delegate = self
             
