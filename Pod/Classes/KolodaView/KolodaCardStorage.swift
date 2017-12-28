@@ -28,6 +28,17 @@ extension KolodaView {
     func configureCard(_ card: DraggableCardView, at index: Int) {
         let contentView = dataSource!.koloda(self, viewForCardAt: index)
         card.configure(contentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAt: index))
+
+        //Reconfigure drag animation constants from Koloda instance.
+        if let rotationMax = self.rotationMax {
+            card.rotationMax = rotationMax
+        }
+        if let rotationAngle = self.rotationAngle {
+            card.rotationAngle = rotationAngle
+        }
+        if let scaleMin = self.scaleMin {
+            card.scaleMin = scaleMin
+        }
     }
     
 }

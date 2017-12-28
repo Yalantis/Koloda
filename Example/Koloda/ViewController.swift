@@ -77,6 +77,10 @@ extension ViewController: KolodaViewDataSource {
         return dataSource.count
     }
     
+    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
+        return .default
+    }
+    
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         return UIImageView(image: dataSource[Int(index)])
     }

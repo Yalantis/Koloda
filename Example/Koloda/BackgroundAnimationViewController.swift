@@ -81,6 +81,10 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
 // MARK: KolodaViewDataSource
 extension BackgroundAnimationViewController: KolodaViewDataSource {
     
+    func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed {
+        return .default
+    }
+    
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
         return numberOfCards
     }
