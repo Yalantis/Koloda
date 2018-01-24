@@ -143,7 +143,7 @@ public func reloadData()
 ```
 This method reloads all KolodaView item views from the dataSource and refreshes the display.
 ```swift
-public func resetCurrentCardNumber()
+public func resetCurrentCardIndex()
 ```
 This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
 ```swift
