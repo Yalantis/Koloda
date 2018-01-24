@@ -145,11 +145,11 @@ This method reloads all KolodaView item views from the dataSource and refreshes 
 ```swift
 public func resetCurrentCardIndex()
 ```
-This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
+This method resets currentCardIndex and calls reloadData, so KolodaView loads from the beginning.
 ```swift
 public func revertAction()
 ```
-Applies undo animation and decrement currentCardNumber.
+Applies undo animation and decrement currentCardIndex.
 ```swift
 public func applyAppearAnimationIfNeeded()
 ```
@@ -157,7 +157,7 @@ Applies appear animation if needed.
 ```swift
 public func swipe(_ direction: SwipeResultDirection, force: Bool = false)
 ```
-Applies swipe animation and action, increment currentCardNumber.
+Applies swipe animation and action, increment currentCardIndex.
 
 ```swift
 open func frameForCard(at index: Int) -> CGRect
