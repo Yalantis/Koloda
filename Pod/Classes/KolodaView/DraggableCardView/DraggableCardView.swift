@@ -413,7 +413,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         layer.pop_removeAllAnimations()
     }
     
-    func swipe(_ direction: SwipeResultDirection) {
+    func swipe(_ direction: SwipeResultDirection, completionHandler: @escaping () -> Void) {
         if !dragBegin {
             delegate?.card(self, wasSwipedIn: direction)
             
@@ -424,6 +424,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             swipePositionAnimation?.completionBlock = {
                 (_, _) in
                 self.removeFromSuperview()
+                completionHandler()
             }
             
             layer.pop_add(swipePositionAnimation, forKey: "swipePositionAnimation")
