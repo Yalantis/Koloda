@@ -288,7 +288,7 @@ Version 1.0
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
 - [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
 - [Color Dating](https://itunes.apple.com/us/app/color-dating-free-app-for/id1100827439?mt=8).
-
+- [Ao Dispor](https://itunes.apple.com/pt/app/ao-dispor/id1185556583)
 
 #### Let us know!
 
