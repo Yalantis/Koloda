@@ -143,13 +143,13 @@ public func reloadData()
 ```
 This method reloads all KolodaView item views from the dataSource and refreshes the display.
 ```swift
-public func resetCurrentCardNumber()
+public func resetCurrentCardIndex()
 ```
-This method resets currentCardNumber and calls reloadData, so KolodaView loads from the beginning.
+This method resets currentCardIndex and calls reloadData, so KolodaView loads from the beginning.
 ```swift
 public func revertAction()
 ```
-Applies undo animation and decrement currentCardNumber.
+Applies undo animation and decrement currentCardIndex.
 ```swift
 public func applyAppearAnimationIfNeeded()
 ```
@@ -157,7 +157,7 @@ Applies appear animation if needed.
 ```swift
 public func swipe(_ direction: SwipeResultDirection, force: Bool = false)
 ```
-Applies swipe animation and action, increment currentCardNumber.
+Applies swipe animation and action, increment currentCardIndex.
 
 ```swift
 open func frameForCard(at index: Int) -> CGRect
@@ -288,7 +288,7 @@ Version 1.0
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Example/UsageExamples/bro.gif)
 - [Storage Space Plus](https://itunes.apple.com/us/app/storage-space-plus-compress/id1086277462?mt=8).
 - [Color Dating](https://itunes.apple.com/us/app/color-dating-free-app-for/id1100827439?mt=8).
-
+- [Ao Dispor](https://itunes.apple.com/pt/app/ao-dispor/id1185556583)
 
 #### Let us know!
 
