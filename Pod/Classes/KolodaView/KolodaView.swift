@@ -281,6 +281,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     // MARK: DraggableCardDelegate
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection) {
+        animationSemaphore.increment()
         
         if let shouldMove = delegate?.kolodaShouldMoveBackgroundCard(self), shouldMove {
             self.moveOtherCardsWithPercentage(percentage)
