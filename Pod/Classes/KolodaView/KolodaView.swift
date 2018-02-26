@@ -129,6 +129,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private(set) public var countOfCards = 0
     public var countOfVisibleCards = defaultCountOfVisibleCards
     private var visibleCards = [DraggableCardView]()
+    public var isLoop = false
     
     override open func layoutSubviews() {
         super.layoutSubviews()
@@ -365,10 +366,13 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         currentCardIndex += 1
         let shownCardsCount = currentCardIndex + countOfVisibleCards
-        if shownCardsCount - 1 < countOfCards {
+        if shownCardsCount - 1 < countOfCards || isLoop {
             loadNextCard()
         }
-        
+        if isLoop && shownCardsCount - 1 >= countOfCards {
+            currentCardIndex = currentCardIndex % countOfCards
+        }
+
         if !visibleCards.isEmpty {
             animateCardsAfterLoadingWithCompletion { [weak self] in
                 guard let _self = self else {
@@ -393,7 +397,11 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
         
         let cardParameters = backgroundCardParametersForFrame(frameForCard(at: visibleCards.count))
-        let lastCard = createCard(at: currentCardIndex + countOfVisibleCards - 1, frame: cardParameters.frame)
+        var index: Int = currentCardIndex + countOfVisibleCards - 1
+        if isLoop && index >= dataSource!.kolodaNumberOfCards(self) {
+            index = 0
+        }
+        let lastCard = createCard(at: index, frame: cardParameters.frame)
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
