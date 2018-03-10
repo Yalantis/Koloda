@@ -398,8 +398,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
         
         let cardParameters = backgroundCardParametersForFrame(frameForCard(at: visibleCards.count))
         var index: Int = currentCardIndex + countOfVisibleCards - 1
-        if isLoop && index >= dataSource!.kolodaNumberOfCards(self) {
-            index = 0
+        if isLoop && index >= countOfCards {
+            index = index % countOfCards
         }
         let lastCard = createCard(at: index, frame: cardParameters.frame)
         
