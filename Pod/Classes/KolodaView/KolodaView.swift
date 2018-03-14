@@ -364,13 +364,15 @@ open class KolodaView: UIView, DraggableCardDelegate {
         animationSemaphore.increment()
         visibleCards.removeFirst()
         
+        let swipedCardIndex = currentCardIndex
         currentCardIndex += 1
-        let shownCardsCount = currentCardIndex + countOfVisibleCards
-        if shownCardsCount - 1 < countOfCards || isLoop {
-            loadNextCard()
-        }
-        if isLoop && shownCardsCount - 1 >= countOfCards {
+        if isLoop && currentCardIndex >= countOfCards && countOfCards > 0 {
             currentCardIndex = currentCardIndex % countOfCards
+        }
+        let indexToBeShow = currentCardIndex + min(countOfVisibleCards, countOfCards) - 1
+        if indexToBeShow < countOfCards
+            || (isLoop && countOfCards > 0 && (dataSource?.kolodaNumberOfCards(self) ?? countOfCards) > visibleCards.count) {
+            loadNextCard()
         }
 
         if !visibleCards.isEmpty {
@@ -381,12 +383,12 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 
                 _self.visibleCards.last?.isHidden = false
                 _self.animationSemaphore.decrement()
-                _self.delegate?.koloda(_self, didSwipeCardAt: _self.currentCardIndex - 1, in: direction)
+                _self.delegate?.koloda(_self, didSwipeCardAt: swipedCardIndex, in: direction)
                 _self.delegate?.koloda(_self, didShowCardAt: _self.currentCardIndex)
             }
         } else {
             animationSemaphore.decrement()
-            delegate?.koloda(self, didSwipeCardAt: self.currentCardIndex - 1, in: direction)
+            delegate?.koloda(self, didSwipeCardAt: swipedCardIndex, in: direction)
             delegate?.kolodaDidRunOutOfCards(self)
         }
     }
@@ -397,11 +399,11 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
         
         let cardParameters = backgroundCardParametersForFrame(frameForCard(at: visibleCards.count))
-        var index: Int = currentCardIndex + countOfVisibleCards - 1
-        if isLoop && index >= countOfCards {
-            index = index % countOfCards
+        var indexToBeMake: Int = currentCardIndex + min(countOfVisibleCards, countOfCards) - 1
+        if isLoop && indexToBeMake >= countOfCards {
+            indexToBeMake = indexToBeMake % countOfCards
         }
-        let lastCard = createCard(at: index, frame: cardParameters.frame)
+        let lastCard = createCard(at: indexToBeMake, frame: cardParameters.frame)
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
