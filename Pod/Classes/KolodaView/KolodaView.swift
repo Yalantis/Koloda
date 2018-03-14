@@ -370,8 +370,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
             currentCardIndex = currentCardIndex % countOfCards
         }
         let indexToBeShow = currentCardIndex + min(countOfVisibleCards, countOfCards) - 1
-        if indexToBeShow < countOfCards
-            || (isLoop && countOfCards > 0 && (dataSource?.kolodaNumberOfCards(self) ?? countOfCards) > visibleCards.count) {
+        let realCountOfCards = dataSource?.kolodaNumberOfCards(self) ?? countOfCards
+        if indexToBeShow < realCountOfCards
+            || (isLoop && realCountOfCards > 0 && realCountOfCards > visibleCards.count) {
             loadNextCard()
         }
 
