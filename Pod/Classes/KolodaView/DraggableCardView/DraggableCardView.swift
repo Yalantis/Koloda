@@ -275,7 +275,9 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         if let touchView = touch.view, let _ = touchView as? UIControl {
             return false
         }
-        return delegate?.card(cardShouldDrag: self) ?? true
+        
+        panGestureRecognizer.isEnabled = delegate?.card(cardShouldDrag: self) ?? true
+        return  true
     }
     
     @objc func tapRecognized(_ recogznier: UITapGestureRecognizer) {
