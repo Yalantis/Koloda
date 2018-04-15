@@ -61,7 +61,7 @@ Usage
     ```
 2. Add `KolodaView` to `MyKolodaViewController`, then set dataSource and delegate for it
     ```swift
-    class ViewController: UIViewController {
+    class MyKolodaViewController: UIViewController {
         @IBOutlet weak var kolodaView: KolodaView!
 
         override func viewDidLoad() {
