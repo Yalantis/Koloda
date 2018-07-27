@@ -529,7 +529,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private func reconfigureCards() {
         if dataSource != nil {
             for (index, card) in visibleCards.enumerated() {
-                let actualIndex = currentCardIndex + index
+                var actualIndex = currentCardIndex + index
+                if isLoop && actualIndex >= countOfCards {
+                    actualIndex -= countOfCards
+                }
                 configureCard(card, at: actualIndex)
             }
         }
