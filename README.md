@@ -1,4 +1,4 @@
-KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.0.x](https://img.shields.io/badge/Swift-4.0.x-orange.svg)
+KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.1](https://img.shields.io/badge/Swift-4.1-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 4.3.1'
+pod 'Koloda', '~> 4.4'
 ```
 
 Thread Safety
@@ -61,7 +61,7 @@ Usage
     ```
 2. Add `KolodaView` to `MyKolodaViewController`, then set dataSource and delegate for it
     ```swift
-    class ViewController: UIViewController {
+    class MyKolodaViewController: UIViewController {
         @IBOutlet weak var kolodaView: KolodaView!
 
         override func viewDidLoad() {
@@ -247,6 +247,11 @@ not move.
 Release Notes
 ----------------
 
+Version 4.4
+- Swift 4.1 via [@irace](https://github.com/irace)
+- Added `isLoop` property via [@brownsoo](https://github.com/brownsoo)
+- Take into account card's alpha channel via [@bwhtmn](https://github.com/bwhtmn)
+
 Version 4.3
 - Swift 4 support
 - iOS 11 frame bugfix
@@ -301,7 +306,7 @@ License
 
 The MIT License (MIT)
 
-Copyright © 2017 Yalantis
+Copyright © 2018 Yalantis
 
 Permission is hereby granted free of charge to any person obtaining a copy of this software and associated documentation files (the "Software") to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

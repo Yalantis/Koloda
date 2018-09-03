@@ -96,11 +96,14 @@ open class KolodaViewAnimator {
     }
     
     open func applyInsertionAnimation(_ cards: [DraggableCardView], completion: AnimationCompletionBlock = nil) {
+        let initialAlphas = cards.map { $0.alpha }
         cards.forEach { $0.alpha = 0.0 }
         UIView.animate(
             withDuration: 0.2,
             animations: {
-                cards.forEach { $0.alpha = 1.0 }
+                for (i, card) in cards.enumerated() {
+                    card.alpha = initialAlphas[i]
+                }
             },
             completion: { finished in
                 completion?(finished)

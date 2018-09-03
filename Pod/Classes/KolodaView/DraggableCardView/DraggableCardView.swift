@@ -27,6 +27,8 @@ protocol DraggableCardDelegate: class {
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection]
     func card(cardShouldDrag card: DraggableCardView) -> Bool
     func card(cardSwipeSpeed card: DraggableCardView) -> DragSpeed
+    func card(cardPanBegan card: DraggableCardView)
+    func card(cardPanFinished card: DraggableCardView)
 }
 
 //Drag animation constants
@@ -240,6 +242,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             animationDirectionY = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0
             layer.rasterizationScale = UIScreen.main.scale
             layer.shouldRasterize = true
+            delegate?.card(cardPanBegan: self)
             
         case .changed:
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
@@ -262,7 +265,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
         case .ended:
             swipeMadeAction()
-            
+            delegate?.card(cardPanFinished: self)
             layer.shouldRasterize = false
             
         default:
@@ -275,7 +278,9 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         if let touchView = touch.view, let _ = touchView as? UIControl {
             return false
         }
-        return delegate?.card(cardShouldDrag: self) ?? true
+        
+        panGestureRecognizer.isEnabled = delegate?.card(cardShouldDrag: self) ?? true
+        return  true
     }
     
     @objc func tapRecognized(_ recogznier: UITapGestureRecognizer) {
@@ -319,7 +324,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             // check 4 borders for intersection with line between touchpoint and center of card
             // return smallest percentage of distance to edge point or 0
             return rect.perimeterLines
-                        .flatMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
+                        .compactMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
                         .map { centerDistance / $0.distanceTo(.zero) }
                         .min() ?? 0
         }
