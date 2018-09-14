@@ -9,6 +9,12 @@
 import UIKit
 import pop
 
+// Direction of visible cards
+public enum VisibleCardsDirection: Int {
+    case top
+    case bottom
+}
+
 //Default values
 private let defaultCountOfVisibleCards = 3
 private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
@@ -95,6 +101,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var scaleMin: CGFloat?
 
     public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
+
+    // Visible cards direction (defaults to bottom)
+    public var visibleCardsDirection: VisibleCardsDirection = .bottom
 
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
@@ -194,12 +203,22 @@ open class KolodaView: UIView, DraggableCardDelegate {
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
-        let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
-        let prevCardFrame = index > 0 ? frameForCard(at: max(index - 1, 0)) : .zero
-        let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
-        let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
-        
-        return frame
+
+        if visibleCardsDirection == .bottom {
+            let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
+            let prevCardFrame = index > 0 ? frameForCard(at: max(index - 1, 0)) : .zero
+            let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
+            let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
+            
+            return frame
+        } else {
+            let multiplier: CGFloat = index < (countOfVisibleCards - 1) ? 1.0 : 0.0
+            let nextCardFrame = index < (countOfVisibleCards - 1) ? frameForCard(at: min(index + 1, (countOfVisibleCards - 1))) : .zero
+            let yOffset = (nextCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
+            let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
+            
+            return frame
+        }
     }
     
     internal func frameForTopCard() -> CGRect {
