@@ -1,4 +1,4 @@
-KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.1](https://img.shields.io/badge/Swift-4.1-orange.svg)
+KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -28,7 +28,7 @@ KolodaView requires ARC.
 ------------------
 
 ```ruby
-pod 'Koloda', '~> 4.4'
+pod 'Koloda', '~> 4.5'
 ```
 
 Thread Safety
@@ -246,6 +246,9 @@ not move.
 
 Release Notes
 ----------------
+
+Version 4.5
+- Swift 4.2 via [@evilmint](https://github.com/evilmint)
 
 Version 4.4
 - Swift 4.1 via [@irace](https://github.com/irace)
