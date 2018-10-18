@@ -20,11 +20,11 @@ open class KolodaViewAnimator {
         self.koloda = koloda
     }
     
-    open func animateAppearanceWithCompletion(_ completion: AnimationCompletionBlock = nil) {
+    open func animateAppearance(_ duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
         let kolodaAppearScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
         
         kolodaAppearScaleAnimation?.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
-        kolodaAppearScaleAnimation?.duration = 0.8
+        kolodaAppearScaleAnimation?.duration = duration
         kolodaAppearScaleAnimation?.fromValue = NSValue(cgPoint: CGPoint(x: 0.1, y: 0.1))
         kolodaAppearScaleAnimation?.toValue = NSValue(cgPoint: CGPoint(x: 1.0, y: 1.0))
         kolodaAppearScaleAnimation?.completionBlock = { (_, finished) in
@@ -36,24 +36,36 @@ open class KolodaViewAnimator {
         kolodaAppearAlphaAnimation?.beginTime = CACurrentMediaTime() + cardSwipeActionAnimationDuration
         kolodaAppearAlphaAnimation?.fromValue = NSNumber(value: 0.0)
         kolodaAppearAlphaAnimation?.toValue = NSNumber(value: 1.0)
-        kolodaAppearAlphaAnimation?.duration = 0.8
+        kolodaAppearAlphaAnimation?.duration = duration
         
         koloda?.pop_add(kolodaAppearAlphaAnimation, forKey: "kolodaAppearScaleAnimation")
         koloda?.layer.pop_add(kolodaAppearScaleAnimation, forKey: "kolodaAppearAlphaAnimation")
     }
     
-    open func applyReverseAnimation(_ card: DraggableCardView, completion: AnimationCompletionBlock = nil) {
-        let firstCardAppearAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-        
-        firstCardAppearAnimation?.toValue = NSNumber(value: 1.0)
-        firstCardAppearAnimation?.fromValue =  NSNumber(value: 0.0)
-        firstCardAppearAnimation?.duration = 1.0
-        firstCardAppearAnimation?.completionBlock = { _, finished in
+    open func applyReverseAnimation(_ card: DraggableCardView, direction: SwipeResultDirection?, duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
+        let alphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
+        alphaAnimation?.fromValue =  NSNumber(value: 0.0)
+        alphaAnimation?.toValue = NSNumber(value: 1.0)
+        alphaAnimation?.duration = direction != nil ? duration : 1.0
+        alphaAnimation?.completionBlock = { _, finished in
             completion?(finished)
             card.alpha = 1.0
         }
+        card.pop_add(alphaAnimation, forKey: "reverseCardAlphaAnimation")
         
-        card.pop_add(firstCardAppearAnimation, forKey: "reverseCardAlphaAnimation")
+        guard let direction = direction else { return }
+        
+        let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
+        translationAnimation?.fromValue = NSValue(cgPoint: card.animationPointForDirection(direction))
+        translationAnimation?.toValue = NSValue(cgPoint: CGPoint.zero)
+        translationAnimation?.duration = duration
+        card.layer.pop_add(translationAnimation, forKey: "reverseCardTranslationAnimation")
+        
+        let rotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
+        rotationAnimation?.fromValue = CGFloat(card.animationRotationForDirection(direction))
+        rotationAnimation?.toValue = CGFloat(0.0)
+        rotationAnimation?.duration = duration
+        card.layer.pop_add(rotationAnimation, forKey: "reverseCardRotationAnimation")
     }
     
     open func applyScaleAnimation(_ card: DraggableCardView, scale: CGSize, frame: CGRect, duration: TimeInterval, completion: AnimationCompletionBlock = nil) {
@@ -84,11 +96,14 @@ open class KolodaViewAnimator {
     }
     
     open func applyInsertionAnimation(_ cards: [DraggableCardView], completion: AnimationCompletionBlock = nil) {
+        let initialAlphas = cards.map { $0.alpha }
         cards.forEach { $0.alpha = 0.0 }
         UIView.animate(
             withDuration: 0.2,
             animations: {
-                cards.forEach { $0.alpha = 1.0 }
+                for (i, card) in cards.enumerated() {
+                    card.alpha = initialAlphas[i]
+                }
             },
             completion: { finished in
                 completion?(finished)
