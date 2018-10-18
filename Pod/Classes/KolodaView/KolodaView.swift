@@ -122,6 +122,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     internal var animationSemaphore = KolodaAnimationSemaphore()
+    public var animating: Bool {
+        return animationSemaphore.isAnimating
+    }
 
     public var isRunOutOfCards: Bool {
         
