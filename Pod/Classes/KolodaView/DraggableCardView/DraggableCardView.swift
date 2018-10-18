@@ -139,34 +139,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
 
             let width = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.width,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .width,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.width,
+                attribute: .width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.height,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .height,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.height,
+                attribute: .height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.top,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .top,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.top,
+                attribute: .top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.leading,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .leading,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.leading,
+                attribute: .leading,
                 multiplier: 1.0,
                 constant: 0)
             addConstraints([width,height,top,leading])
@@ -179,34 +179,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.width,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .width,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.width,
+                attribute: .width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.height,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .height,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.height,
+                attribute: .height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.top,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .top,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.top,
+                attribute: .top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.leading,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .leading,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.leading,
+                attribute: .leading,
                 multiplier: 1.0,
                 constant: 0)
             
