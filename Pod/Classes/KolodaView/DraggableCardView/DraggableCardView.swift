@@ -136,37 +136,37 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private func configureOverlayView() {
         if let overlay = self.overlayView {
             overlay.translatesAutoresizingMaskIntoConstraints = false
-            
+
             let width = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: NSLayoutAttribute.width,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: NSLayoutAttribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: NSLayoutAttribute.height,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: NSLayoutAttribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: NSLayoutAttribute.top,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: NSLayoutAttribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: NSLayoutAttribute.leading,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: NSLayoutAttribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             addConstraints([width,height,top,leading])
@@ -179,34 +179,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: NSLayoutAttribute.width,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: NSLayoutAttribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: NSLayoutAttribute.height,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: NSLayoutAttribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: NSLayoutAttribute.top,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: NSLayoutAttribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: NSLayoutAttribute.leading,
                 relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: NSLayoutAttribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             
