@@ -76,6 +76,10 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
         animation?.springSpeed = frameAnimationSpringSpeed
         return animation
     }
+    
+    func kolodaVerticalPanHandled(_ koloda: KolodaView, card: DraggableCardView, pan: UIPanGestureRecognizer) {
+        print("vertical pan handled: \(pan.location(in: card))")
+    }
 }
 
 // MARK: KolodaViewDataSource

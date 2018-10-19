@@ -29,6 +29,7 @@ protocol DraggableCardDelegate: class {
     func card(cardSwipeSpeed card: DraggableCardView) -> DragSpeed
     func card(cardPanBegan card: DraggableCardView)
     func card(cardPanFinished card: DraggableCardView)
+    func card(verticalPanHandled card: DraggableCardView, pan: UIPanGestureRecognizer)
 }
 
 //Drag animation constants
@@ -220,14 +221,27 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
+    private var isBottomToTopSwipe:Bool = false
+    
     //MARK: GestureRecognizers
     @objc func panGestureRecognized(_ gestureRecognizer: UIPanGestureRecognizer) {
         dragDistance = gestureRecognizer.translation(in: self)
         
         let touchLocation = gestureRecognizer.location(in: self)
+
+        let velocity = gestureRecognizer.velocity(in: self)
         
         switch gestureRecognizer.state {
         case .began:
+
+            if fabs(velocity.y) > fabs(velocity.x) {
+                isBottomToTopSwipe = true
+                delegate?.card(verticalPanHandled: self, pan: gestureRecognizer)
+                return
+            }else {
+                isBottomToTopSwipe = false
+            }
+            
             
             let firstTouchPoint = gestureRecognizer.location(in: self)
             let newAnchorPoint = CGPoint(x: firstTouchPoint.x / bounds.width, y: firstTouchPoint.y / bounds.height)
@@ -250,6 +264,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             let scaleStrength = 1 - ((1 - scaleMin) * abs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     
+            if isBottomToTopSwipe {
+                delegate?.card(verticalPanHandled: self, pan: gestureRecognizer)
+                return
+            }
+            
             var transform = CATransform3DIdentity
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)

@@ -58,6 +58,7 @@ public protocol KolodaViewDelegate: class {
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool
     func kolodaPanBegan(_ koloda: KolodaView, card: DraggableCardView)
+    func kolodaVerticalPanHandled(_ koloda:KolodaView, card: DraggableCardView, pan:UIPanGestureRecognizer)
     func kolodaPanFinished(_ koloda: KolodaView, card: DraggableCardView)
     
 }
@@ -78,6 +79,7 @@ public extension KolodaViewDelegate {
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {}
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool { return true }
     func kolodaPanBegan(_ koloda: KolodaView, card: DraggableCardView) {}
+    func kolodaVerticalPanHandled(_ koloda:KolodaView, card: DraggableCardView, pan:UIPanGestureRecognizer) {}
     func kolodaPanFinished(_ koloda: KolodaView, card: DraggableCardView) {}
 }
 
@@ -303,6 +305,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection) {
         swipedAction(direction)
+    }
+    
+    func card(verticalPanHandled card: DraggableCardView, pan: UIPanGestureRecognizer) {
+        delegate?.kolodaVerticalPanHandled(self, card: card, pan: pan)
     }
     
     func card(cardWasReset card: DraggableCardView) {
