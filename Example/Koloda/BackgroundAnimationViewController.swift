@@ -55,7 +55,7 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     }
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
-        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
+//        UIApplication.shared.openURL(URL(string: "https://yalantis.com/")!)
     }
     
     func kolodaShouldApplyAppearAnimation(_ koloda: KolodaView) -> Bool {
@@ -78,7 +78,10 @@ extension BackgroundAnimationViewController: KolodaViewDelegate {
     }
     
     func kolodaVerticalPanHandled(_ koloda: KolodaView, card: DraggableCardView, pan: UIPanGestureRecognizer) {
-        print("vertical pan handled: \(pan.location(in: card))")
+        let location = pan.location(in: card)
+        let velocity = pan.velocity(in: card)
+        let translation = pan.translation(in: card)
+        print("vertical pan handled\nlocation: \(location)\nvelocity:\(velocity)\ntranslation:\(translation)")
     }
 }
 
@@ -90,7 +93,7 @@ extension BackgroundAnimationViewController: KolodaViewDataSource {
     }
     
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int {
-        return numberOfCards
+        return 1
     }
     
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
