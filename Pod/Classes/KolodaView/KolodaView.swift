@@ -133,7 +133,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
     public var countOfVisibleCards = defaultCountOfVisibleCards
-    private var visibleCards = [DraggableCardView]()
+    public var visibleCards = [DraggableCardView]()
     public var isLoop = false
     
     override open func layoutSubviews() {
