@@ -60,7 +60,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     private var overlayView: OverlayView?
-    public var contentView: UIView?
+    public private(set) var contentView: UIView?
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
@@ -233,6 +233,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         
         switch gestureRecognizer.state {
         case .began:
+
             if fabs(velocity.y) > fabs(velocity.x) {
                 isBottomToTopSwipe = true
                 delegate?.card(verticalPanHandled: self, pan: gestureRecognizer)
@@ -263,7 +264,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             let scaleStrength = 1 - ((1 - scaleMin) * abs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     
-            if fabs(velocity.y) > fabs(velocity.x) && isBottomToTopSwipe {
+            if isBottomToTopSwipe {
                 delegate?.card(verticalPanHandled: self, pan: gestureRecognizer)
                 return
             }
@@ -284,7 +285,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         case .ended:
             swipeMadeAction()
             delegate?.card(cardPanFinished: self)
-            isBottomToTopSwipe = false
             layer.shouldRasterize = false
             
         default:
