@@ -88,13 +88,16 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueTransparent = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
     public var shouldPassthroughTapsWhenNoVisibleCards = false
-
+    
     //Drag animation constants
     public var rotationMax: CGFloat?
     public var rotationAngle: CGFloat?
     public var scaleMin: CGFloat?
 
+    //Animation durations
     public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
+    public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
+    public var reverseAnimationDuration = defaultReverseAnimationDuration
 
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
@@ -111,6 +114,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         get {
             return self._animator
         }
+    }
+    
+    public var isAnimating: Bool {
+        return animationSemaphore.isAnimating
     }
     
     private lazy var _animator: KolodaViewAnimator = {
@@ -458,7 +465,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 currentCard,
                 scale: cardParameters.scale,
                 frame: cardParameters.frame,
-                duration: defaultBackgroundCardFrameAnimationDuration,
+                duration: backgroundCardFrameAnimationDuration,
                 completion: animationCompletion
             )
         }
@@ -488,7 +495,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             visibleCards.insert(firstCardView, at: 0)
             
             animationSemaphore.increment()
-            animator.applyReverseAnimation(firstCardView, direction: direction, duration: defaultReverseAnimationDuration, completion: { [weak self] _ in
+            animator.applyReverseAnimation(firstCardView, direction: direction, duration: reverseAnimationDuration, completion: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
@@ -509,7 +516,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 card,
                 scale: cardParameters.scale,
                 frame: cardParameters.frame,
-                duration: defaultBackgroundCardFrameAnimationDuration,
+                duration: backgroundCardFrameAnimationDuration,
                 completion: nil
             )
         }
@@ -537,7 +544,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    private func reconfigureCards() {
+    public func reconfigureCards() {
         if dataSource != nil {
             for (index, card) in visibleCards.enumerated() {
                 var actualIndex = currentCardIndex + index
