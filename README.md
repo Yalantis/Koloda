@@ -1,4 +1,4 @@
-KolodaView [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg)
+KolodaView [![cocoapods](https://img.shields.io/cocoapods/v/Koloda.svg)][![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg)
 --------------
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
@@ -23,13 +23,6 @@ ARC Compatibility
 ------------------
 
 KolodaView requires ARC.
-
-Сocoapods version
-------------------
-
-```ruby
-pod 'Koloda', '~> 4.5.1'
-```
 
 Thread Safety
 --------------
@@ -246,6 +239,11 @@ not move.
 
 Release Notes
 ----------------
+
+Version 4.6
+- update some properties to be publicitly settable via [@sroik](https://github.com/sroik) and [@leonardoherbert](https://github.com/leonardoherbert)
+- Xcode 9 back compatibility via [@seriyvolk83](https://github.com/seriyvolk83)
+- added posibility to have the card stack at the top or bottom via [@lorenzOliveto](https://github.com/lorenzOliveto)
 
 Version 4.5
 - Swift 4.2 via [@evilmint](https://github.com/evilmint)
