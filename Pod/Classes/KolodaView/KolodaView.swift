@@ -94,13 +94,16 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueTransparent = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
     public var shouldPassthroughTapsWhenNoVisibleCards = false
-
+    
     //Drag animation constants
     public var rotationMax: CGFloat?
     public var rotationAngle: CGFloat?
     public var scaleMin: CGFloat?
 
+    //Animation durations
     public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
+    public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
+    public var reverseAnimationDuration = defaultReverseAnimationDuration
 
     // Visible cards direction (defaults to bottom)
     public var visibleCardsDirection: VisibleCardsDirection = .bottom
@@ -122,6 +125,10 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
+    public var isAnimating: Bool {
+        return animationSemaphore.isAnimating
+    }
+    
     private lazy var _animator: KolodaViewAnimator = {
         return KolodaViewAnimator(koloda: self)
     }()
@@ -140,6 +147,13 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private(set) public var currentCardIndex = 0
     private(set) public var countOfCards = 0
     public var countOfVisibleCards = defaultCountOfVisibleCards
+    public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
+    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
+    public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
+    public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
+    public var reverseAnimationDuration = defaultReverseAnimationDuration
+
+
     private var visibleCards = [DraggableCardView]()
     public var isLoop = false
     
@@ -198,8 +212,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
     // MARK: Frames
     open func frameForCard(at index: Int) -> CGRect {
         let bottomOffset: CGFloat = 0
-        let topOffset = defaultBackgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
-        let scalePercent = defaultBackgroundCardsScalePercent
+        let topOffset = backgroundCardsTopMargin * CGFloat(countOfVisibleCards - 1)
+        let scalePercent = backgroundCardsScalePercent
         let width = self.frame.width * pow(scalePercent, CGFloat(index))
         let xOffset = (self.frame.width - width) / 2
         let height = (self.frame.height - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
@@ -207,14 +221,14 @@ open class KolodaView: UIView, DraggableCardDelegate {
         if visibleCardsDirection == .bottom {
             let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
             let prevCardFrame = index > 0 ? frameForCard(at: max(index - 1, 0)) : .zero
-            let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
+            let yOffset = (prevCardFrame.height - height + prevCardFrame.origin.y + backgroundCardsTopMargin) * multiplier
             let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
             
             return frame
         } else {
             let multiplier: CGFloat = index < (countOfVisibleCards - 1) ? 1.0 : 0.0
             let nextCardFrame = index < (countOfVisibleCards - 1) ? frameForCard(at: min(index + 1, (countOfVisibleCards - 1))) : .zero
-            let yOffset = (nextCardFrame.origin.y + defaultBackgroundCardsTopMargin) * multiplier
+            let yOffset = (nextCardFrame.origin.y + backgroundCardsTopMargin) * multiplier
             let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
             
             return frame
@@ -477,7 +491,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 currentCard,
                 scale: cardParameters.scale,
                 frame: cardParameters.frame,
-                duration: defaultBackgroundCardFrameAnimationDuration,
+                duration: backgroundCardFrameAnimationDuration,
                 completion: animationCompletion
             )
         }
@@ -507,7 +521,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             visibleCards.insert(firstCardView, at: 0)
             
             animationSemaphore.increment()
-            animator.applyReverseAnimation(firstCardView, direction: direction, duration: defaultReverseAnimationDuration, completion: { [weak self] _ in
+            animator.applyReverseAnimation(firstCardView, direction: direction, duration: reverseAnimationDuration, completion: { [weak self] _ in
                 guard let _self = self else {
                     return
                 }
@@ -528,7 +542,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 card,
                 scale: cardParameters.scale,
                 frame: cardParameters.frame,
-                duration: defaultBackgroundCardFrameAnimationDuration,
+                duration: backgroundCardFrameAnimationDuration,
                 completion: nil
             )
         }
@@ -556,7 +570,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    private func reconfigureCards() {
+    public func reconfigureCards() {
         if dataSource != nil {
             for (index, card) in visibleCards.enumerated() {
                 var actualIndex = currentCardIndex + index

@@ -59,7 +59,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     private var overlayView: OverlayView?
-    private(set) var contentView: UIView?
+    public private(set) var contentView: UIView?
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
@@ -139,34 +139,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.width,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.width,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.width,
+                attribute: NSLayoutConstraint.Attribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutAttribute.height,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.height,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.height,
+                attribute: NSLayoutConstraint.Attribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.top,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.top,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.top,
+                attribute: NSLayoutConstraint.Attribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutAttribute.leading,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.leading,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.leading,
+                attribute: NSLayoutConstraint.Attribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             addConstraints([width,height,top,leading])
@@ -179,34 +179,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.width,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.width,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.width,
+                attribute: NSLayoutConstraint.Attribute.width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutAttribute.height,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.height,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.height,
+                attribute: NSLayoutConstraint.Attribute.height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.top,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.top,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.top,
+                attribute: NSLayoutConstraint.Attribute.top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutAttribute.leading,
-                relatedBy: NSLayoutRelation.equal,
+                attribute: NSLayoutConstraint.Attribute.leading,
+                relatedBy: NSLayoutConstraint.Relation.equal,
                 toItem: self,
-                attribute: NSLayoutAttribute.leading,
+                attribute: NSLayoutConstraint.Attribute.leading,
                 multiplier: 1.0,
                 constant: 0)
             
@@ -247,7 +247,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         case .changed:
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
             let rotationAngle = animationDirectionY * self.rotationAngle * rotationStrength
-            let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
+            let scaleStrength = 1 - ((1 - scaleMin) * abs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
     
             var transform = CATransform3DIdentity
@@ -260,7 +260,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             updateOverlayWithFinishPercent(percentage, direction:dragDirection)
             if let dragDirection = dragDirection {
                 //100% - for proportion
-                delegate?.card(self, wasDraggedWithFinishPercentage: min(fabs(100 * percentage), 100), inDirection: dragDirection)
+                delegate?.card(self, wasDraggedWithFinishPercentage: min(abs(100 * percentage), 100), inDirection: dragDirection)
             }
             
         case .ended:
