@@ -9,13 +9,7 @@
 import UIKit
 import pop
 
-// Direction of visible cards
-public enum VisibleCardsDirection: Int {
-    case top
-    case bottom
-}
-
-//Default values
+// Default values
 private let defaultCountOfVisibleCards = 3
 private let defaultBackgroundCardsTopMargin: CGFloat = 4.0
 private let defaultBackgroundCardsScalePercent: CGFloat = 0.95
@@ -24,10 +18,15 @@ private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
 private let defaultAppearanceAnimationDuration: TimeInterval = 0.8
 private let defaultReverseAnimationDuration: TimeInterval = 0.3
 
-//Opacity values
+// Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
 private let defaultAlphaValueTransparent: CGFloat = 0.0
 private let defaultAlphaValueSemiTransparent: CGFloat = 0.7
+
+// Direction of visible cards
+public enum VisibleCardsDirection: Int {
+    case top, bottom
+}
 
 public protocol KolodaViewDataSource: class {
     
@@ -89,25 +88,36 @@ public extension KolodaViewDelegate {
 
 open class KolodaView: UIView, DraggableCardDelegate {
     
-    //Opacity values
+    // MARK: Public
+    
+    // Opacity values
     public var alphaValueOpaque = defaultAlphaValueOpaque
     public var alphaValueTransparent = defaultAlphaValueTransparent
     public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
     public var shouldPassthroughTapsWhenNoVisibleCards = false
     
-    //Drag animation constants
+    // Drag animation constants
     public var rotationMax: CGFloat?
     public var rotationAngle: CGFloat?
     public var scaleMin: CGFloat?
 
-    //Animation durations
+    // Animation durations
     public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
     public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
     public var reverseAnimationDuration = defaultReverseAnimationDuration
+    
+    public var countOfVisibleCards = defaultCountOfVisibleCards
+    public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
+    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
 
     // Visible cards direction (defaults to bottom)
     public var visibleCardsDirection: VisibleCardsDirection = .bottom
-
+    
+    public var isLoop = false
+    
+    private(set) public var currentCardIndex = 0
+    private(set) public var countOfCards = 0
+    
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
             setupDeck()
@@ -117,45 +127,30 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public weak var delegate: KolodaViewDelegate?
     
     public var animator: KolodaViewAnimator {
-        set {
-            self._animator = newValue
-        }
-        get {
-            return self._animator
-        }
+        set { self._animator = newValue }
+        get { return self._animator }
     }
     
     public var isAnimating: Bool {
         return animationSemaphore.isAnimating
     }
     
-    private lazy var _animator: KolodaViewAnimator = {
-        return KolodaViewAnimator(koloda: self)
-    }()
+    public var isRunOutOfCards: Bool {
+        return visibleCards.isEmpty
+    }
+    
+    // MARK: Private
     
     internal var shouldTransparentizeNextCard: Bool {
         return delegate?.kolodaShouldTransparentizeNextCard(self) ?? true
     }
-    
     internal var animationSemaphore = KolodaAnimationSemaphore()
-
-    public var isRunOutOfCards: Bool {
-        
-        return visibleCards.isEmpty
-    }
     
-    private(set) public var currentCardIndex = 0
-    private(set) public var countOfCards = 0
-    public var countOfVisibleCards = defaultCountOfVisibleCards
-    public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
-    public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
-    public var backgroundCardFrameAnimationDuration = defaultBackgroundCardFrameAnimationDuration
-    public var appearanceAnimationDuration = defaultAppearanceAnimationDuration
-    public var reverseAnimationDuration = defaultReverseAnimationDuration
-
-
+    private lazy var _animator: KolodaViewAnimator = {
+        return KolodaViewAnimator(koloda: self)
+    }()
     private var visibleCards = [DraggableCardView]()
-    public var isLoop = false
+
     
     override open func layoutSubviews() {
         super.layoutSubviews()
