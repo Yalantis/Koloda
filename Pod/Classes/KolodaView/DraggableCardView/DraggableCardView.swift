@@ -139,34 +139,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.width,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .width,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: .width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.height,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .height,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: .height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.top,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .top,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: .top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: overlay,
-                attribute: NSLayoutConstraint.Attribute.leading,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .leading,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: .leading,
                 multiplier: 1.0,
                 constant: 0)
             addConstraints([width,height,top,leading])
@@ -179,34 +179,34 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             
             let width = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.width,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .width,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.width,
+                attribute: .width,
                 multiplier: 1.0,
                 constant: 0)
             let height = NSLayoutConstraint(
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.height,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .height,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.height,
+                attribute: .height,
                 multiplier: 1.0,
                 constant: 0)
             let top = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.top,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .top,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.top,
+                attribute: .top,
                 multiplier: 1.0,
                 constant: 0)
             let leading = NSLayoutConstraint (
                 item: contentView,
-                attribute: NSLayoutConstraint.Attribute.leading,
-                relatedBy: NSLayoutConstraint.Relation.equal,
+                attribute: .leading,
+                relatedBy: .equal,
                 toItem: self,
-                attribute: NSLayoutConstraint.Attribute.leading,
+                attribute: .leading,
                 multiplier: 1.0,
                 constant: 0)
             
