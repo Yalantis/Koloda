@@ -150,17 +150,18 @@ open class KolodaView: UIView, DraggableCardDelegate {
         return KolodaViewAnimator(koloda: self)
     }()
     private var visibleCards = [DraggableCardView]()
-    private var cardsDragging: Bool {
-        return visibleCards.contains { card in
-            return card.dragBegin
+
+    private var cardIsDragging: Bool {
+        guard let frontCard = visibleCards.first else {
+            return false
         }
+        return frontCard.dragBegin
     }
 
-    
     override open func layoutSubviews() {
         super.layoutSubviews()
         
-        if !animationSemaphore.isAnimating, !cardsDragging {
+        if !animationSemaphore.isAnimating, !cardIsDragging {
             layoutDeck()
         }
     }
