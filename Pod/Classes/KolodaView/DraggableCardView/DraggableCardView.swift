@@ -64,7 +64,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var animationDirectionY: CGFloat = 1.0
-    private var dragBegin = false
+    private(set) var dragBegin = false
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
 
