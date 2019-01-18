@@ -46,7 +46,7 @@ private let cardResetAnimationDuration: TimeInterval = 0.2
 internal var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.rawValue
 
 public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
-
+    
     //Drag animation constants
     public var rotationMax = defaultRotationMax
     public var rotationAngle = defaultRotationAngle
@@ -67,7 +67,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private(set) var dragBegin = false
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
-
+    
     
     //MARK: Lifecycle
     init() {
@@ -108,7 +108,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.cancelsTouchesInView = false
         addGestureRecognizer(tapGestureRecognizer)
-
+        
         if let delegate = delegate {
             cardSwipeActionAnimationDuration = delegate.card(cardSwipeSpeed: self).rawValue
         }
@@ -128,11 +128,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         } else {
             self.addSubview(view)
         }
-
+        
         self.contentView = view
         configureContentView()
     }
-
+    
     private func configureOverlayView() {
         if let overlay = self.overlayView {
             overlay.translatesAutoresizingMaskIntoConstraints = false
@@ -249,7 +249,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             let rotationAngle = animationDirectionY * self.rotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * abs(rotationStrength))
             let scale = max(scaleStrength, scaleMin)
-    
+            
             var transform = CATransform3DIdentity
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform = CATransform3DRotate(transform, rotationAngle, 0, 0, 1)
@@ -275,12 +275,17 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if let touchView = touch.view, let _ = touchView as? UIControl {
-            return false
+        guard gestureRecognizer == tapGestureRecognizer, touch.view is UIControl else {
+            return true
         }
-        
-        panGestureRecognizer.isEnabled = delegate?.card(cardShouldDrag: self) ?? true
-        return  true
+        return false
+    }
+    
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer == panGestureRecognizer else {
+            return true
+        }
+        return delegate?.card(cardShouldDrag: self) ?? true
     }
     
     @objc func tapRecognized(_ recogznier: UITapGestureRecognizer) {
@@ -324,9 +329,9 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             // check 4 borders for intersection with line between touchpoint and center of card
             // return smallest percentage of distance to edge point or 0
             return rect.perimeterLines
-                        .compactMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
-                        .map { centerDistance / $0.distanceTo(.zero) }
-                        .min() ?? 0
+                .compactMap { CGPoint.intersectionBetweenLines(targetLine, line2: $0) }
+                .map { centerDistance / $0.distanceTo(.zero) }
+                .min() ?? 0
         }
     }
     
