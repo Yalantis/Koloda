@@ -21,6 +21,10 @@ public enum SwipeResultDirection: String {
     case bottomRight
 }
 
+#if swift(>=4.2)
+extension SwipeResultDirection: CaseIterable { }
+#endif
+
 extension SwipeResultDirection {
     
     private var swipeDirection: Direction {

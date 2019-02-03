@@ -354,10 +354,24 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     func animationPointForDirection(_ direction: SwipeResultDirection) -> CGPoint {
-        let point = direction.point
-        let animatePoint = CGPoint(x: point.x * 4, y: point.y * 4) //should be 2
-        let retPoint = animatePoint.screenPointForSize(screenSize)
-        return retPoint
+        guard let superview = self.superview else {
+            return .zero
+        }
+        
+        let superSize = superview.bounds.size
+        let space = max(screenSize.width, screenSize.height)
+        switch direction {
+        case .left, .right:
+            // Optimize left and right position
+            let x = direction.point.x * (superSize.width + space)
+            let y = 0.5 * superSize.height
+            return CGPoint(x: x, y: y)
+            
+        default:
+            let x = direction.point.x * (superSize.width + space)
+            let y = direction.point.y * (superSize.height + space)
+            return CGPoint(x: x, y: y)
+        }
     }
     
     func animationRotationForDirection(_ direction: SwipeResultDirection) -> CGFloat {
