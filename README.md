@@ -239,6 +239,9 @@ not move.
 
 Release Notes
 ----------------
+Version 4.7
+- fixed a bug with card responding during swiping via [@lixiang1994](https://github.com/lixiang1994)
+- fixed a bug with inappropriate layouting via [@soundsmitten](https://github.com/soundsmitten)
 
 Version 4.6
 - update some properties to be publicitly settable via [@sroik](https://github.com/sroik) and [@leonardoherbert](https://github.com/leonardoherbert)
@@ -307,7 +310,7 @@ License
 
 The MIT License (MIT)
 
-Copyright © 2018 Yalantis
+Copyright © 2019 Yalantis
 
 Permission is hereby granted free of charge to any person obtaining a copy of this software and associated documentation files (the "Software") to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
