@@ -57,6 +57,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             configureSwipeSpeed()
         }
     }
+
+    internal var dragBegin = false
     
     private var overlayView: OverlayView?
     public private(set) var contentView: UIView?
@@ -64,7 +66,6 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
     private var animationDirectionY: CGFloat = 1.0
-    private var dragBegin = false
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
 
