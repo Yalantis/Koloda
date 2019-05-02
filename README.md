@@ -239,6 +239,10 @@ not move.
 
 Release Notes
 ----------------
+
+Version 5.0
+- Swift 5.0 via [@maxxfrazer](https://github.com/maxxfrazer)
+
 Version 4.7
 - fixed a bug with card responding during swiping via [@lixiang1994](https://github.com/lixiang1994)
 - fixed a bug with inappropriate layouting via [@soundsmitten](https://github.com/soundsmitten)
