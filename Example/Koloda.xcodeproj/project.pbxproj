@@ -408,7 +408,7 @@
 				INFOPLIST_FILE = Koloda/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.WKKoloda-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.Koloda-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -425,7 +425,7 @@
 				INFOPLIST_FILE = Koloda/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.WKKoloda-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yalantis.Koloda-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
