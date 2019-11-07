@@ -38,6 +38,8 @@ private let defaultScaleMin: CGFloat = 0.8
 
 private let screenSize = UIScreen.main.bounds.size
 
+private let defaultCloseScrollConflict = false
+
 //Reset animation constants
 private let cardResetAnimationSpringBounciness: CGFloat = 10.0
 private let cardResetAnimationSpringSpeed: CGFloat = 20.0
@@ -45,12 +47,17 @@ private let cardResetAnimationKey = "resetPositionAnimation"
 private let cardResetAnimationDuration: TimeInterval = 0.2
 internal var cardSwipeActionAnimationDuration: TimeInterval = DragSpeed.default.rawValue
 
+
+
 public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
 
     //Drag animation constants
     public var rotationMax = defaultRotationMax
     public var rotationAngle = defaultRotationAngle
     public var scaleMin = defaultScaleMin
+    
+    ////新增 是否关闭上下手势冲突
+    public var closeScrollConflict = defaultCloseScrollConflict
     
     weak var delegate: DraggableCardDelegate? {
         didSet {
@@ -221,9 +228,23 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         }
     }
     
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if closeScrollConflict {
+            return true
+        }else {
+            return false
+        }
+    }
+    
     //MARK: GestureRecognizers
     @objc func panGestureRecognized(_ gestureRecognizer: UIPanGestureRecognizer) {
-        dragDistance = gestureRecognizer.translation(in: self)
+        if closeScrollConflict {
+            //把手势的y轴位移强制置为0，防止上下滑动和外部手势冲突
+            let gesDistance = gestureRecognizer.translation(in: self)
+            dragDistance = CGPoint(x: gesDistance.x, y: 0.0)
+        }else {
+            dragDistance = gestureRecognizer.translation(in: self)
+        }
         
         let touchLocation = gestureRecognizer.location(in: self)
         

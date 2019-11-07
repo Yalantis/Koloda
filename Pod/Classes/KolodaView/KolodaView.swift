@@ -18,6 +18,9 @@ private let defaultBackgroundCardFrameAnimationDuration: TimeInterval = 0.2
 private let defaultAppearanceAnimationDuration: TimeInterval = 0.8
 private let defaultReverseAnimationDuration: TimeInterval = 0.3
 
+//默认不关闭手势冲突
+private let defaultCloseScrollConflict = false
+
 // Opacity values
 private let defaultAlphaValueOpaque: CGFloat = 1.0
 private let defaultAlphaValueTransparent: CGFloat = 0.0
@@ -109,6 +112,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var countOfVisibleCards = defaultCountOfVisibleCards
     public var backgroundCardsTopMargin = defaultBackgroundCardsTopMargin
     public var backgroundCardsScalePercent = defaultBackgroundCardsScalePercent
+    
+    //新增 是否关闭上下手势冲突
+    public var closeScrollConflict = defaultCloseScrollConflict
 
     // Visible cards direction (defaults to bottom)
     public var visibleCardsDirection: VisibleCardsDirection = .bottom
@@ -181,6 +187,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                     let isTop = index == 0
                     nextCardView.isUserInteractionEnabled = isTop
                     nextCardView.alpha = alphaValueOpaque
+                    //新增
                     if shouldTransparentizeNextCard && !isTop {
                         nextCardView.alpha = alphaValueSemiTransparent
                     }
@@ -202,11 +209,13 @@ open class KolodaView: UIView, DraggableCardDelegate {
         if index == 0 {
             card.layer.transform = CATransform3DIdentity
             card.frame = frameForTopCard()
+            card.closeScrollConflict = closeScrollConflict
         } else {
             let cardParameters = backgroundCardParametersForFrame(frameForCard(at: index))
             let scale = cardParameters.scale
             card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
             card.frame = cardParameters.frame
+            card.closeScrollConflict = closeScrollConflict
         }
     }
     
