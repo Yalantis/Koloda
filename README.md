@@ -1,6 +1,8 @@
 KolodaView ![cocoapods](https://img.shields.io/cocoapods/v/Koloda.svg)[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg)
 --------------
 
+说明：此库为Koloda的fork库，在原库的基础上添加了防止和superView手势冲突的开关。
+
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
 Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/).
@@ -34,12 +36,12 @@ Installation
 To install via CocoaPods add this lines to your Podfile. You need CocoaPods v. 1.1 or higher
 ```ruby
 use_frameworks!
-pod "Koloda"
+pod "WKKoloda"
 ```
 
 To install via Carthage add this lines to your Cartfile
 ```ruby
-github "Yalantis/Koloda"
+github "DevilGene/WKKoloda"
 ```
 
 To install manually the KolodaView class in an app, just drag the KolodaView, DraggableCardView, OverlayView class files (demo files and assets are not needed) into your project. Also you need to install facebook-pop. Or add bridging header if you are using CocoaPods.
