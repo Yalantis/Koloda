@@ -19,7 +19,7 @@
 
 /* Begin PBXFileReference section */
 		84F820B51E4D31BC0088562A /* KolodaAnimationSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KolodaAnimationSemaphore.swift; sourceTree = "<group>"; };
-		C517E4AB1D9CF9010002D88F /* Koloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Koloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C517E4AB1D9CF9010002D88F /* WKKoloda.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WKKoloda.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C517E4AE1D9CF9010002D88F /* Koloda.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Koloda.h; sourceTree = "<group>"; };
 		C517E4AF1D9CF9010002D88F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C517E4E51D9D00520002D88F /* DraggableCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggableCardView.swift; sourceTree = "<group>"; };
@@ -54,7 +54,7 @@
 		C517E4AC1D9CF9010002D88F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C517E4AB1D9CF9010002D88F /* Koloda.framework */,
+				C517E4AB1D9CF9010002D88F /* WKKoloda.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -152,7 +152,7 @@
 			);
 			name = Koloda;
 			productName = Pod;
-			productReference = C517E4AB1D9CF9010002D88F /* Koloda.framework */;
+			productReference = C517E4AB1D9CF9010002D88F /* WKKoloda.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -175,6 +175,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = C517E4A11D9CF9010002D88F;
@@ -330,7 +331,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = WKKoloda;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 			};
@@ -352,7 +353,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = WKKoloda;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.2;
 			};

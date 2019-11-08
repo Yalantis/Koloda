@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
 
 	s.homepage         = 'https://github.com/DevilGene/WKKoloda'
 	s.license          = 'MIT'
-	s.author           = 'Yalantis'
+	s.author           = 'DevilGene'
 	s.source           = { :git => 'https://github.com/DevilGene/WKKoloda.git', :tag => s.version }
 	s.social_media_url = 'https://twitter.com/yalantis'
 
