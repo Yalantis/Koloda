@@ -1,7 +1,8 @@
 KolodaView ![cocoapods](https://img.shields.io/cocoapods/v/Koloda.svg)[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) ![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg)
 --------------
 
-说明：此库为Koloda的fork库，在原库的基础上添加了防止和superView手势冲突的开关。
+说明：此库为Koloda的fork库，在原库的基础上添加了防止和superView手势冲突的开关：
+onlyHorizontalScrolling //只能左右移动
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
