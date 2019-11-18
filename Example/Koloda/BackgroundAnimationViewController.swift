@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Koloda
+import WKKoloda
 import pop
 
 private let numberOfCards: Int = 5
@@ -25,7 +25,7 @@ class BackgroundAnimationViewController: UIViewController {
         super.viewDidLoad()
         kolodaView.alphaValueSemiTransparent = kolodaAlphaValueSemiTransparent
         kolodaView.countOfVisibleCards = kolodaCountOfVisibleCards
-        kolodaView.closeScrollConflict = true
+        kolodaView.onlyHorizontalScrolling = true
         kolodaView.delegate = self
         kolodaView.dataSource = self
         kolodaView.animator = BackgroundKolodaAnimator(koloda: kolodaView)

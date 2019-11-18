@@ -38,7 +38,7 @@ private let defaultScaleMin: CGFloat = 0.8
 
 private let screenSize = UIScreen.main.bounds.size
 
-private let defaultCloseScrollConflict = false
+private let defaultOnlyHorizontalScrolling = false
 
 //Reset animation constants
 private let cardResetAnimationSpringBounciness: CGFloat = 10.0
@@ -57,7 +57,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     public var scaleMin = defaultScaleMin
     
     ////新增 是否关闭上下手势冲突
-    public var closeScrollConflict = defaultCloseScrollConflict
+    public var onlyHorizontalScrolling = defaultOnlyHorizontalScrolling
     
     weak var delegate: DraggableCardDelegate? {
         didSet {
@@ -75,6 +75,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var animationDirectionY: CGFloat = 1.0
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
+    private var canPanGest = true
 
     
     //MARK: Lifecycle
@@ -229,18 +230,29 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     }
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        if closeScrollConflict {
-            return true
-        }else {
-            return false
+        if onlyHorizontalScrolling {
+            //当外部也为拖动手势时，限制移动
+            if gestureRecognizer == panGestureRecognizer && otherGestureRecognizer is UIPanGestureRecognizer {
+                let point = panGestureRecognizer.translation(in: self)
+                if abs(point.x) > abs(point.y) {
+                    self.canPanGest = true
+                    return false
+                }else {
+                    self.canPanGest = false
+                }
+            }
         }
+        return false
     }
     
     //MARK: GestureRecognizers
     @objc func panGestureRecognized(_ gestureRecognizer: UIPanGestureRecognizer) {
-        if closeScrollConflict {
+        if onlyHorizontalScrolling {
             //把手势的y轴位移强制置为0，防止上下滑动和外部手势冲突
-            let gesDistance = gestureRecognizer.translation(in: self)
+            var gesDistance = gestureRecognizer.translation(in: self)
+            if !self.canPanGest {
+                gesDistance = CGPoint(x: 0.0, y: 0.0)
+            }
             dragDistance = CGPoint(x: gesDistance.x, y: 0.0)
         }else {
             dragDistance = gestureRecognizer.translation(in: self)

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Koloda
+import WKKoloda
 
 private var numberOfCards: Int = 5
 

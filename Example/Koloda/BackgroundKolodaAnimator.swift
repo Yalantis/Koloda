@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Koloda
+import WKKoloda
 import pop
 
 class BackgroundKolodaAnimator: KolodaViewAnimator {

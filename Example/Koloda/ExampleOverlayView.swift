@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Koloda
+import WKKoloda
 
 private let overlayRightImageName = "yesOverlayImage"
 private let overlayLeftImageName = "noOverlayImage"
