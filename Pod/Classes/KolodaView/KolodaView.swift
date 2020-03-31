@@ -61,6 +61,7 @@ public protocol KolodaViewDelegate: class {
     func kolodaDidResetCard(_ koloda: KolodaView)
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat?
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
+    func koloda(_ koloda: KolodaView, didRewindCardAt index: Int)
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool
     func kolodaPanBegan(_ koloda: KolodaView, card: DraggableCardView)
     func kolodaPanFinished(_ koloda: KolodaView, card: DraggableCardView)
@@ -81,6 +82,7 @@ public extension KolodaViewDelegate {
     func kolodaDidResetCard(_ koloda: KolodaView) {}
     func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat? { return nil}
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {}
+    func koloda(_ koloda: KolodaView, didRewindCardAt index: Int) {}
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool { return true }
     func kolodaPanBegan(_ koloda: KolodaView, card: DraggableCardView) {}
     func kolodaPanFinished(_ koloda: KolodaView, card: DraggableCardView) {}
@@ -528,6 +530,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 }
                 
                 _self.animationSemaphore.decrement()
+                _self.delegate?.koloda(_self, didRewindCardAt: _self.currentCardIndex)
                 _self.delegate?.koloda(_self, didShowCardAt: _self.currentCardIndex)
             })
         }
