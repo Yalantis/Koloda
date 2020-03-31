@@ -240,6 +240,9 @@ not move.
 Release Notes
 ----------------
 
+Version 5.0.1
+- added posibility to determine index of rewound card.
+
 Version 5.0
 - Swift 5.0 via [@maxxfrazer](https://github.com/maxxfrazer)
 
