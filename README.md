@@ -231,6 +231,10 @@ func koloda(_ koloda: KolodaView, didShowCardAt index: Int)
 ```
 This method is called after a card has been shown, after animation is complete
 ```swift
+func koloda(_ koloda: KolodaView, didRewindTo index: Int)
+```
+This method is called after a card was rewound, after animation is complete
+```swift
 func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int) -> Bool
 ```
 This method is called when the card is beginning to be dragged. If you return YES from the method or
@@ -239,6 +243,9 @@ not move.
 
 Release Notes
 ----------------
+
+Version 5.0.1
+- added posibility to determine index of rewound card.
 
 Version 5.0
 - Swift 5.0 via [@maxxfrazer](https://github.com/maxxfrazer)
