@@ -333,7 +333,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
     
     func card(cardAllowedDirections card: DraggableCardView) -> [SwipeResultDirection] {
-        let index = currentCardIndex + visibleCards.firstIndex(of: card)!
+        guard let firsIndex = visibleCards.firstIndex(of: card) else { return [.left, .right] }
+        
+        let index = currentCardIndex + firsIndex
         return delegate?.koloda(self, allowedDirectionsForIndex: index) ?? [.left, .right]
     }
     
