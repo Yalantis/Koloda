@@ -596,7 +596,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     public func reloadData() {
         guard let numberOfCards = dataSource?.kolodaNumberOfCards(self), numberOfCards > 0 else {
+            countOfCards = 0
             clear()
+            
             return
         }
         
