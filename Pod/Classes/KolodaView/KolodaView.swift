@@ -80,7 +80,7 @@ public extension KolodaViewDelegate {
     func kolodaShouldTransparentizeNextCard(_ koloda: KolodaView) -> Bool { return true }
     func koloda(_ koloda: KolodaView, draggedCardWithPercentage finishPercentage: CGFloat, in direction: SwipeResultDirection) {}
     func kolodaDidResetCard(_ koloda: KolodaView) {}
-    func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat? { return nil}
+    func kolodaSwipeThresholdRatioMargin(_ koloda: KolodaView) -> CGFloat? { return nil }
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {}
     func koloda(_ koloda: KolodaView, didRewindTo index: Int) {}
     func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int ) -> Bool { return true }
@@ -596,7 +596,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     public func reloadData() {
         guard let numberOfCards = dataSource?.kolodaNumberOfCards(self), numberOfCards > 0 else {
+            countOfCards = 0
             clear()
+            
             return
         }
         
