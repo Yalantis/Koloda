@@ -748,16 +748,20 @@ open class KolodaView: UIView, DraggableCardDelegate {
     
     // MARK: Cards managing - Deletion
     
-    private func proceedDeletionInRange(_ range: CountableClosedRange<Int>) {
+    private func proceedDeletionInRange(_ range: CountableClosedRange<Int>, animated: Bool = true) {
         let deletionIndexes = [Int](range)
         deletionIndexes.sorted { $0 > $1 }.forEach { deletionIndex in
             let visibleCardIndex = deletionIndex - currentCardIndex
             let card = visibleCards[visibleCardIndex]
-            card.delegate = nil
-            card.swipe(.right) {
-                
+            if animated {
+                card.delegate = nil
+                card.swipe(.right) {
+                }
+                visibleCards.remove(at: visibleCardIndex)
+            } else {
+                removeCards([card])
+                visibleCards.remove(at: visibleCardIndex)
             }
-            visibleCards.remove(at: visibleCardIndex)
         }
     }
     
@@ -765,13 +769,12 @@ open class KolodaView: UIView, DraggableCardDelegate {
         guard let dataSource = dataSource else {
             return
         }
-        
         animationSemaphore.increment()
         let currentItemsCount = countOfCards
         countOfCards = dataSource.kolodaNumberOfCards(self)
         let visibleIndexes = [Int](indexRange).filter { $0 >= currentCardIndex && $0 < currentCardIndex + countOfVisibleCards }
         if !visibleIndexes.isEmpty {
-            proceedDeletionInRange(visibleIndexes[0]...visibleIndexes[visibleIndexes.count - 1])
+            proceedDeletionInRange(visibleIndexes[0]...visibleIndexes[visibleIndexes.count - 1], animated: animated)
         }
         currentCardIndex -= Array(indexRange).filter { $0 < currentCardIndex }.count
         loadMissingCards(missingCardsCount())
@@ -781,7 +784,6 @@ open class KolodaView: UIView, DraggableCardDelegate {
             card.isUserInteractionEnabled = index == 0
         }
         animationSemaphore.decrement()
-        
         assert(
             currentItemsCount - indexRange.count == countOfCards,
             "Cards count after update is not equal to data source count"
