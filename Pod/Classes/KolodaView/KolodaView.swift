@@ -28,7 +28,7 @@ public enum VisibleCardsDirection: Int {
     case top, bottom
 }
 
-public protocol KolodaViewDataSource: class {
+public protocol KolodaViewDataSource: AnyObject {
     
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int
     func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed
@@ -47,7 +47,7 @@ public extension KolodaViewDataSource {
 	}
 }
 
-public protocol KolodaViewDelegate: class {
+public protocol KolodaViewDelegate: AnyObject {
     
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection]
     func koloda(_ koloda: KolodaView, shouldSwipeCardAt index: Int, in direction: SwipeResultDirection) -> Bool
