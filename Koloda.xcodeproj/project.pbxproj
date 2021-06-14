@@ -175,6 +175,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = C517E4A11D9CF9010002D88F;
@@ -328,6 +329,7 @@
 				);
 				INFOPLIST_FILE = Pod/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -350,6 +352,7 @@
 				);
 				INFOPLIST_FILE = Pod/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.cocoapods.Koloda;
 				PRODUCT_NAME = "$(TARGET_NAME)";
