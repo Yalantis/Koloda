@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import pop
 
 public enum DragSpeed: TimeInterval {
     case slow = 2.0
@@ -378,89 +377,54 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         overlayView?.overlayState = direction
         overlayView?.alpha = 1.0
         delegate?.card(self, wasSwipedIn: direction)
-        let translationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
-        translationAnimation?.duration = cardSwipeActionAnimationDuration
-        translationAnimation?.fromValue = NSValue(cgPoint: POPLayerGetTranslationXY(layer))
-        translationAnimation?.toValue = NSValue(cgPoint: animationPointForDirection(direction))
-        translationAnimation?.completionBlock = { _, _ in
+
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: cardSwipeActionAnimationDuration, delay: 0, options: []) {
+            let point = self.animationPointForDirection(direction)
+            self.transform = CGAffineTransform(translationX: point.x, y: point.y)
+        } completion: { position in
             self.removeFromSuperview()
         }
-        layer.pop_add(translationAnimation, forKey: "swipeTranslationAnimation")
     }
     
     private func resetViewPositionAndTransformations() {
         delegate?.card(cardWasReset: self)
         
         removeAnimations()
-        
-        let resetPositionAnimation = POPSpringAnimation(propertyNamed: kPOPLayerTranslationXY)
-        resetPositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
-        resetPositionAnimation?.toValue = NSValue(cgPoint: CGPoint.zero)
-        resetPositionAnimation?.springBounciness = cardResetAnimationSpringBounciness
-        resetPositionAnimation?.springSpeed = cardResetAnimationSpringSpeed
-        resetPositionAnimation?.completionBlock = {
-            (_, _) in
+
+        UIView.animate(withDuration: cardResetAnimationDuration, delay: 0, usingSpringWithDamping: (20 - cardResetAnimationSpringBounciness) / 20, initialSpringVelocity: cardResetAnimationSpringSpeed * 2, options: []) {
+            self.transform = .identity
+        } completion: { _ in
             self.layer.transform = CATransform3DIdentity
             self.dragBegin = false
         }
-        
-        layer.pop_add(resetPositionAnimation, forKey: "resetPositionAnimation")
-        
-        let resetRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
-        resetRotationAnimation?.fromValue = POPLayerGetRotationZ(layer)
-        resetRotationAnimation?.toValue = CGFloat(0.0)
-        resetRotationAnimation?.duration = cardResetAnimationDuration
-        
-        layer.pop_add(resetRotationAnimation, forKey: "resetRotationAnimation")
-        
-        let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-        overlayAlphaAnimation?.toValue = 0.0
-        overlayAlphaAnimation?.duration = cardResetAnimationDuration
-        overlayAlphaAnimation?.completionBlock = { _, _ in
+
+        UIViewPropertyAnimator.runningPropertyAnimator(withDuration: cardResetAnimationDuration, delay: 0, options: []) {
+            self.overlayView?.alpha = 0
+        } completion: { position in
             self.overlayView?.alpha = 0
         }
-        overlayView?.pop_add(overlayAlphaAnimation, forKey: "resetOverlayAnimation")
-        
-        let resetScaleAnimation = POPBasicAnimation(propertyNamed: kPOPLayerScaleXY)
-        resetScaleAnimation?.toValue = NSValue(cgPoint: CGPoint(x: 1.0, y: 1.0))
-        resetScaleAnimation?.duration = cardResetAnimationDuration
-        layer.pop_add(resetScaleAnimation, forKey: "resetScaleAnimation")
     }
     
     //MARK: Public
     func removeAnimations() {
-        pop_removeAllAnimations()
-        layer.pop_removeAllAnimations()
+        layer.removeAllAnimations()
     }
     
     func swipe(_ direction: SwipeResultDirection, completionHandler: @escaping () -> Void) {
         if !dragBegin {
             delegate?.card(self, wasSwipedIn: direction)
-            
-            let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
-            swipePositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
-            swipePositionAnimation?.toValue = NSValue(cgPoint:animationPointForDirection(direction))
-            swipePositionAnimation?.duration = cardSwipeActionAnimationDuration
-            swipePositionAnimation?.completionBlock = {
-                (_, _) in
+
+            overlayView?.overlayState = direction
+
+            UIViewPropertyAnimator.runningPropertyAnimator(withDuration: cardSwipeActionAnimationDuration, delay: 0, options: []) {
+                let point = self.animationPointForDirection(direction)
+                self.transform = CGAffineTransform(translationX: point.x, y: point.y)
+                    .rotated(by: self.animationRotationForDirection(direction))
+                self.overlayView?.alpha = 1
+            } completion: { position in
                 self.removeFromSuperview()
                 completionHandler()
             }
-            
-            layer.pop_add(swipePositionAnimation, forKey: "swipePositionAnimation")
-            
-            let swipeRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
-            swipeRotationAnimation?.fromValue = POPLayerGetRotationZ(layer)
-            swipeRotationAnimation?.toValue = CGFloat(animationRotationForDirection(direction))
-            swipeRotationAnimation?.duration = cardSwipeActionAnimationDuration
-            
-            layer.pop_add(swipeRotationAnimation, forKey: "swipeRotationAnimation")
-            
-            overlayView?.overlayState = direction
-            let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
-            overlayAlphaAnimation?.toValue = 1.0
-            overlayAlphaAnimation?.duration = cardSwipeActionAnimationDuration
-            overlayView?.pop_add(overlayAlphaAnimation, forKey: "swipeOverlayAnimation")
         }
     }
 }
