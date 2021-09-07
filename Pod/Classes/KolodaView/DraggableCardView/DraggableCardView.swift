@@ -16,7 +16,7 @@ public enum DragSpeed: TimeInterval {
     case fast = 0.4
 }
 
-protocol DraggableCardDelegate: class {
+protocol DraggableCardDelegate: AnyObject {
     
     func card(_ card: DraggableCardView, wasDraggedWithFinishPercentage percentage: CGFloat, inDirection direction: SwipeResultDirection)
     func card(_ card: DraggableCardView, wasSwipedIn direction: SwipeResultDirection)
