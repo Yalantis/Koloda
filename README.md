@@ -3,7 +3,8 @@ KolodaView ![cocoapods](https://img.shields.io/cocoapods/v/Koloda.svg)[![Carthag
 
 [![Yalantis](https://raw.githubusercontent.com/Yalantis/PullToMakeSoup/master/PullToMakeSoupDemo/Resouces/badge_dark.png)](https://Yalantis.com/?utm_source=github)
 
-Check this [article on our blog](https://yalantis.com/blog/how-we-built-tinder-like-koloda-in-swift/).
+Our designer Dmitry Goncharov decided to create an animation that follows Tinder’s trend. We called our Tinder-style card-based animation Koloda which is a Ukrainian word for the deck (of cards).
+The component can be used in different local event apps, and even in Tinder if it adds a possibility to choose dating places. The concept created by Dmitriy was implemented by Eugene Andreyev, our iOS developer.
 
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v2_example_animation.gif)
 ![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v1_example_animation.gif)
@@ -27,6 +28,219 @@ Thread Safety
 --------------
 
 KolodaView is subclassed from UIView and - as with all UIKit components - it should only be accessed from the main thread. You may wish to use threads for loading or updating KolodaView contents or items, but always ensure that once your content has loaded, you switch back to the main thread before updating the KolodaView.
+
+Prototype of Koloda in Pixate
+--------------
+
+Our designer created the mock-up in Photoshop and used [Pixate](http://www.pixate.com) for prototyping Koloda. The prototype we created reproduced the behavior of cards exactly how we wanted it.
+
+The main Pixate toolset includes layers, an action kit, and animations. After the assets are loaded and located on the artboard, you can start working on layers, and then proceed to reproduce interactions.
+
+At first, we made the cards move horizontally and fly away from the screen once they cross a certain vertical line. The designer also made the cards change their transparency and spin a bit during interactions.
+
+Then, we needed to make a new card appear in a way as if it collects itself from the background, so we had to stretch and scale it. We set a scale for the prototype from 3.5x (the size, when a card is still on the background) to 1x.
+
+![Preview](https://github.com/Yalantis/Koloda/blob/master/assets/content_tips.png)
+
+For a better effect, we added a few bounce animations and that was it! The prototype was ready for development.
+
+Building Koloda animation
+--------------
+
+There are a few ready-made mobile libraries and iOS animation examples out there that an app developer can use.
+
+We wanted the animation to be as simple and convenient as views like UITableView. Therefore, we created a custom component for the animation. It consists of the three main parts:
+
+1. `DraggableCardView` – a card that displays content.
+2. `OverlayView` – a dynamic view that changes depending on where a user drags a card (to the left or to the right).
+3. `KolodaView` – a view that controls loading and interactions between cards.
+
+DraggableCardView implementation
+--------------
+
+We implemented DraggableCardView with the help of `UIPanGestureRecognizer` and `CGAffineTransform`. See the coding part below:
+
+```swift
+func panGestureRecognized(gestureRecognizer: UIPanGestureRecognizer) {
+    xDistanceFromCenter = gestureRecognizer.translationInView(self).x
+    yDistanceFromCenter = gestureRecognizer.translationInView(self).y
+
+    let touchLocation = gestureRecognizer.locationInView(self)
+    switch gestureRecognizer.state {
+    case .Began:
+        originalLocation = center
+
+        animationDirection = touchLocation.y >= frame.size.height / 2 ? -1.0 : 1.0      
+        layer.shouldRasterize = true
+        break
+
+    case .Changed:
+
+        let rotationStrength = min(xDistanceFromCenter! / self.frame.size.width, rotationMax)
+        let rotationAngle = animationDirection! * defaultRotationAngle * rotationStrength
+        let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))
+        let scale = max(scaleStrength, scaleMin)
+
+        layer.rasterizationScale = scale * UIScreen.mainScreen().scale
+ 
+        let transform = CGAffineTransformMakeRotation(rotationAngle)
+        let scaleTransform = CGAffineTransformScale(transform, scale, scale)
+
+        self.transform = scaleTransform
+        center = CGPoint(x: originalLocation!.x + xDistanceFromCenter!, y: originalLocation!.y + yDistanceFromCenter!)
+           
+        updateOverlayWithFinishPercent(xDistanceFromCenter! / frame.size.width)
+        //100% - for proportion
+        delegate?.cardDraggedWithFinishPercent(self, percent: min(fabs(xDistanceFromCenter! * 100 / frame.size.width), 100))
+
+        break
+    case .Ended:
+        swipeMadeAction()
+
+        layer.shouldRasterize = false
+    default:
+        break
+    }
+}
+```
+
+The overlay gets updated with every move. It changes transparency in the process of animation ( 5% –  hardly seen, 100% – clearly seen).
+
+In order to avoid a card’s edges becoming sharp during movement, we used the `shouldRasterize` layer option.
+
+We had to consider a reset situation which happens once a card fails to reach the action margin (ending point) and comes back to the initial state. We used the Facebook Pop framework for this situation, and also for the “undo” action.
+
+OverlayView implementation
+--------------
+
+`OverlayView` is a view that is added on top of a card during animation. It has only one variable called `overlayState` with two options: when a user drags a card to the left, the `overlayState` adds a red hue to the card, and when a card is moved to the right, the variable uses the other option to make the UI become green.
+
+To implement custom actions for the overlay, we should inherit from `OverlayView`, and reload the operation `didSet` in the `overlayState`:
+
+```swift
+public enum OverlayMode{
+   case None
+   case Left
+   case Right
+}
+
+public class OverlayView: UIView {
+    public var overlayState:OverlayMode = OverlayMode.None
+}
+
+class ExampleOverlayView: OverlayView {
+override var overlayState:OverlayMode  {
+    didSet {
+        switch overlayState {
+           case .Left :
+               overlayImageView.image = UIImage(named: overlayLeftImageName)
+           case .Right :
+               overlayImageView.image = UIImage(named: overlayRightImageName)
+           default:
+               overlayImageView.image = nil
+           }          
+
+       }
+
+   }
+
+}
+```
+
+KolodaView implementation
+--------------
+
+The `KolodaView` class does a card loading and card management job. You can either implement it in the code or in the Interface Builder. Then, you should specify a data source and add a delegate (optional). After that, you should implement the following methods of the `KolodaViewDataSource` protocol in the data source-class:
+
+```swift
+func kolodaNumberOfCards(koloda: KolodaView) -> UInt
+    func kolodaViewForCardAtIndex(koloda: KolodaView, index: UInt) -> UIView
+    func kolodaViewForCardOverlayAtIndex(koloda: KolodaView, index: UInt) -> OverlayView?
+```
+
+`KolodaView` had to display a correct number of cards below the top card and make them occupy the right positions when the animation starts. To make it possible, we had to calculate frames for all the cards by adding the corresponding indexes to each element. For example, the first card has an [i] index, the second one would have an [i+1] index, the third – [i+2], and so on:
+
+```swift
+private func frameForCardAtIndex(index: UInt) -> CGRect {
+    let bottomOffset:CGFloat = 0
+    let topOffset = backgroundCardsTopMargin * CGFloat(self.countOfVisibleCards - 1)
+    let xOffset = backgroundCardsLeftMargin * CGFloat(index)
+    let scalePercent = backgroundCardsScalePercent
+    let width = CGRectGetWidth(self.frame) * pow(scalePercent, CGFloat(index))
+    let height = (CGRectGetHeight(self.frame) - bottomOffset - topOffset) * pow(scalePercent, CGFloat(index))
+    let multiplier: CGFloat = index > 0 ? 1.0 : 0.0
+    let previousCardFrame = index > 0 ? frameForCardAtIndex(max(index - 1, 0)) : CGRectZero
+    let yOffset = (CGRectGetHeight(previousCardFrame) - height + previousCardFrame.origin.y + backgroundCardsTopMargin) * multiplier
+    let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)     
+
+    return frame
+}
+```
+
+Now, since we know the indexes, card frames, and also the percent at which the animation ends (from the `DraggableCardView`), we can easily find out where the cards below will go once an upper card is swiped. After that, we can implement `PercentDrivenAnimation`.
+
+Building Koloda v.2
+--------------
+
+The main difference between the first and second versions of the Koloda animation is in the cards’ layout. The front card in the new version is placed in the middle of the screen and the back card is stretched on the background. In addition, the back card does not respond to the movement of the front card and arrives with a bounce effect after the front card is swiped.
+
+Also, the second version of Koloda was easier to build thanks to the prototype of it in Pixate.
+
+![Preview](https://github.com/Yalantis/Koloda/blob/master/Koloda_v1_example_animation.gif)
+
+Implementation of KolodaView v.2
+--------------
+
+To implement KolodaView v.2, we had to place the cards differently, so we put the method `frameForCardAtIndex` in the public interface.
+
+In `KolodaView` inheritor we overrode the method and put the cards in the following order:
+
+```swift
+override func frameForCardAtIndex(index: UInt) -> CGRect {
+    if index == 0 {
+        let bottomOffset:CGFloat = defaultBottomOffset
+        let topOffset:CGFloat = defaultTopOffset
+        let xOffset:CGFloat = defaultHorizontalOffset
+        let width = CGRectGetWidth(self.frame ) - 2 * defaultHorizontalOffset
+        let height = width * defaultHeightRatio
+        let yOffset:CGFloat = topOffset
+        let frame = CGRect(x: xOffset, y: yOffset, width: width, height: height)
+        return frame
+    } else if index == 1 {
+        let horizontalMargin = -self.bounds.width * backgroundCardHorizontalMarginMultiplier
+        let width = self.bounds.width * backgroundCardScalePercent
+        let height = width * defaultHeightRatio
+        return CGRect(x: horizontalMargin, y: 0, width: width, height: height)
+    }
+    return CGRectZero
+}
+```
+
+We place `frontCard` in the middle of `KolodaView`, and stretch the background card with a scalePercent that equals 1.5.
+
+![Preview](https://github.com/Yalantis/Koloda/blob/master/assets/states.jpeg)
+
+Bounce animation for the background card
+--------------
+
+Since the background card arrives with a bounce effect and changes its transparency while moving, we created a new delegate method:
+
+```swift
+KolodaView - func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation?
+```
+
+In this method, `POPAnimation` is created and passed to Koloda. Then, Koloda uses it for animating frame changes after a user swipes a card. If the delegate returns `nil`, it means that Koloda uses default animation.
+
+Below you can see the implementation of this method in the delegate:
+
+```swift
+func kolodaBackgroundCardAnimation(koloda: KolodaView) -> POPPropertyAnimation? {
+    let animation = POPSpringAnimation(propertyNamed: kPOPViewFrame)
+    animation.springBounciness = frameAnimationSpringBounciness
+    animation.springSpeed = frameAnimationSpringSpeed
+    return animation
+}
+```
 
 Installation
 --------------
