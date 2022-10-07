@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "pop-spm-package",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vmzhivetyev/pop-spm-package.git",
+      "state" : {
+        "revision" : "7363d7e8b2419e7c47fdea7422bacc0c33cd64f9",
+        "version" : "1.0.4"
+      }
+    }
+  ],
+  "version" : 2
+}
