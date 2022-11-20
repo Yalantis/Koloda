@@ -398,8 +398,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
     }
 
     // MARK: Private
-    private func clear() {
-        currentCardIndex = 0
+    private func clear(index: Int = 0) {
+        currentCardIndex = index
         
         for card in visibleCards {
             card.removeFromSuperview()
@@ -646,8 +646,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
     }
     
-    public func resetCurrentCardIndex() {
-        clear()
+    public func resetCurrentCardIndex(index: Int = 0) {
+        clear(index: index)
         reloadData()
     }
     
