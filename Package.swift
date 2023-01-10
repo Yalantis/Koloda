@@ -23,8 +23,8 @@ let package = Package(
         ),
         .binaryTarget(
             name: "pop",
-            url: "https://github.com/Wei18/pop/releases/download/1.0.12/pop-addx86sim.zip",
-            checksum: "a8c00109025ef6e8d27d0a60778c2083a69f4a916ad296dac195fa8e7be77396"
+            url: "https://github.com/Wei18/pop/releases/download/1.0.12/pop.zip",
+            checksum: "c950433712fff5b13bf27e190ad3143dcedf85762dbbf06efbb39058742f7434"
         ),
     ]
 )
