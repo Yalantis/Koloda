@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 	s.source           = { :git => 'https://github.com/Yalantis/Koloda.git', :tag => s.version }
 	s.social_media_url = 'https://twitter.com/yalantis'
 
-	s.platform     = :ios, "11.0'
+	s.platform     = :ios, '11.0'
 	s.source_files = 'Pod/Classes/**/*'
 
 	s.frameworks = 'UIKit'
