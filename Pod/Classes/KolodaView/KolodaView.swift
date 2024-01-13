@@ -207,6 +207,9 @@ open class KolodaView: UIView, DraggableCardDelegate {
         } else {
             let cardParameters = backgroundCardParametersForFrame(frameForCard(at: index))
             let scale = cardParameters.scale
+            if scale.height.isNaN || scale.width.isNaN {
+                    return
+            }
             card.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1.0)
             card.frame = cardParameters.frame
         }
